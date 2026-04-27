@@ -222,17 +222,27 @@ def generate_synthetic_dataset(
     failure_type = np.full(n_samples, "None", dtype=object)
     failure_mask = failure_within_24h == 1
 
-    # Calcul des "scores" par type pour les machines en panne.
-    mech_score = vibration_rms + 0.01 * maintenance_age_days
-    therm_score = temperature_motor / 30.0
-    elec_score = np.abs(voltage - 400) / 10.0 + rng.normal(0, 0.5, n_samples)
-    hydro_score = np.abs(pressure_level - 6.0) * 1.5
+    # Tirage probabiliste · scores normalisés + softmax (factor 1.2) puis
+    # multinomial. Cela garantit naturellement que les 4 types apparaissent
+    # tous (vs argmax qui concentrait quasi-systématiquement sur Mechanical).
+    n_failed = int(failure_mask.sum())
+    if n_failed > 0:
+        mech_score = (vibration_rms / 6.0) + 0.005 * maintenance_age_days
+        therm_score = np.maximum(temperature_motor - 50.0, 0.0) / 30.0
+        elec_score = np.abs(voltage - 400.0) / 6.0 + 0.3
+        hydro_score = np.abs(pressure_level - 6.0) / 3.0 + 0.2
 
-    score_matrix = np.stack([mech_score, therm_score, elec_score, hydro_score], axis=1)
-    # Index du type dominant ⇒ on mappe sur les 4 types de panne (≠ "None").
-    dominant = np.argmax(score_matrix, axis=1)
-    type_map = ["Mechanical", "Thermal", "Electrical", "Hydraulic"]
-    failure_type[failure_mask] = np.array([type_map[i] for i in dominant[failure_mask]])
+        scores = np.stack([mech_score, therm_score, elec_score, hydro_score], axis=1)[failure_mask]
+        # Softmax modéré · favorise le score max sans concentrer totalement.
+        exp_s = np.exp(1.2 * scores)
+        probas = exp_s / exp_s.sum(axis=1, keepdims=True)
+
+        # Tirage multinomial vectorisé (cumul + uniform).
+        cumprobas = probas.cumsum(axis=1)
+        u = rng.uniform(0, 1, size=n_failed).reshape(-1, 1)
+        chosen_idx = (u < cumprobas).argmax(axis=1)
+        type_map = ["Mechanical", "Thermal", "Electrical", "Hydraulic"]
+        failure_type[failure_mask] = np.array([type_map[i] for i in chosen_idx])
 
     # Durée de vie restante (RUL) en heures · décroît avec le risque.
     # Machines saines · 200-1500h, machines à risque · <100h.
