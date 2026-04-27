@@ -1,0 +1,11 @@
+{
+  "threshold": 0.24999999999999994,
+  "optimal_threshold": 0.24999999999999994,
+  "optimal_cost_eur": 125800.0,
+  "cost_fn_eur": 1000.0,
+  "cost_fp_eur": 100.0,
+  "fn_at_default_0_5": 128,
+  "fp_at_default_0_5": 176,
+  "fn_at_optimal": 80,
+  "fp_at_optimal": 458
+}

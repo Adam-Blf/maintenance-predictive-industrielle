@@ -1,0 +1,30 @@
+[
+  {
+    "model_name":"logistic_regression",
+    "accuracy":0.4349112426,
+    "macro_f1":0.3454224995,
+    "weighted_f1":0.4702210919,
+    "fit_time_s":0.0434136391
+  },
+  {
+    "model_name":"random_forest",
+    "accuracy":0.5414201183,
+    "macro_f1":0.4192632546,
+    "weighted_f1":0.5425018526,
+    "fit_time_s":0.3829371929
+  },
+  {
+    "model_name":"xgboost",
+    "accuracy":0.5710059172,
+    "macro_f1":0.3960409392,
+    "weighted_f1":0.5376098176,
+    "fit_time_s":1.23893857
+  },
+  {
+    "model_name":"mlp",
+    "accuracy":0.5650887574,
+    "macro_f1":0.3267439432,
+    "weighted_f1":0.5003480101,
+    "fit_time_s":0.4754261971
+  }
+]

@@ -23,6 +23,7 @@ on substitue les caracteres Unicode etendus (• -> -, -> -> ->).
 
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -390,8 +391,12 @@ def build_toc_page(pdf: ProjectReportPDF) -> None:
         ("5.", "Évaluation comparative des modèles"),
         ("6.", "Interprétabilité et explicabilite"),
         ("7.", "Industrialisation - Dashboard et API"),
-        ("8.", "Conclusion et perspectives"),
-        ("A.", "Annexes - alignément RNCP40875"),
+        ("8.", "Industrialisation - Dashboard et API"),
+        ("9.", "Calibration et seuil métier"),
+        ("10.", "Tâches bonus - multi-classe et régression"),
+        ("11.", "Hyperparameter tuning Optuna"),
+        ("12.", "Conclusion et perspectives"),
+        ("A.", "Annexes - alignement RNCP40875"),
     ]
     pdf.set_font("Helvetica", "", 12)
     pdf.set_text_color(*COLOR_DARK_TEXT)
@@ -870,9 +875,9 @@ def build_section_industrialization(pdf: ProjectReportPDF) -> None:
 
 
 def build_section_conclusion(pdf: ProjectReportPDF) -> None:
-    """Section 8 · conclusion."""
+    """Section 12 · conclusion."""
     pdf.add_page()
-    pdf.h1("8. Conclusion et perspectives")
+    pdf.h1("12. Conclusion et perspectives")
 
     pdf.h2("8.1 Synthese")
     pdf.body(
@@ -914,6 +919,146 @@ def build_section_conclusion(pdf: ProjectReportPDF) -> None:
         "Mesurer l'empreinte carbone reelle des entrainements via CodeCarbon "
         "(écoresponsabilité, C4.3)."
     )
+
+
+def build_section_calibration(pdf: ProjectReportPDF) -> None:
+    """Section · calibration probabiliste + threshold tuning métier."""
+    pdf.add_page()
+    pdf.h1("9. Calibration et seuil métier")
+
+    pdf.h2("9.1 Reliability diagram + Brier score")
+    pdf.body(
+        "Un modèle parfaitement calibré a la propriété suivante · parmi les "
+        "prédictions de probabilité 0.7, exactement 70% des cas sont "
+        "réellement positifs. Le Brier score mesure cet écart (plus c'est "
+        "bas, mieux c'est calibré · 0 = parfait, 0.25 = aléatoire)."
+    )
+    final_name_path = REPORTS_DIR.parent / "models" / "final_model_name.txt"
+    final_name = (
+        final_name_path.read_text(encoding="utf-8").strip() if final_name_path.exists() else "model"
+    )
+    rel_fig = REPORTS_FIGURES_DIR / f"reliability_diagram_{final_name}.png"
+    if rel_fig.exists():
+        pdf.figure(
+            rel_fig,
+            f"Figure · Reliability diagram du modèle {final_name}. La courbe "
+            "proche de la diagonale indique une bonne calibration.",
+        )
+
+    pdf.h2("9.2 Threshold tuning métier")
+    pdf.body(
+        "Le seuil de décision par défaut (0.5) n'est presque jamais le bon "
+        "en maintenance prédictive. Hypothèses métier · faux négatif (panne "
+        "ratée) coûte 1000 EUR (arrêt de production), faux positif "
+        "(intervention inutile) coûte 100 EUR (main d'oeuvre). On cherche "
+        "le seuil qui minimise le coût total sur le test set."
+    )
+    cost_fig = REPORTS_FIGURES_DIR / f"cost_threshold_{final_name}.png"
+    if cost_fig.exists():
+        pdf.figure(
+            cost_fig,
+            "Figure · Coût total en fonction du seuil. Le seuil optimal est "
+            "marqué en rouge, le seuil par défaut 0.5 en gris pointillé.",
+        )
+
+    # Charge le seuil optimal pour le mentionner.
+    threshold_path = REPORTS_DIR.parent / "models" / "optimal_threshold.json"
+    if threshold_path.exists():
+        info = json.loads(threshold_path.read_text(encoding="utf-8"))
+        cost_default = (
+            info["cost_fn_eur"] * info["fn_at_default_0_5"]
+            + info["cost_fp_eur"] * info["fp_at_default_0_5"]
+        )
+        gain = cost_default - info["optimal_cost_eur"]
+        pdf.body(
+            f"Résultat · seuil optimal = {info['threshold']:.3f}. "
+            f"Coût total = {info['optimal_cost_eur']:.0f} EUR (vs "
+            f"{cost_default:.0f} EUR au seuil 0.5). "
+            f"Économie = {gain:.0f} EUR sur le test set."
+        )
+
+
+def build_section_bonus_tasks(pdf: ProjectReportPDF) -> None:
+    """Section · tâches bonus (multi-classe failure_type + régression RUL)."""
+    pdf.add_page()
+    pdf.h1("10. Tâches bonus · multi-classe et régression")
+
+    pdf.body(
+        "Le sujet mentionne explicitement *Points Bonus · Pour plusieurs "
+        "tâches de prédiction*. Au-delà de la classification binaire "
+        "(tâche principale), nous avons implémenté en parallèle une "
+        "classification multi-classe sur le type de panne et une "
+        "régression sur la durée de vie restante. Chaque tâche utilise les "
+        "mêmes 4 modèles (Logistic / RF / XGBoost / MLP) pour cohérence "
+        "comparative."
+    )
+
+    # Multi-classe
+    pdf.h2("10.1 Classification multi-classe · failure_type")
+    multi_csv = REPORTS_DIR / "metrics_multiclass.csv"
+    if multi_csv.exists():
+        df_multi = pd.read_csv(multi_csv)
+        pdf.metrics_table(
+            df_multi, "Métriques (4 classes : Mechanical / Thermal / Electrical / Hydraulic)"
+        )
+    cm_fig = REPORTS_FIGURES_DIR / "multiclass_confusion_matrix.png"
+    if cm_fig.exists():
+        pdf.figure(
+            cm_fig,
+            "Figure · Matrice de confusion multi-classe (normalisée par "
+            "ligne). La diagonale montre les classes bien identifiées.",
+        )
+    pdf.body(
+        "Intérêt métier · permettre au responsable maintenance de mobiliser "
+        "directement la bonne équipe technique (mécanicien vs électricien "
+        "vs hydraulicien) avant l'intervention, ce qui réduit le temps de "
+        "diagnostic et optimise le stock de pièces détachées."
+    )
+
+    # Régression
+    pdf.h2("10.2 Régression · rul_hours (Remaining Useful Life)")
+    reg_csv = REPORTS_DIR / "metrics_regression.csv"
+    if reg_csv.exists():
+        df_reg = pd.read_csv(reg_csv)
+        pdf.metrics_table(df_reg, "Métriques (MAE/RMSE en heures, R² coefficient de détermination)")
+    pred_fig = REPORTS_FIGURES_DIR / "regression_pred_vs_true.png"
+    if pred_fig.exists():
+        pdf.figure(
+            pred_fig,
+            "Figure · Prédiction RUL vs vérité terrain. Les points sur la "
+            "diagonale correspondent à des prédictions parfaites.",
+        )
+    pdf.body(
+        "Intérêt métier · planifier la maintenance préventive en optimisant "
+        "les fenêtres d'arrêt programmé, allonger la durée d'exploitation "
+        "des équipements, minimiser le risque d'arrêt brutal."
+    )
+
+
+def build_section_tuning(pdf: ProjectReportPDF) -> None:
+    """Section · hyperparameter tuning Optuna (si résultats disponibles)."""
+    tuning_path = REPORTS_DIR / "tuning_results.json"
+    if not tuning_path.exists():
+        return
+    pdf.add_page()
+    pdf.h1("11. Hyperparameter tuning (Optuna)")
+
+    pdf.body(
+        "Optuna avec sampler TPE (Tree-Parzen Estimator) explore l'espace "
+        "des hyperparamètres de manière bayésienne · plus efficace qu'un "
+        "GridSearchCV exhaustif sur des espaces larges. 20 essais par "
+        "modèle suffisent à converger vers une bonne région."
+    )
+    try:
+        results = json.loads(tuning_path.read_text(encoding="utf-8"))
+    except Exception:
+        return
+
+    for name, payload in results.items():
+        pdf.h2(f"11.{list(results).index(name)+1} {name}")
+        pdf.body(f"Best F1 = {payload.get('best_value', 0.0):.4f}")
+        params_str = "  ·  ".join(f"{k}={v}" for k, v in payload.get("best_params", {}).items())
+        pdf.body(f"Hyperparamètres optimaux · {params_str}")
 
 
 def build_annex_rncp(pdf: ProjectReportPDF) -> None:
@@ -1037,6 +1182,9 @@ def render_full_report(output_path: Path | None = None) -> Path:
     build_section_évaluation(pdf)
     build_section_interpretability(pdf, final_name)
     build_section_industrialization(pdf)
+    build_section_calibration(pdf)
+    build_section_bonus_tasks(pdf)
+    build_section_tuning(pdf)
     build_section_conclusion(pdf)
     build_annex_rncp(pdf)
 

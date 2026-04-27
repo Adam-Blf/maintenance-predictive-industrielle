@@ -1,0 +1,30 @@
+[
+  {
+    "model_name":"ridge",
+    "mae_hours":114.3826516938,
+    "rmse_hours":156.3295430932,
+    "r2":0.6196133383,
+    "fit_time_s":0.0981152058
+  },
+  {
+    "model_name":"random_forest",
+    "mae_hours":54.3574358616,
+    "rmse_hours":77.37161658,
+    "r2":0.906823476,
+    "fit_time_s":20.1899075508
+  },
+  {
+    "model_name":"xgboost",
+    "mae_hours":54.6991034014,
+    "rmse_hours":78.328973197,
+    "r2":0.9045033736,
+    "fit_time_s":2.0393445492
+  },
+  {
+    "model_name":"mlp",
+    "mae_hours":55.1703502075,
+    "rmse_hours":77.2618667304,
+    "r2":0.907087626,
+    "fit_time_s":11.7199046612
+  }
+]
