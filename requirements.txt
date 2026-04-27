@@ -1,0 +1,40 @@
+# =============================================================================
+# Dependances du projet · Maintenance Predictive Industrielle
+# Adam Beloucif & Emilien Morice · M1 Data Engineering & IA · EFREI 2025-2026
+# =============================================================================
+# Versions epinglees aux ranges compatibles avec Python 3.12.
+
+# --- Core scientifique ---
+numpy>=1.26,<3.0
+pandas>=2.1,<3.0
+scipy>=1.11
+
+# --- Machine Learning ---
+scikit-learn>=1.4
+xgboost>=2.0
+joblib>=1.3
+
+# --- Deep Learning (MLP via scikit-learn, pas de torch/tf necessaire) ---
+# scikit-learn fournit MLPClassifier · suffisant pour le scope du projet.
+
+# --- Interpretabilite ---
+shap>=0.44
+
+# --- Visualisation ---
+matplotlib>=3.8
+seaborn>=0.13
+plotly>=5.18
+
+# --- Dashboard ---
+streamlit>=1.32
+
+# --- API ---
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.6
+
+# --- Generation PDF ---
+fpdf2>=2.7
+
+# --- Utilitaires ---
+python-dotenv>=1.0

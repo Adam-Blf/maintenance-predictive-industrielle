@@ -1,0 +1,103 @@
+# =============================================================================
+# .gitignore · Projet Maintenance Predictive Industrielle
+# =============================================================================
+
+# --- Donnees brutes et intermediaires (lourdes, regenerables) ---
+data/raw/*.csv
+data/processed/*.csv
+data/processed/*.parquet
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# --- Artefacts modeles (regenerables via scripts/03_train_models.py) ---
+models/*.joblib
+models/*.pkl
+models/*.h5
+!models/.gitkeep
+
+# --- Sujets PDF originaux (non livrables) ---
+docs/sujet/
+*.pdf
+!reports/rapport_projet_data_science.pdf
+
+# --- Caches Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Environnements virtuels ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Caches outils ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# --- Notebooks Jupyter ---
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Streamlit ---
+.streamlit/secrets.toml
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Fichiers temporaires ---
+*.tmp
+*.bak
+*.orig
+
+# --- Secrets (defense en profondeur) ---
+.env
+.env.*
+!.env.example
+*secret*
+*.token
+*.key
+*.pem
+sbp_*
+ghp_*
+github_pat_*
+
+# --- Sortie Black/isort/Prettier ---
+.black-cache/
