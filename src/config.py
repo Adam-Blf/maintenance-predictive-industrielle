@@ -38,6 +38,8 @@ ASSETS_DIR: Path = PROJECT_ROOT / "assets"
 EFREI_LOGO: Path = ASSETS_DIR / "logo_efrei.png"
 # Variante blanche du logo EFREI · pour les slides à fond sombre (navy).
 EFREI_LOGO_WHITE: Path = ASSETS_DIR / "logo_efrei_white.png"
+# Variante noire monochrome du logo EFREI · pour impression noir et blanc.
+EFREI_LOGO_BLACK: Path = ASSETS_DIR / "logo_efrei_noir.png"
 
 # Nom canonique du dataset (cohérent avec le sujet officiel Kaggle).
 DATASET_FILENAME: str = "industrial_machine_maintenance.csv"
