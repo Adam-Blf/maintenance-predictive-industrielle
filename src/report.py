@@ -142,47 +142,58 @@ class ProjectReportPDF(FPDF):
         path: Path,
         caption: str,
         max_width: float = 165.0,
-        new_page: bool = True,
+        new_page: bool = False,
     ) -> None:
-        """Insère une figure centrée avec sa légende, sur sa propre page.
+        """Insère une figure centrée avec sa légende.
 
-        Le saut de page systématique (``new_page=True`` par défaut)
-        garantit qu'aucune figure n'est tronquée ni superposée à un
-        texte voisin. La hauteur réelle est calculée à partir des
-        dimensions PNG (PIL) afin que la légende soit positionnée
-        EN DESSOUS de l'image et non par-dessus.
+        Comportement par defaut (``new_page=False``) · la figure est
+        placee sur la page courante si elle y tient avec sa caption,
+        sinon on declenche un saut de page automatique. Cela evite les
+        grandes zones blanches a la fin de chaque page tout en
+        garantissant qu'image et caption restent ensemble.
+
+        La hauteur reelle est calculee a partir des dimensions PNG (PIL)
+        pour positionner la caption EN DESSOUS de l'image et non par-dessus.
         """
-        from PIL import Image  # import local · PIL deja en dépendance pandas
-
-        if new_page:
-            self.add_page()
+        from PIL import Image  # import local · PIL est dépendance de pandas
 
         if not path.exists():
             self.body(f"[Figure manquante · {path.name}]")
             return
 
-        # Mesure du ratio reel de l'image pour calculer la hauteur exacte
-        # apres scaling a `max_width`.
+        # Mesure du ratio reel de l'image pour calculer la hauteur
+        # exacte apres scaling a `max_width`.
         with Image.open(path) as img:
             px_w, px_h = img.size
         scaled_h = max_width * px_h / px_w  # mm
+        scaled_w = max_width
 
-        # Hauteur disponible · page courante - position verticale
-        # actuelle - marge basse (footer) - hauteur reservee a la caption
-        # (~12mm pour 2 lignes de texte italique).
-        available_h = self.h - self.get_y() - 35
-        # Si l'image scaled depasse la hauteur dispo, on la reduit
-        # proportionnellement pour qu'elle tienne avec sa caption SUR LA
-        # MEME PAGE. Cela elimine les pages avec une caption orpheline.
+        # Marge basse minimum a reserver · footer (~15mm) + caption (~12mm).
+        bottom_margin = 30
+
+        # Espace pre-marge avant l'image (2mm).
+        spacing_before = 2
+
+        # Hauteur totale necessaire pour image + caption (~12mm) + marge.
+        total_needed = spacing_before + scaled_h + 14
+
+        available_h = self.h - self.get_y() - bottom_margin
+
+        # Si on a explicitement demande une nouvelle page, ou si l'image
+        # ne rentre pas sur la page courante, on saute de page.
+        if new_page or total_needed > available_h:
+            self.add_page()
+            available_h = self.h - self.get_y() - bottom_margin
+
+        # Si meme apres add_page la hauteur est insuffisante (image
+        # gigantesque), on rescale proportionnellement.
         if scaled_h > available_h:
             scaled_h = available_h
             scaled_w = scaled_h * px_w / px_h
-        else:
-            scaled_w = max_width
+
         x_offset = (210 - scaled_w) / 2
 
-        # Marge avant l'image pour aérer.
-        self.ln(2)
+        self.ln(spacing_before)
         y_top = self.get_y()
 
         self.image(
@@ -193,9 +204,9 @@ class ProjectReportPDF(FPDF):
             h=scaled_h,
             keep_aspect_ratio=True,
         )
-        # On avance le curseur EXACTEMENT a la fin de l'image + marge,
-        # ce qui evite toute superposition entre l'image et la caption.
-        self.set_y(y_top + scaled_h + 4)
+        # On avance le curseur EXACTEMENT a la fin de l'image + petite
+        # marge, eliminant toute superposition image/caption.
+        self.set_y(y_top + scaled_h + 3)
         self.caption(caption)
 
     def metrics_table(self, df: pd.DataFrame, title: str = "") -> None:
@@ -808,7 +819,6 @@ def build_section_interpretability(pdf: ProjectReportPDF, final_name: str) -> No
             "Figure 15 · SHAP importance globale (moyenne des valeurs " "absolues SHAP).",
         )
 
-    pdf.add_page()
     pdf.h2("6.4 Lecture métier")
     pdf.body(
         "Pour un responsable maintenance, ces visualisations répondent "
