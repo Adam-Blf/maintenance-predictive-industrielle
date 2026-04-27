@@ -466,26 +466,29 @@ def build_section_dataset(pdf: ProjectReportPDF) -> None:
 
     pdf.h2("2.1 Schéma du dataset")
     pdf.body(
-        "Le dataset reproduit fidèlement le schéma de la source Kaggle "
-        "officielle (`tatheerabbas/industrial-machine-predictive-maintenance`). "
-        "Pour garantir la reproductibilite hors connexion, un generateur "
-        "synthetique reproduisant les mêmes 24 042 enregistrements et 15 "
-        "variables est embarque dans le module `src/data_loader.py`. Les "
-        "relations physiques injectées (vibration croissante avec l'âge "
-        "machine, surchauffe en mode HighLoad, pic de pression hydraulique "
-        "lors d'une panne, etc.) garantissent que les modèles apprennent des "
-        "patterns métier interprétables."
+        "Le dataset utilise est la source officielle Kaggle CC0 public domain "
+        "`tatheerabbas/industrial-machine-predictive-maintenance` v3.0 (24 042 "
+        "lignes, 15 colonnes, 2.17 Mo). Le projet embarque egalement un "
+        "generateur synthetique au schema strictement identique dans "
+        "`src/data_loader.py`, comme fallback hors-ligne pour reproduire la "
+        "pipeline sans cle API Kaggle. Les capteurs presentent ~4% de NaN "
+        "volontaires (defaillances IoT), geres par SimpleImputer en pipeline."
     )
 
     pdf.h2("2.2 Variables principales")
     pdf.bullet("vibration_rms · vibration efficace en mm/s (capteur principal).")
-    pdf.bullet("temperature_motor · température moteur en degrés Celsius.")
-    pdf.bullet("rpm · vitesse de rotation en tours par minute.")
+    pdf.bullet("temperature_motor · temperature moteur en degres Celsius.")
+    pdf.bullet("current_phase_avg · courant moyen sur 3 phases en amperes.")
     pdf.bullet("pressure_level · pression du circuit hydraulique en bar.")
-    pdf.bullet("operating_mode · Normal / HighLoad / Idle / Maintenance.")
-    pdf.bullet("rul_hours · durée de vie restante en heures (regression).")
+    pdf.bullet("rpm · vitesse de rotation en tours par minute.")
+    pdf.bullet("hours_since_maintenance · heures depuis la derniere maintenance.")
+    pdf.bullet("ambient_temp · temperature ambiante en degres Celsius.")
+    pdf.bullet("operating_mode · normal / idle / peak.")
+    pdf.bullet("machine_type · CNC / Pump / Compressor / Robotic Arm.")
+    pdf.bullet("rul_hours · duree de vie restante en heures (regression).")
     pdf.bullet("failure_within_24h · cible binaire (classification - retenue).")
-    pdf.bullet("failure_type · type de panne (classification multi-classe).")
+    pdf.bullet("failure_type · 5 classes · none / bearing / motor_overheat / hydraulic / electrical.")
+    pdf.bullet("estimated_repair_cost · cout estime de reparation en euros (regression bonus).")
 
     pdf.h2("2.3 Distribution des classes")
     pdf.body(
@@ -544,9 +547,9 @@ def build_section_dataset(pdf: ProjectReportPDF) -> None:
 
     pdf.figure(
         REPORTS_FIGURES_DIR / "eda_operating_mode.png",
-        "Figure 7 · Le mode HighLoad cumule un grand volume d'observations "
-        "et le taux de panne le plus élevé. La feature operating_mode est "
-        "donc discriminante.",
+        "Figure 7 · Le mode peak cumule le taux de panne le plus eleve "
+        "malgre un volume d'observations minoritaire. La feature operating_mode "
+        "est donc fortement discriminante.",
     )
 
 
@@ -999,7 +1002,7 @@ def build_section_bonus_tasks(pdf: ProjectReportPDF) -> None:
     if multi_csv.exists():
         df_multi = pd.read_csv(multi_csv)
         pdf.metrics_table(
-            df_multi, "Métriques (4 classes : Mechanical / Thermal / Electrical / Hydraulic)"
+            df_multi, "Metriques (4 classes : bearing / motor_overheat / hydraulic / electrical)"
         )
     cm_fig = REPORTS_FIGURES_DIR / "multiclass_confusion_matrix.png"
     if cm_fig.exists():
