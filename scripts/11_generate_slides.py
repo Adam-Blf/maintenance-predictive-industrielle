@@ -107,10 +107,47 @@ def _add_title_bar(slide, title: str) -> None:
     )
 
 
-def _add_image_safe(slide, path: Path, left: float, top: float, width: float) -> None:
-    """Insère une image si le fichier existe, sinon skip silencieusement."""
-    if path.exists():
-        slide.shapes.add_picture(str(path), Inches(left), Inches(top), width=Inches(width))
+def _add_image_safe(
+    slide,
+    path: Path,
+    left: float,
+    top: float,
+    width: float,
+    max_height: float | None = None,
+    recenter: bool = True,
+) -> float:
+    """Insere une image en calculant la hauteur reelle via PIL.
+
+    Si `max_height` est fourni et que l'image scaled depasserait, on
+    reduit la largeur pour rester dans la zone disponible (evite que
+    l'image ecrase un textbox positionne en dessous).
+
+    Returns
+    -------
+    float
+        Hauteur reelle de l'image inseree (en inches) · utilisee par les
+        slides qui placent un textbox dynamiquement sous l'image.
+    """
+    if not path.exists():
+        return 0.0
+    from PIL import Image
+
+    with Image.open(path) as img:
+        px_w, px_h = img.size
+    scaled_h = width * px_h / px_w  # in inches, ratio preserve
+
+    # Si max_height est specifie et qu'on deborde, on reduit la largeur
+    # proportionnellement pour rester dans la zone disponible.
+    if max_height is not None and scaled_h > max_height:
+        scaled_h = max_height
+        width = scaled_h * px_w / px_h
+        if recenter:
+            left = (13.33 - width) / 2  # recentre horizontalement
+
+    slide.shapes.add_picture(
+        str(path), Inches(left), Inches(top), width=Inches(width), height=Inches(scaled_h)
+    )
+    return scaled_h
 
 
 def build_title_slide(prs: Presentation) -> None:
@@ -206,19 +243,19 @@ def build_context_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "1. Contexte métier et objectifs")
     bullets = [
-        "→  Capteurs IoT industriels génèrent en continu vibration / température / pression / RPM.",
-        "→  Une panne non anticipée provoque arrêt non planifié, coût correctif et perte de production.",
-        "→  Cible retenue : classification binaire `failure_within_24h` (panne dans 24h).",
-        "→  Tâches bonus : multi-classe `failure_type` + régression `rul_hours`.",
-        "→  Objectif : transformer le signal capteur en alerte exploitable → décision proactive.",
+        "Capteurs IoT industriels · vibration / température / pression / RPM en continu.",
+        "Une panne non anticipée provoque arrêt non planifié, coût correctif élevé.",
+        "Cible retenue : classification binaire failure_within_24h.",
+        "Tâches bonus : multi-classe failure_type + régression rul_hours.",
+        "Objectif : transformer le signal capteur en alerte exploitable.",
     ]
     _add_textbox(
         slide,
-        "\n\n".join(bullets),
-        0.6,
+        "\n\n".join("•  " + b for b in bullets),
+        0.7,
         1.3,
-        12.1,
-        5.5,
+        12.0,
+        5.8,
         size=18,
         color=COLOR_DARK,
     )
@@ -227,12 +264,21 @@ def build_context_slide(prs: Presentation) -> None:
 def build_architecture_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "2. Architecture du système")
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "diagram_architecture.png", 0.5, 1.2, 12.3)
+    # Zone disponible · entre titre (y=0.9) et caption (~y=6.5) → max 5.4
+    img_top = 1.2
+    img_h = _add_image_safe(
+        slide,
+        REPORTS_FIGURES_DIR / "diagram_architecture.png",
+        0.5,
+        img_top,
+        12.3,
+        max_height=5.2,
+    )
     _add_textbox(
         slide,
         "Architecture médaillon Bronze / Silver / Gold · pipeline reproductible · API + Dashboard.",
         0.5,
-        6.7,
+        img_top + img_h + 0.2,
         12.3,
         0.6,
         size=14,
@@ -244,30 +290,47 @@ def build_architecture_slide(prs: Presentation) -> None:
 def build_methodology_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "3. Méthodologie · 4 modèles comparés")
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "diagram_ml_pipeline.png", 0.5, 1.2, 12.3)
+    img_top = 1.2
+    img_h = _add_image_safe(
+        slide,
+        REPORTS_FIGURES_DIR / "diagram_ml_pipeline.png",
+        0.5,
+        img_top,
+        12.3,
+        max_height=4.0,
+    )
     bullets = [
         "Logistic Regression · baseline interprétable",
         "Random Forest · ensemble d'arbres, capture les non-linéarités",
         "XGBoost · gradient boosting, état de l'art tabulaire",
         "MLP 64-32-16 · Deep Learning (early stopping, alpha = 1e-3)",
     ]
+    # Bullets · 1 par ligne pour eviter la superposition horizontale.
     _add_textbox(
         slide,
-        "  ·  ".join(bullets),
-        0.5,
-        5.4,
-        12.3,
-        1.5,
-        size=14,
+        "\n".join("•  " + b for b in bullets),
+        0.8,
+        img_top + img_h + 0.3,
+        11.7,
+        1.8,
+        size=15,
         color=COLOR_DARK,
-        align="center",
+        align="left",
     )
 
 
 def build_results_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "4. Résultats · comparaison des 4 modèles")
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "metrics_comparison_barplot.png", 0.5, 1.2, 12.3)
+    img_top = 1.1
+    img_h = _add_image_safe(
+        slide,
+        REPORTS_FIGURES_DIR / "metrics_comparison_barplot.png",
+        0.5,
+        img_top,
+        12.3,
+        max_height=5.0,
+    )
 
     # Lecture du modèle final.
     final_name_path = MODELS_DIR / "final_model_name.txt"
@@ -280,7 +343,7 @@ def build_results_slide(prs: Presentation) -> None:
         slide,
         f"Modèle candidat retenu : {final_name} (compromis F1 / stabilité CV / interprétabilité)",
         0.5,
-        6.6,
+        img_top + img_h + 0.25,
         12.3,
         0.6,
         size=16,
@@ -293,35 +356,56 @@ def build_results_slide(prs: Presentation) -> None:
 def build_curves_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "5. ROC + Precision-Recall")
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "roc_curves_comparison.png", 0.3, 1.1, 6.4)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "pr_curves_comparison.png", 6.7, 1.1, 6.4)
+    # 2 images côte à côte · contrainte hauteur pour eviter overflow.
+    _add_image_safe(
+        slide,
+        REPORTS_FIGURES_DIR / "roc_curves_comparison.png",
+        0.3,
+        1.1,
+        6.4,
+        max_height=5.5,
+        recenter=False,
+    )
+    _add_image_safe(
+        slide,
+        REPORTS_FIGURES_DIR / "pr_curves_comparison.png",
+        6.7,
+        1.1,
+        6.4,
+        max_height=5.5,
+        recenter=False,
+    )
 
 
 def build_interpret_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "6. Interprétabilité · SHAP")
-
-    # Cherche le shap_summary du best model.
     final_name = (MODELS_DIR / "final_model_name.txt").read_text(encoding="utf-8").strip()
-    _add_image_safe(
+    # 2 images côte à côte · recenter=False pour ne pas se chevaucher.
+    h1 = _add_image_safe(
         slide,
         REPORTS_FIGURES_DIR / f"shap_summary_{final_name}.png",
-        0.5,
+        0.3,
         1.1,
         7.0,
+        max_height=5.4,
+        recenter=False,
     )
-    _add_image_safe(
+    h2 = _add_image_safe(
         slide,
         REPORTS_FIGURES_DIR / f"shap_bar_{final_name}.png",
-        7.7,
-        1.5,
-        5.3,
+        7.5,
+        1.4,
+        5.5,
+        max_height=4.8,
+        recenter=False,
     )
+    bottom = 1.1 + max(h1, h2) + 0.2
     _add_textbox(
         slide,
         "Vibration_rms · Temperature_motor · Maintenance_age_days = top 3 variables explicatives.",
         0.5,
-        6.8,
+        bottom,
         12.3,
         0.5,
         size=14,
@@ -337,16 +421,16 @@ def build_industrialization_slide(prs: Presentation) -> None:
     bullets = [
         "Dashboard Streamlit · 5 onglets, CSS personnalisé charte EFREI",
         "API REST FastAPI · /predict, /health, /model-info (Pydantic v2)",
-        "Architecture front -> API -> modèle (joblib) reproduisant un environnement de production",
-        "Container Docker + docker-compose pour reproductibilité (`docker compose up`)",
+        "Architecture front → API → modèle (joblib), pratiques production",
+        "Container Docker + docker-compose, démarrage en docker compose up",
     ]
     _add_textbox(
         slide,
-        "\n\n".join("→  " + b for b in bullets),
-        0.6,
+        "\n\n".join("•  " + b for b in bullets),
+        0.7,
         1.3,
-        12.1,
-        5.5,
+        12.0,
+        5.8,
         size=18,
         color=COLOR_DARK,
     )
@@ -356,12 +440,20 @@ def build_eco_slide(prs: Presentation) -> None:
     """Slide écoresponsabilité (CodeCarbon)."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "8. Écoresponsabilité (RNCP C4.3)")
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "compute_cost_comparison.png", 0.5, 1.1, 12.3)
+    img_top = 1.1
+    img_h = _add_image_safe(
+        slide,
+        REPORTS_FIGURES_DIR / "compute_cost_comparison.png",
+        0.5,
+        img_top,
+        12.3,
+        max_height=5.0,
+    )
     _add_textbox(
         slide,
         "Empreinte CO2 mesurée via CodeCarbon · mix énergétique France ~80 gCO2/kWh.",
         0.5,
-        6.7,
+        img_top + img_h + 0.25,
         12.3,
         0.5,
         size=14,
@@ -382,11 +474,11 @@ def build_conclusion_slide(prs: Presentation) -> None:
     ]
     _add_textbox(
         slide,
-        "\n\n".join("→  " + b for b in bullets),
-        0.6,
+        "\n\n".join("•  " + b for b in bullets),
+        0.7,
         1.3,
-        12.1,
-        5.5,
+        12.0,
+        5.8,
         size=18,
         color=COLOR_DARK,
     )
