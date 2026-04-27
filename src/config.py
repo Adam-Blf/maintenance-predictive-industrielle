@@ -36,6 +36,8 @@ REPORTS_DIR: Path = PROJECT_ROOT / "reports"
 # Logo EFREI utilisé en page de garde du rapport et dans le dashboard.
 ASSETS_DIR: Path = PROJECT_ROOT / "assets"
 EFREI_LOGO: Path = ASSETS_DIR / "logo_efrei.png"
+# Variante blanche du logo EFREI · pour les slides à fond sombre (navy).
+EFREI_LOGO_WHITE: Path = ASSETS_DIR / "logo_efrei_white.png"
 
 # Nom canonique du dataset (cohérent avec le sujet officiel Kaggle).
 DATASET_FILENAME: str = "industrial_machine_maintenance.csv"

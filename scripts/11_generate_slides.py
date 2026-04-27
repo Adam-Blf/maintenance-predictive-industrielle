@@ -34,6 +34,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config import (  # noqa: E402
     EFREI_LOGO,
+    EFREI_LOGO_WHITE,
     MODELS_DIR,
     REPORTS_DIR,
     REPORTS_FIGURES_DIR,
@@ -487,8 +488,10 @@ def build_conclusion_slide(prs: Presentation) -> None:
 def build_thanks_slide(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _set_slide_background(slide, COLOR_NAVY)
-    if EFREI_LOGO.exists():
-        slide.shapes.add_picture(str(EFREI_LOGO), Inches(4.65), Inches(0.7), height=Inches(1.2))
+    # Variante blanche du logo (fond navy) sinon fallback sur la version standard.
+    logo_path = EFREI_LOGO_WHITE if EFREI_LOGO_WHITE.exists() else EFREI_LOGO
+    if logo_path.exists():
+        slide.shapes.add_picture(str(logo_path), Inches(4.65), Inches(0.7), height=Inches(1.2))
     _add_textbox(
         slide,
         "Merci pour votre attention",
