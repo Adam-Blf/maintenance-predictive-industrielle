@@ -530,8 +530,8 @@ def build_section_dataset(pdf: ProjectReportPDF) -> None:
     pdf.h2("2.5 Correlations entre features")
     pdf.figure(
         REPORTS_FIGURES_DIR / "eda_correlation_heatmap.png",
-        "Figure 5 · Matrice de correlation. Les correlations élevées entre "
-        "voltage, current et power_consumption sont attendues (P=UI). "
+        "Figure 5 · Matrice de correlation. La correlation rpm/current_phase_avg "
+        "et temperature_motor/ambient_temp est attendue (lois physiques). "
         "Aucune redondance critique justifiant la suppression d'une variable.",
     )
 

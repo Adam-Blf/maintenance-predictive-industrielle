@@ -46,16 +46,17 @@ def test_config_paths() -> None:
 
 
 def test_synthetic_dataset_shape() -> None:
-    """Le générateur synthétique respecte les specs du sujet."""
+    """Le fallback synthétique respecte le schéma officiel Kaggle v3.0."""
     from src.data_loader import generate_synthetic_dataset
 
     df = generate_synthetic_dataset(n_samples=1000, seed=42)
-    # 16 colonnes (10 num + 1 cat + 1 ts + 1 id + 3 cibles).
-    assert len(df.columns) == 16
+    # 15 colonnes Kaggle v3.0 (7 num + 2 cat + ts + id + 4 cibles).
+    assert len(df.columns) == 15
     assert len(df) == 1000
     assert df["failure_within_24h"].isin([0, 1]).all()
     assert (df["rul_hours"] >= 0).all()
-    assert df["operating_mode"].isin(["Normal", "HighLoad", "Idle", "Maintenance"]).all()
+    assert df["operating_mode"].isin(["normal", "idle", "peak"]).all()
+    assert df["machine_type"].isin(["CNC", "Pump", "Compressor", "Robotic Arm"]).all()
 
 
 def test_preprocessor_builds() -> None:

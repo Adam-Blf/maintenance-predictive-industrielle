@@ -41,9 +41,12 @@ EFREI_LOGO_WHITE: Path = ASSETS_DIR / "logo_efrei_white.png"
 # Variante noire monochrome du logo EFREI · pour impression noir et blanc.
 EFREI_LOGO_BLACK: Path = ASSETS_DIR / "logo_efrei_noir.png"
 
-# Nom canonique du dataset (cohérent avec le sujet officiel Kaggle).
-DATASET_FILENAME: str = "industrial_machine_maintenance.csv"
+# Nom canonique du dataset · fichier officiel Kaggle
+# `tatheerabbas/industrial-machine-predictive-maintenance` v3.0 (CC0 public
+# domain). 24 042 lignes · 15 colonnes · NaN volontaires (~4% capteurs).
+DATASET_FILENAME: str = "predictive_maintenance_v3.csv"
 DATASET_PATH: Path = DATA_RAW_DIR / DATASET_FILENAME
+DATASET_KAGGLE_REF: str = "tatheerabbas/industrial-machine-predictive-maintenance"
 
 # ---------------------------------------------------------------------------
 # Hyperparamètres de la phase de modélisation.
@@ -74,37 +77,41 @@ TARGET_MULTICLASS: str = "failure_type"
 # Variable cible tertiaire · régression sur la durée de vie restante.
 TARGET_REGRESSION: str = "rul_hours"
 
+# Variable cible quaternaire (bonus) · coût estimé de réparation.
+TARGET_REGRESSION_COST: str = "estimated_repair_cost"
+
 # ---------------------------------------------------------------------------
 # Variables d'entrée du dataset · capteurs physiques + contexte machine.
+# Schéma officiel Kaggle v3.0 · `predictive_maintenance_v3.csv`.
 # L'ordre est important · il sert de contrat d'interface pour le dashboard
 # Streamlit ET pour l'API FastAPI (validation Pydantic).
 # ---------------------------------------------------------------------------
 NUMERIC_FEATURES: list[str] = [
     "vibration_rms",  # Vibration efficace en mm/s (capteur principal)
     "temperature_motor",  # Température du moteur en °C
-    "rpm",  # Vitesse de rotation en tours/minute
+    "current_phase_avg",  # Courant absorbé moyen sur 3 phases en A
     "pressure_level",  # Pression du circuit hydraulique en bar
-    "ambient_temperature",  # Température ambiante en °C (contexte)
-    "humidity",  # Humidité relative en % (contexte)
-    "voltage",  # Tension d'alimentation en V
-    "current",  # Courant absorbé en A
-    "power_consumption",  # Puissance instantanée en kW
-    "maintenance_age_days",  # Jours depuis dernière maintenance
+    "rpm",  # Vitesse de rotation en tours/minute
+    "hours_since_maintenance",  # Heures depuis dernière maintenance
+    "ambient_temp",  # Température ambiante en °C (contexte)
 ]
 
-# Variables catégorielles · seul `operating_mode` est qualitatif.
-CATEGORICAL_FEATURES: list[str] = ["operating_mode"]
+# Variables catégorielles · mode opératoire + type de machine.
+CATEGORICAL_FEATURES: list[str] = ["operating_mode", "machine_type"]
 
-# Modes opératoires possibles · valeurs canoniques du dataset.
-OPERATING_MODES: list[str] = ["Normal", "HighLoad", "Idle", "Maintenance"]
+# Modes opératoires possibles · valeurs canoniques du dataset Kaggle.
+OPERATING_MODES: list[str] = ["normal", "idle", "peak"]
+
+# Types de machine du parc industriel simulé.
+MACHINE_TYPES: list[str] = ["CNC", "Pump", "Compressor", "Robotic Arm"]
 
 # Types de panne possibles (classification multi-classe).
 FAILURE_TYPES: list[str] = [
-    "None",  # Pas de panne (machine saine)
-    "Mechanical",  # Usure mécanique (roulement, axe)
-    "Electrical",  # Défaut électrique (court-circuit, surtension)
-    "Thermal",  # Surchauffe / refroidissement insuffisant
-    "Hydraulic",  # Fuite ou perte de pression
+    "none",  # Pas de panne (machine saine)
+    "bearing",  # Usure roulement (mécanique)
+    "motor_overheat",  # Surchauffe moteur (thermique)
+    "hydraulic",  # Fuite ou perte de pression hydraulique
+    "electrical",  # Défaut électrique (surintensité, sous-tension)
 ]
 
 # Liste complète des features (utilisée pour bâtir le ColumnTransformer).

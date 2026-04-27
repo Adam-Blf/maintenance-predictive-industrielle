@@ -82,18 +82,18 @@ class SensorReading(BaseModel):
 
     vibration_rms: float = Field(..., ge=0.0, le=15.0, description="Vibration RMS (mm/s)")
     temperature_motor: float = Field(..., ge=-20.0, le=160.0, description="Température moteur (°C)")
+    current_phase_avg: float = Field(..., ge=0.0, le=40.0, description="Courant phase moyen (A)")
+    pressure_level: float = Field(..., ge=0.0, le=120.0, description="Pression (bar)")
     rpm: float = Field(..., ge=0.0, le=5000.0, description="Vitesse de rotation (tr/min)")
-    pressure_level: float = Field(..., ge=0.0, le=15.0, description="Pression (bar)")
-    ambient_temperature: float = Field(
-        ..., ge=-20.0, le=60.0, description="Température ambiante (°C)"
+    hours_since_maintenance: float = Field(
+        ..., ge=0.0, le=3000.0, description="Heures depuis dernière maintenance"
     )
-    humidity: float = Field(..., ge=0.0, le=100.0, description="Humidité relative (%)")
-    voltage: float = Field(..., ge=300.0, le=500.0, description="Tension (V)")
-    current: float = Field(..., ge=0.0, le=200.0, description="Courant (A)")
-    power_consumption: float = Field(..., ge=0.0, le=200.0, description="Puissance (kW)")
-    maintenance_age_days: int = Field(..., ge=0, le=2000, description="Jours depuis maintenance")
-    operating_mode: Literal["Normal", "HighLoad", "Idle", "Maintenance"] = Field(
+    ambient_temp: float = Field(..., ge=-20.0, le=60.0, description="Température ambiante (°C)")
+    operating_mode: Literal["normal", "idle", "peak"] = Field(
         ..., description="Mode opératoire"
+    )
+    machine_type: Literal["CNC", "Pump", "Compressor", "Robotic Arm"] = Field(
+        ..., description="Type de machine industrielle"
     )
 
     model_config = {
@@ -101,15 +101,13 @@ class SensorReading(BaseModel):
             "example": {
                 "vibration_rms": 4.2,
                 "temperature_motor": 78.5,
+                "current_phase_avg": 12.3,
+                "pressure_level": 58.7,
                 "rpm": 2100,
-                "pressure_level": 8.7,
-                "ambient_temperature": 24.1,
-                "humidity": 58.0,
-                "voltage": 402.1,
-                "current": 62.3,
-                "power_consumption": 21.3,
-                "maintenance_age_days": 180,
-                "operating_mode": "HighLoad",
+                "hours_since_maintenance": 320.0,
+                "ambient_temp": 24.1,
+                "operating_mode": "peak",
+                "machine_type": "CNC",
             }
         }
     }

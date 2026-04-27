@@ -56,15 +56,13 @@ def test_predict_valid(client) -> None:
     payload = {
         "vibration_rms": 4.2,
         "temperature_motor": 78.5,
+        "current_phase_avg": 12.3,
+        "pressure_level": 58.7,
         "rpm": 2100,
-        "pressure_level": 8.7,
-        "ambient_temperature": 24.1,
-        "humidity": 58.0,
-        "voltage": 402.1,
-        "current": 62.3,
-        "power_consumption": 21.3,
-        "maintenance_age_days": 180,
-        "operating_mode": "HighLoad",
+        "hours_since_maintenance": 320.0,
+        "ambient_temp": 24.1,
+        "operating_mode": "peak",
+        "machine_type": "CNC",
     }
     r = client.post("/predict", json=payload)
     assert r.status_code == 200
@@ -79,15 +77,13 @@ def test_predict_invalid_mode(client) -> None:
     payload = {
         "vibration_rms": 4.2,
         "temperature_motor": 78.5,
+        "current_phase_avg": 12.3,
+        "pressure_level": 58.7,
         "rpm": 2100,
-        "pressure_level": 8.7,
-        "ambient_temperature": 24.1,
-        "humidity": 58.0,
-        "voltage": 402.1,
-        "current": 62.3,
-        "power_consumption": 21.3,
-        "maintenance_age_days": 180,
+        "hours_since_maintenance": 320.0,
+        "ambient_temp": 24.1,
         "operating_mode": "Turbo",  # invalide
+        "machine_type": "CNC",
     }
     r = client.post("/predict", json=payload)
     assert r.status_code == 422
@@ -98,15 +94,13 @@ def test_predict_out_of_range(client) -> None:
     payload = {
         "vibration_rms": -50.0,  # négatif (hors ge=0)
         "temperature_motor": 78.5,
+        "current_phase_avg": 12.3,
+        "pressure_level": 58.7,
         "rpm": 2100,
-        "pressure_level": 8.7,
-        "ambient_temperature": 24.1,
-        "humidity": 58.0,
-        "voltage": 402.1,
-        "current": 62.3,
-        "power_consumption": 21.3,
-        "maintenance_age_days": 180,
-        "operating_mode": "Normal",
+        "hours_since_maintenance": 320.0,
+        "ambient_temp": 24.1,
+        "operating_mode": "normal",
+        "machine_type": "CNC",
     }
     r = client.post("/predict", json=payload)
     assert r.status_code == 422

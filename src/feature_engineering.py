@@ -6,13 +6,13 @@ Le sujet recommande explicitement d'envisager des variables derivees ·
 est plus informative que les variables brutes"* (cahier des charges,
 section Recommandations).
 
-Variables produites ·
+Variables produites · alignees sur le schema Kaggle v3.0.
   - **vibration_per_rpm** · ratio · normalise la vibration par la vitesse
     (capture le sur-frottement quel que soit le regime moteur).
   - **temp_above_ambient** · ecart thermique moteur / ambiant (capture
     la charge thermique reelle, independante de la temperature exterieure).
-  - **power_density** · puissance / rpm (capture la signature mecanique
-    de la transmission).
+  - **current_per_rpm** · ratio · courant absorbe / rpm (signature
+    de la charge electrique reelle, anomalie si plus eleve qu'attendu).
   - **age_x_vibration** · interaction · machine vieillissante qui vibre
     fortement = signal premonitoire fort.
   - **age_x_temperature** · interaction analogue.
@@ -29,12 +29,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-# Pression nominale par mode opératoire (cohérent avec le générateur).
+# Pression nominale par mode opératoire · valeurs observées dataset Kaggle v3.0.
 NOMINAL_PRESSURE: dict[str, float] = {
-    "Idle": 2.0,
-    "Normal": 6.5,
-    "HighLoad": 9.0,
-    "Maintenance": 4.0,
+    "idle": 15.0,
+    "normal": 35.0,
+    "peak": 60.0,
 }
 
 
@@ -50,17 +49,17 @@ def add_engineered_features(df: pd.DataFrame) -> pd.DataFrame:
     out["vibration_per_rpm"] = out["vibration_rms"] / np.maximum(out["rpm"], 1.0)
 
     # Ecart thermique moteur / ambiant.
-    out["temp_above_ambient"] = out["temperature_motor"] - out["ambient_temperature"]
+    out["temp_above_ambient"] = out["temperature_motor"] - out["ambient_temp"]
 
-    # Densite de puissance · power / rpm.
-    out["power_density"] = out["power_consumption"] / np.maximum(out["rpm"], 1.0)
+    # Ratio courant / rpm · signature de la charge electrique reelle.
+    out["current_per_rpm"] = out["current_phase_avg"] / np.maximum(out["rpm"], 1.0) * 1000.0
 
     # Interactions age x signaux dominants.
-    out["age_x_vibration"] = out["maintenance_age_days"] * out["vibration_rms"]
-    out["age_x_temperature"] = out["maintenance_age_days"] * out["temperature_motor"] / 100.0
+    out["age_x_vibration"] = out["hours_since_maintenance"] * out["vibration_rms"]
+    out["age_x_temperature"] = out["hours_since_maintenance"] * out["temperature_motor"] / 1000.0
 
     # Deviation a la pression nominale du mode opératoire.
-    nominal = out["operating_mode"].map(NOMINAL_PRESSURE).fillna(6.0)
+    nominal = out["operating_mode"].map(NOMINAL_PRESSURE).fillna(35.0)
     out["pressure_deviation"] = (out["pressure_level"] - nominal).abs()
 
     return out
@@ -71,7 +70,7 @@ def add_engineered_features(df: pd.DataFrame) -> pd.DataFrame:
 ENGINEERED_NUMERIC_FEATURES: list[str] = [
     "vibration_per_rpm",
     "temp_above_ambient",
-    "power_density",
+    "current_per_rpm",
     "age_x_vibration",
     "age_x_temperature",
     "pressure_deviation",

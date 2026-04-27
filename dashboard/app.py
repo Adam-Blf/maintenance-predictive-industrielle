@@ -767,7 +767,14 @@ def tab_simulator(model, df: pd.DataFrame, best_name: str) -> None:
         inputs["operating_mode"] = st.selectbox(
             "Mode opératoire",
             OPERATING_MODES,
-            index=OPERATING_MODES.index("Normal"),
+            index=OPERATING_MODES.index("normal"),
+        )
+        # Type de machine · ajouté avec le schéma Kaggle v3.0.
+        from src.config import MACHINE_TYPES  # noqa
+        inputs["machine_type"] = st.selectbox(
+            "Type de machine",
+            MACHINE_TYPES,
+            index=0,
         )
 
         do_predict = st.button("⚡ Lancer la prédiction", type="primary")
