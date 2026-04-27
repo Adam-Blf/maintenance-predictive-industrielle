@@ -15,10 +15,12 @@ models/*.pkl
 models/*.h5
 !models/.gitkeep
 
-# --- Sujets PDF originaux (non livrables) ---
-docs/sujet/
+# --- PDFs · on conserve le sujet officiel et le referentiel RNCP, on
+#     bloque tous les autres PDF accidentels (CV scolaires, etc.).
 *.pdf
 !reports/rapport_projet_data_science.pdf
+!docs/Projet M1 DE Sujet 1 - Maintenance Prédictive Industrielle.pdf
+!docs/Référentiel RNCP40875 .PDF
 
 # --- Caches Python ---
 __pycache__/
