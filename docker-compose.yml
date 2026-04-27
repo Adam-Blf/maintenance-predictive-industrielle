@@ -1,0 +1,38 @@
+# =============================================================================
+# docker compose · pile complete dev/demo
+# Lance API (port 8000) + Dashboard (port 8501) en deux containers
+# qui partagent le code source.
+# =============================================================================
+services:
+  api:
+    build: .
+    image: maintenance-predictive:latest
+    container_name: maintenance-api
+    ports:
+      - "8000:8000"
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import httpx; httpx.get('http://127.0.0.1:8000/health', timeout=3)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  dashboard:
+    build: .
+    image: maintenance-predictive:latest
+    container_name: maintenance-dashboard
+    ports:
+      - "8501:8501"
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - API_URL=http://api:8000
