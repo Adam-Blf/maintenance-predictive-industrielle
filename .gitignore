@@ -103,3 +103,15 @@ github_pat_*
 
 # --- Sortie Black/isort/Prettier ---
 .black-cache/
+
+# --- PyInstaller (build.py · regenerable via `python build.py`) ---
+*.spec
+MaintenancePredictive/
+
+# --- CodeCarbon (cachedir + traces emissions) ---
+cachedir/
+emissions.csv
+reports/codecarbon/
+
+# --- Joblib disk cache ---
+joblib_cache/
