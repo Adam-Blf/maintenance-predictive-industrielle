@@ -144,42 +144,58 @@ class ProjectReportPDF(FPDF):
         max_width: float = 165.0,
         new_page: bool = True,
     ) -> None:
-        """Insere une figure centree avec sa legende, sur sa propre page.
+        """Insère une figure centrée avec sa légende, sur sa propre page.
 
-        Le saut de page systematique (`new_page=True` par defaut) garantit
-        qu'aucune figure n'est tronquee ni superposee a un texte voisin.
-        Cela genere un rapport plus long mais bien plus aéré.
+        Le saut de page systématique (``new_page=True`` par défaut)
+        garantit qu'aucune figure n'est tronquée ni superposée à un
+        texte voisin. La hauteur réelle est calculée à partir des
+        dimensions PNG (PIL) afin que la légende soit positionnée
+        EN DESSOUS de l'image et non par-dessus.
         """
+        from PIL import Image  # import local · PIL deja en dépendance pandas
+
         if new_page:
             self.add_page()
 
-        # Titre de la figure (utilise comme h2 si sur sa propre page).
         if not path.exists():
             self.body(f"[Figure manquante · {path.name}]")
             return
 
-        # Centrage horizontal.
-        x_offset = (210 - max_width) / 2
+        # Mesure du ratio reel de l'image pour calculer la hauteur exacte
+        # apres scaling a `max_width`.
+        with Image.open(path) as img:
+            px_w, px_h = img.size
+        scaled_h = max_width * px_h / px_w  # mm
 
-        # On laisse au moins 4mm de marge avant l'image pour respirer.
-        self.ln(2)
-
-        # Hauteur disponible · de get_y() jusqu'a (h - footer_margin - caption).
+        # Hauteur disponible · page courante - position verticale
+        # actuelle - marge basse (footer) - hauteur reservee a la caption
+        # (~12mm pour 2 lignes de texte italique).
         available_h = self.h - self.get_y() - 35
-        # h=0 conserve le ratio. FPDF clippe automatiquement a max_width.
+        # Si l'image scaled depasse la hauteur dispo, on la reduit
+        # proportionnellement pour qu'elle tienne avec sa caption SUR LA
+        # MEME PAGE. Cela elimine les pages avec une caption orpheline.
+        if scaled_h > available_h:
+            scaled_h = available_h
+            scaled_w = scaled_h * px_w / px_h
+        else:
+            scaled_w = max_width
+        x_offset = (210 - scaled_w) / 2
+
+        # Marge avant l'image pour aérer.
+        self.ln(2)
+        y_top = self.get_y()
+
         self.image(
             str(path),
             x=x_offset,
-            y=self.get_y(),
-            w=max_width,
-            h=0,
+            y=y_top,
+            w=scaled_w,
+            h=scaled_h,
             keep_aspect_ratio=True,
         )
-        # Avancement vertical · on prend une hauteur prudente (ne renvoie
-        # pas la hauteur reelle apres scaling). 110mm convient a la plupart
-        # des figures matplotlib produites par le projet.
-        approximate_image_height = min(110, available_h - 10)
-        self.ln(approximate_image_height)
+        # On avance le curseur EXACTEMENT a la fin de l'image + marge,
+        # ce qui evite toute superposition entre l'image et la caption.
+        self.set_y(y_top + scaled_h + 4)
         self.caption(caption)
 
     def metrics_table(self, df: pd.DataFrame, title: str = "") -> None:

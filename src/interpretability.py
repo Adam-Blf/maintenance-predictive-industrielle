@@ -204,63 +204,68 @@ def compute_shap_values(
     try:
         explainer = shap.TreeExplainer(classifier)
         shap_values = explainer.shap_values(X_transformed_df)
-        # Pour RF binaire, shap_values peut être une liste [class0, class1].
-        # On garde la classe positive (panne).
-        if isinstance(shap_values, list):
-            shap_values = shap_values[1]
     except Exception:
         # Fallback · KernelExplainer sur petit échantillon de référence.
         background = X_transformed_df.sample(n=min(100, len(X_transformed_df)), random_state=42)
         explainer = shap.KernelExplainer(classifier.predict_proba, background)
         shap_values = explainer.shap_values(X_transformed_df, nsamples=100)
-        if isinstance(shap_values, list):
-            shap_values = shap_values[1]
+
+    # Normalisation de la forme · les versions recentes de SHAP retournent
+    # soit une liste [class_0, class_1] (ancien format), soit un ndarray
+    # 3D (n_samples, n_features, n_classes) pour le binaire. On extrait
+    # systematiquement la contribution de la classe positive (panne).
+    import numpy as np
+
+    if isinstance(shap_values, list):
+        shap_values = shap_values[1]
+    elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 3:
+        shap_values = shap_values[:, :, 1]
 
     # ------------------------------------------------------------------
     # SHAP Summary Plot · vue globale, top features les plus influentes.
-    # Chaque point = une prédiction, couleur = valeur de la feature.
-    # ------------------------------------------------------------------
-    plt.figure(figsize=(10, 7))
-    shap.summary_plot(
-        shap_values,
-        X_transformed_df,
-        show=False,
-        plot_type="dot",
-        max_display=12,
-    )
-    plt.title(
-        f"SHAP Summary · {model_name}",
-        fontsize=13,
-        fontweight="bold",
-        color=COLOR_EFREI_DARK,
-    )
-    plt.tight_layout()
-    summary_path = output_dir / f"shap_summary_{model_name}.png"
-    plt.savefig(summary_path, dpi=150, bbox_inches="tight")
-    plt.close()
-
-    # ------------------------------------------------------------------
-    # SHAP Bar Plot · importance globale (moyenne des |SHAP|).
-    # Plus lisible pour le rapport non technique.
+    # Le titre est mis APRES summary_plot (qui cree son propre axes) avec
+    # `pad=20` pour ne pas se superposer au premier label de feature.
     # ------------------------------------------------------------------
     plt.figure(figsize=(10, 6))
     shap.summary_plot(
         shap_values,
         X_transformed_df,
         show=False,
+        plot_type="dot",
+        max_display=10,
+    )
+    plt.title(
+        f"SHAP Summary · {model_name}",
+        fontsize=12,
+        fontweight="bold",
+        color=COLOR_EFREI_DARK,
+        pad=18,
+    )
+    summary_path = output_dir / f"shap_summary_{model_name}.png"
+    plt.savefig(summary_path, dpi=140, bbox_inches="tight", pad_inches=0.3)
+    plt.close()
+
+    # ------------------------------------------------------------------
+    # SHAP Bar Plot · importance globale (moyenne des |SHAP|).
+    # ------------------------------------------------------------------
+    plt.figure(figsize=(10, 5.5))
+    shap.summary_plot(
+        shap_values,
+        X_transformed_df,
+        show=False,
         plot_type="bar",
-        max_display=12,
+        max_display=10,
         color=COLOR_EFREI_BLUE,
     )
     plt.title(
         f"SHAP Importance globale · {model_name}",
-        fontsize=13,
+        fontsize=12,
         fontweight="bold",
         color=COLOR_EFREI_DARK,
+        pad=18,
     )
-    plt.tight_layout()
     bar_path = output_dir / f"shap_bar_{model_name}.png"
-    plt.savefig(bar_path, dpi=150, bbox_inches="tight")
+    plt.savefig(bar_path, dpi=140, bbox_inches="tight", pad_inches=0.3)
     plt.close()
 
     return summary_path, bar_path
