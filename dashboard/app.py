@@ -65,128 +65,394 @@ st.set_page_config(
 # cartes arrondies, badges colorés pour les KPI).
 # ---------------------------------------------------------------------------
 CUSTOM_CSS = """
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-    /* Police globale plus moderne que la sans-serif Streamlit par défaut */
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* =====================================================================
+       Design tokens · charte EFREI premium
+       Une seule source de vérité pour les couleurs, ombres, radii, espacement.
+       Inspiration · Apple HIG, Linear, Vercel (sobriété + densité d'information).
+    ====================================================================== */
+    :root {
+        --ef-primary: #1E88E5;
+        --ef-primary-deep: #0D47A1;
+        --ef-primary-soft: #E3F2FD;
+        --ef-success: #10B981;
+        --ef-success-soft: #D1FAE5;
+        --ef-warning: #F59E0B;
+        --ef-warning-soft: #FEF3C7;
+        --ef-danger: #EF4444;
+        --ef-danger-soft: #FEE2E2;
+
+        --ef-bg: #F8FAFC;
+        --ef-surface: #FFFFFF;
+        --ef-surface-2: #F1F5F9;
+        --ef-border: #E2E8F0;
+        --ef-border-strong: #CBD5E1;
+        --ef-text: #0F172A;
+        --ef-text-soft: #475569;
+        --ef-text-muted: #94A3B8;
+
+        --ef-radius-sm: 10px;
+        --ef-radius-md: 14px;
+        --ef-radius-lg: 20px;
+        --ef-radius-xl: 28px;
+
+        --ef-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+        --ef-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+        --ef-shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.10), 0 4px 8px rgba(15, 23, 42, 0.04);
+        --ef-shadow-blue: 0 8px 24px rgba(30, 136, 229, 0.18);
+
+        --ef-easing: cubic-bezier(0.32, 0.72, 0, 1);
+        --ef-font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        --ef-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
     }
 
-    /* Header principal · gradient bleu EFREI vers bleu nuit */
+    /* =====================================================================
+       Reset · base typographique et fond
+    ====================================================================== */
+    html, body {
+        color: var(--ef-text) !important;
+        background-color: var(--ef-bg) !important;
+        font-family: var(--ef-font-sans);
+        font-feature-settings: 'cv11', 'ss01', 'ss03';
+        -webkit-font-smoothing: antialiased;
+    }
+    .stApp { background-color: var(--ef-bg) !important; }
+    .main .block-container {
+        padding-top: 1.4rem;
+        padding-bottom: 4rem;
+        max-width: 1320px;
+    }
+    .main .block-container p,
+    .main .block-container li,
+    .main .block-container span,
+    .main .block-container label,
+    .main .block-container div { color: var(--ef-text); }
+    .main .block-container h1 {
+        color: var(--ef-primary-deep) !important;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+    }
+    .main .block-container h2,
+    .main .block-container h3 {
+        color: var(--ef-primary-deep) !important;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+    }
+    .main .block-container h4 {
+        color: var(--ef-text) !important;
+        font-weight: 700;
+    }
+    /* Le header gradient garde son texte blanc · exception explicite. */
+    .main-header, .main-header * { color: #FFFFFF !important; }
+
+    /* =====================================================================
+       Header principal · vague de bleu EFREI avec halo lumineux
+    ====================================================================== */
     .main-header {
-        background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
-        padding: 28px 36px;
-        border-radius: 18px;
-        color: white;
-        margin-bottom: 28px;
-        box-shadow: 0 8px 24px rgba(13, 71, 161, 0.18);
+        position: relative;
+        background:
+            radial-gradient(circle at top right, rgba(255,255,255,0.18) 0%, transparent 55%),
+            linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
+        padding: 32px 40px;
+        border-radius: var(--ef-radius-xl);
+        color: #FFFFFF;
+        margin-bottom: 32px;
+        box-shadow: var(--ef-shadow-blue);
+        overflow: hidden;
+    }
+    .main-header::after {
+        content: '';
+        position: absolute;
+        right: -120px; top: -120px;
+        width: 320px; height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
+        pointer-events: none;
     }
     .main-header h1 {
         margin: 0;
-        font-size: 2.0rem;
+        font-size: 2.05rem;
         font-weight: 800;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.035em;
+        line-height: 1.15;
     }
     .main-header p {
-        margin: 6px 0 0 0;
-        opacity: 0.92;
+        margin: 8px 0 0 0;
+        opacity: 0.95;
         font-size: 1.05rem;
+        font-weight: 500;
     }
     .main-header .authors {
-        font-size: 0.88rem;
-        opacity: 0.78;
-        margin-top: 4px;
+        font-size: 0.86rem;
+        opacity: 0.82;
+        margin-top: 6px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
     }
 
-    /* Cartes KPI · bord coloré à gauche selon la sémantique */
+    /* =====================================================================
+       Cartes KPI · ombre douce, hover lift, valeur en JetBrains Mono
+    ====================================================================== */
     .kpi-card {
-        background: white;
-        padding: 18px 22px;
-        border-radius: 14px;
-        border-left: 5px solid #1E88E5;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        background: var(--ef-surface);
+        padding: 20px 22px;
+        border-radius: var(--ef-radius-md);
+        border: 1px solid var(--ef-border);
+        border-left: 4px solid var(--ef-primary);
+        box-shadow: var(--ef-shadow-sm);
         height: 100%;
+        position: relative;
+        transition: transform 0.25s var(--ef-easing),
+                    box-shadow 0.25s var(--ef-easing),
+                    border-color 0.25s var(--ef-easing);
     }
-    .kpi-card.alert { border-left-color: #E53935; }
-    .kpi-card.success { border-left-color: #43A047; }
-    .kpi-card.warning { border-left-color: #FB8C00; }
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--ef-shadow-md);
+        border-color: var(--ef-border-strong);
+    }
+    .kpi-card.alert { border-left-color: var(--ef-danger); }
+    .kpi-card.success { border-left-color: var(--ef-success); }
+    .kpi-card.warning { border-left-color: var(--ef-warning); }
     .kpi-card .kpi-label {
-        font-size: 0.82rem;
-        color: #5F6368;
+        font-size: 0.74rem;
+        color: var(--ef-text-soft);
         text-transform: uppercase;
-        letter-spacing: 0.6px;
+        letter-spacing: 0.08em;
         font-weight: 600;
     }
     .kpi-card .kpi-value {
+        font-family: var(--ef-font-mono);
         font-size: 1.95rem;
-        font-weight: 800;
-        color: #0D47A1;
-        margin-top: 4px;
-        line-height: 1.1;
+        font-weight: 700;
+        color: var(--ef-primary-deep);
+        margin-top: 6px;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
     }
+    .kpi-card.alert   .kpi-value { color: var(--ef-danger); }
+    .kpi-card.success .kpi-value { color: var(--ef-success); }
+    .kpi-card.warning .kpi-value { color: var(--ef-warning); }
     .kpi-card .kpi-sub {
-        font-size: 0.82rem;
-        color: #80868B;
-        margin-top: 4px;
+        font-size: 0.78rem;
+        color: var(--ef-text-muted);
+        margin-top: 6px;
+        font-weight: 500;
     }
 
-    /* Badges de prédiction · pilule colorée */
+    /* =====================================================================
+       Badges de prédiction · pastille glassmorphism
+    ====================================================================== */
     .badge {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         padding: 6px 14px;
         border-radius: 999px;
         font-weight: 700;
-        font-size: 0.92rem;
-        letter-spacing: 0.4px;
+        font-size: 0.86rem;
+        letter-spacing: 0.02em;
+        backdrop-filter: blur(8px);
     }
-    .badge-success { background: #E8F5E9; color: #1B5E20; border: 1px solid #43A047; }
-    .badge-warning { background: #FFF3E0; color: #E65100; border: 1px solid #FB8C00; }
-    .badge-alert { background: #FFEBEE; color: #B71C1C; border: 1px solid #E53935; }
+    .badge-success { background: var(--ef-success-soft); color: #065F46; border: 1px solid var(--ef-success); }
+    .badge-warning { background: var(--ef-warning-soft); color: #92400E; border: 1px solid var(--ef-warning); }
+    .badge-alert   { background: var(--ef-danger-soft);  color: #991B1B; border: 1px solid var(--ef-danger); }
 
-    /* Sidebar · fond légèrement teinté pour la distinguer */
+    /* =====================================================================
+       Sidebar · branding EFREI subtil, séparateurs nets
+    ====================================================================== */
     section[data-testid="stSidebar"] {
-        background: #F4F7FB;
-        border-right: 1px solid #DDE5EE;
+        background: linear-gradient(180deg, #FFFFFF 0%, var(--ef-surface-2) 100%) !important;
+        border-right: 1px solid var(--ef-border);
     }
-    section[data-testid="stSidebar"] h2 {
-        color: #0D47A1 !important;
+    section[data-testid="stSidebar"] *,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] div { color: var(--ef-text) !important; }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3 {
+        color: var(--ef-primary-deep) !important;
         font-weight: 700 !important;
+        letter-spacing: -0.015em;
+    }
+    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] hr {
+        border-color: var(--ef-border);
     }
 
-    /* Onglets · ligne de soulignement EFREI */
+    /* =====================================================================
+       Onglets · indicateur slide animé
+    ====================================================================== */
     .stTabs [data-baseweb="tab-list"] {
         gap: 4px;
-        border-bottom: 2px solid #E3EAF2;
+        border-bottom: 1px solid var(--ef-border);
+        padding-bottom: 0;
     }
     .stTabs [data-baseweb="tab"] {
         background: transparent;
         font-weight: 600;
-        color: #5F6368;
-        padding: 10px 18px;
+        color: var(--ef-text-soft);
+        padding: 12px 20px;
+        border-radius: var(--ef-radius-sm) var(--ef-radius-sm) 0 0;
+        transition: color 0.2s var(--ef-easing), background 0.2s var(--ef-easing);
+        font-size: 0.95rem;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: var(--ef-primary-deep);
+        background: var(--ef-surface-2);
     }
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        color: #1E88E5;
-        border-bottom: 3px solid #1E88E5;
+        color: var(--ef-primary) !important;
+        border-bottom: 3px solid var(--ef-primary);
+        background: transparent;
+    }
+
+    /* =====================================================================
+       Inputs · radius cohérent, focus EFREI ring
+    ====================================================================== */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input,
+    .stSelectbox > div > div,
+    .stMultiSelect > div > div {
+        border-radius: var(--ef-radius-sm) !important;
+        border-color: var(--ef-border) !important;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .stTextInput > div > div > input:focus,
+    .stNumberInput > div > div > input:focus {
+        border-color: var(--ef-primary) !important;
+        box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15) !important;
+    }
+
+    /* Sliders · pouce EFREI avec halo */
+    .stSlider [data-baseweb="slider"] [role="slider"] {
+        background: var(--ef-primary) !important;
+        border-color: var(--ef-primary) !important;
+        box-shadow: 0 0 0 6px rgba(30, 136, 229, 0.12) !important;
+    }
+    .stSlider [data-baseweb="slider"] > div:nth-child(2) > div {
+        background: var(--ef-primary) !important;
+    }
+
+    /* =====================================================================
+       Boutons · primary gradient EFREI, secondary outline
+    ====================================================================== */
+    .stButton > button {
+        border-radius: var(--ef-radius-sm);
+        font-weight: 600;
+        transition: transform 0.15s var(--ef-easing), box-shadow 0.2s var(--ef-easing);
+        letter-spacing: 0.01em;
+    }
+    .stButton > button:hover { transform: translateY(-1px); }
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.25);
+    }
+    .stButton > button[kind="primary"]:hover {
+        box-shadow: 0 8px 20px rgba(30, 136, 229, 0.35);
+    }
+
+    /* Métriques natives Streamlit · style cohérent KPI */
+    [data-testid="stMetric"] {
+        background: var(--ef-surface);
+        border: 1px solid var(--ef-border);
+        border-radius: var(--ef-radius-md);
+        padding: 18px 20px;
+        box-shadow: var(--ef-shadow-sm);
+        transition: box-shadow 0.25s var(--ef-easing);
+    }
+    [data-testid="stMetric"]:hover { box-shadow: var(--ef-shadow-md); }
+    [data-testid="stMetricValue"] {
+        font-family: var(--ef-font-mono) !important;
+        font-variant-numeric: tabular-nums;
+        color: var(--ef-primary-deep) !important;
+        font-weight: 700 !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: var(--ef-text-soft) !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.74rem !important;
+    }
+
+    /* Tables · zebrage subtil, header EFREI */
+    .stDataFrame, [data-testid="stTable"] {
+        border-radius: var(--ef-radius-md);
+        overflow: hidden;
+        border: 1px solid var(--ef-border);
+        box-shadow: var(--ef-shadow-sm);
+    }
+    .stDataFrame thead tr th {
+        background: var(--ef-surface-2) !important;
+        color: var(--ef-primary-deep) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 0.78rem !important;
+    }
+
+    /* Alerts (info/warning/error/success) · radius + ombre */
+    [data-testid="stAlert"] {
+        border-radius: var(--ef-radius-md);
+        border: 1px solid var(--ef-border);
+        box-shadow: var(--ef-shadow-sm);
+    }
+
+    /* Expanders · bord doux et hover */
+    [data-testid="stExpander"] {
+        border-radius: var(--ef-radius-md);
+        border: 1px solid var(--ef-border) !important;
+        background: var(--ef-surface);
+        box-shadow: var(--ef-shadow-sm);
+        transition: box-shadow 0.25s var(--ef-easing);
+    }
+    [data-testid="stExpander"]:hover { box-shadow: var(--ef-shadow-md); }
+
+    /* Code blocks · monospace JetBrains */
+    code, pre, .stCode {
+        font-family: var(--ef-font-mono) !important;
+        font-feature-settings: 'liga' 0;
     }
 
     /* Footer minimaliste */
     .footer {
         text-align: center;
-        padding: 18px;
-        color: #80868B;
-        font-size: 0.85rem;
-        margin-top: 40px;
-        border-top: 1px solid #E3EAF2;
+        padding: 24px;
+        color: var(--ef-text-muted);
+        font-size: 0.82rem;
+        margin-top: 56px;
+        border-top: 1px solid var(--ef-border);
+        font-weight: 500;
+        letter-spacing: 0.01em;
     }
 
-    /* Boutons primaires · couleur EFREI */
-    .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
-        color: white;
-        border: none;
-        font-weight: 700;
-        padding: 8px 22px;
-        border-radius: 10px;
+    /* Animation · fade-in subtil au chargement */
+    @keyframes ef-fade-in {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
+    .main-header, .kpi-card, [data-testid="stMetric"] {
+        animation: ef-fade-in 0.45s var(--ef-easing) both;
+    }
+
+    /* Scrollbar fine et discrète (Webkit) */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+        background: var(--ef-border-strong);
+        border-radius: 999px;
+        border: 2px solid var(--ef-bg);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ef-text-muted); }
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)

@@ -1,0 +1,17 @@
+# Theme Streamlit force en mode "light" pour eviter les bascules en dark
+# qui cassent les contrastes du CSS custom (texte blanc sur fond blanc).
+# Charte EFREI · bleu institutionnel sur fond ivoire.
+
+[theme]
+base = "light"
+primaryColor = "#1E88E5"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F4F7FB"
+textColor = "#1F2937"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
