@@ -126,12 +126,17 @@ class ProjectReportPDF(FPDF):
         self.ln(2)
 
     def bullet(self, text: str) -> None:
-        """Item de liste à puce."""
+        """Item de liste a puce.
+
+        On utilise un tiret cadratin ASCII compatible avec la police
+        Helvetica builtin de FPDF2 (qui ne supporte que Latin-1, donc pas
+        le caractere Unicode U+2022 BULLET).
+        """
         self.set_font("Helvetica", "", 10.5)
         self.set_text_color(*COLOR_DARK_TEXT)
-        # Indentation · puce + tab.
+        # Indentation · tiret court + tab.
         self.cell(6, 5.5, "")
-        self.cell(4, 5.5, "•")
+        self.cell(4, 5.5, "-")
         self.multi_cell(0, 5.5, text, align="L")
         self.ln(0.5)
 
