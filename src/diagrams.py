@@ -294,21 +294,30 @@ def render_bias_variance_diagram(
         "XGBoost": 6.5,
         "MLP": 7.8,
     }
+    # Hauteurs d'annotation alternées (basse / haute) pour éviter la
+    # superposition entre les 4 étiquettes proches en y.
+    annotation_offsets = {
+        "Logistic\nRegression": 2.6,
+        "Random\nForest": 4.0,
+        "XGBoost": 2.6,
+        "MLP": 4.0,
+    }
     for model, pos in model_positions.items():
         # Calcul de l'erreur totale au point de complexité du modèle.
         idx = (np.abs(complexity - pos)).argmin()
         ax.axvline(pos, color="gray", linestyle=":", alpha=0.4)
+        offset = annotation_offsets.get(model, 2.6)
         ax.annotate(
             model,
             xy=(pos, total[idx]),
-            xytext=(pos, total[idx] + 1.5),
+            xytext=(pos, total[idx] + offset),
             ha="center",
             fontsize=9,
             fontweight="bold",
             arrowprops=dict(arrowstyle="->", color="gray", lw=1),
         )
 
-    ax.set_xlabel("Complexité du modèle →", fontsize=11)
+    ax.set_xlabel("Complexité du modèle (faible -> forte)", fontsize=11)
     ax.set_ylabel("Erreur de généralisation", fontsize=11)
     ax.set_title(
         "Compromis Biais-Variance · positionnement des 4 modèles",
@@ -316,9 +325,12 @@ def render_bias_variance_diagram(
         fontweight="bold",
         color=COLOR_EFREI_DARK,
     )
-    ax.legend(loc="upper right", framealpha=0.95)
+    # Légende positionnée en haut à droite avec ylim généreux pour
+    # laisser de la place aux annotations de modèles sans superposition.
+    ax.legend(loc="upper left", framealpha=0.95, fontsize=10)
     ax.grid(True, alpha=0.3)
-    ax.set_ylim(0, 10)
+    ax.set_ylim(0, 12)
+    ax.set_xlim(-0.3, 10.5)
 
     plt.tight_layout()
     output_path = output_dir / "diagram_bias_variance.png"
