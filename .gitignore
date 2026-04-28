@@ -22,6 +22,10 @@ models/*.h5
 !docs/Projet M1 DE Sujet 1 - Maintenance Prédictive Industrielle.pdf
 !docs/Référentiel RNCP40875 .PDF
 
+# --- Fichiers de lock Office (Word/Excel/PowerPoint en cours d'edition) ---
+~$*
+*.lock
+
 # --- Caches Python ---
 __pycache__/
 *.py[cod]
