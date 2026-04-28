@@ -45,14 +45,24 @@ def test_config_paths() -> None:
     assert "logo_efrei" in EFREI_LOGO.name
 
 
-def test_synthetic_dataset_shape() -> None:
-    """Le fallback synthétique respecte le schéma officiel Kaggle v3.0."""
-    from src.data_loader import generate_synthetic_dataset
+def test_real_dataset_shape() -> None:
+    """Le CSV Kaggle officiel respecte le schéma attendu (15 colonnes v3.0).
 
-    df = generate_synthetic_dataset(n_samples=1000, seed=42)
+    Politique projet · pas de génération synthétique. Si le CSV n'a pas
+    été téléchargé dans data/raw/, le test est skippé proprement.
+    """
+    import pytest
+
+    from src.config import DATASET_PATH
+    from src.data_loader import load_dataset
+
+    if not DATASET_PATH.exists():
+        pytest.skip(f"Dataset Kaggle absent · {DATASET_PATH}")
+
+    df = load_dataset()
     # 15 colonnes Kaggle v3.0 (7 num + 2 cat + ts + id + 4 cibles).
     assert len(df.columns) == 15
-    assert len(df) == 1000
+    assert len(df) > 0
     assert df["failure_within_24h"].isin([0, 1]).all()
     assert (df["rul_hours"] >= 0).all()
     assert df["operating_mode"].isin(["normal", "idle", "peak"]).all()
