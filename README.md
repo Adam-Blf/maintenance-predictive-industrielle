@@ -264,7 +264,11 @@ python scripts/04_interpret.py
 python scripts/05_generate_diagrams.py
 ```
 
-Le **rapport PDF** et le **support PPTX** sont rédigés à la main (Word/LaTeX, PowerPoint) à partir des artefacts produits par 02-05 + 07-10. Pas de pipeline de génération automatique.
+Les livrables jury sont déjà présents dans le repo ·
+- `reports/06/rapport_projet_data_science.pdf` · ~30 pages, 2.4 Mo
+- `reports/11/presentation.pptx` · 24 slides charte EFREI, 2.2 Mo
+
+(Pas de script de génération · ces livrables sont versionnés tels quels.)
 
 ### Tâches bonus (optionnelles, exécutables après 03)
 
@@ -678,10 +682,14 @@ maintenance-predictive-industrielle/
 │   ├── 03/                               # Sorties scripts/03_train_models.py (métriques + CM + ROC/PR)
 │   ├── 04/                               # Sorties scripts/04_interpret.py (SHAP + permutation)
 │   ├── 05/                               # Sorties scripts/05_generate_diagrams.py (4 schémas)
+│   ├── 06/                               # Rapport PDF jury (livrable versionné)
+│   │   └── rapport_projet_data_science.pdf
 │   ├── 07/                               # Sorties scripts/07_train_multiclass.py (bonus)
 │   ├── 08/                               # Sorties scripts/08_train_regression.py (RUL, bonus)
 │   ├── 09/                               # Sorties scripts/09_tune_hyperparams.py (Optuna, bonus)
-│   └── 10/                               # Sorties scripts/10_calibrate.py (calibration, bonus)
+│   ├── 10/                               # Sorties scripts/10_calibrate.py (calibration, bonus)
+│   └── 11/                               # Présentation PPTX jury (livrable versionné)
+│       └── presentation.pptx
 ├── scripts/
 │   ├── 02_eda.py                         # Analyse exploratoire (8 graphiques + analyse NaN)
 │   ├── 03_train_models.py                # Entraînement 4 modèles + CV + évaluation

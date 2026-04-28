@@ -61,7 +61,7 @@ Dataset utilisé · `tatheerabbas/industrial-machine-predictive-maintenance` v3.
 
 | Critère | Évaluation | Preuve |
 |---|---|---|
-| **C4.1** Stratégie d'intégration de l'IA | Cas d'usage pertinent + ROI | Onglet "Impact économique" du dashboard · section "Contexte métier" du rapport (livré manuellement) |
+| **C4.1** Stratégie d'intégration de l'IA | Cas d'usage pertinent + ROI | Onglet "Impact économique" du dashboard · `reports/06/rapport_projet_data_science.pdf` section "Contexte métier" |
 | **C4.2** Développer modèles prédictifs | Modèle efficace | 4 modèles (LogReg, RF, XGBoost, MLP) · `models/final_model.joblib` · F1=0.886 sur test |
 | **C4.3** Évaluer + écoresponsabilité | Comparaison rigoureuse + impact carbone | 6 métriques · CV 5-fold · `reports/03/metrics_summary.csv` colonnes `fit_time_s` + `predict_time_ms` · `reports/03/compute_cost_comparison.png` (temps train vs latence inference) |
 
@@ -72,8 +72,8 @@ Dataset utilisé · `tatheerabbas/industrial-machine-predictive-maintenance` v3.
 | Livrable | État | Chemin |
 |---|---|---|
 | **Code source de la solution fonctionnelle** | ✅ | Tout le repo · `src/` + `scripts/` + `dashboard/` + `api/` + `tests/` |
-| **Rapport du projet** | 📝 manuel | `rapport_projet_data_science.pdf` rédigé à la main (Word/LaTeX) à partir des artefacts `reports/02..05,07-10/` |
-| **Support de Présentation** | 📝 manuel | `presentation.pptx` rédigé à la main (PowerPoint) avec les figures `reports/02..05,07-10/` |
+| **Rapport du projet** | ✅ | `reports/06/rapport_projet_data_science.pdf` (~30 pages, 2.4 Mo) |
+| **Support de Présentation** | ✅ | `reports/11/presentation.pptx` (24 slides, 2.2 Mo, charte EFREI) |
 | Documentation technique annexe (optionnel) | ✅ | `docs/adr/` (Architecture Decision Records) · `README.md` (badges, arbo, install) |
 | Soumission Git/GitHub (optionnel) | ✅ | https://github.com/Adam-Blf/maintenance-predictive-industrielle |
 
@@ -103,7 +103,7 @@ python scripts/02_eda.py             # EDA → reports/02/
 python scripts/03_train_models.py    # train 4 modèles → models/ + reports/03/
 python scripts/04_interpret.py       # SHAP → reports/04/
 python scripts/05_generate_diagrams.py  # schémas → reports/05/
-# Rapport PDF + slides PPTX rédigés ensuite à la main avec les figures produites
+# Le rapport PDF (reports/06/) et le PPTX (reports/11/) sont livrés tels quels dans le repo
 
 # 4. Lancer dashboard ou API
 streamlit run dashboard/app.py       # dashboard métier
