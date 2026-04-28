@@ -4,27 +4,27 @@
     "accuracy":0.8425868164,
     "macro_f1":0.6751176585,
     "weighted_f1":0.8703984315,
-    "fit_time_s":0.2479276657
+    "fit_time_s":0.2493810654
   },
   {
     "model_name":"random_forest",
     "accuracy":0.9638178415,
     "macro_f1":0.8985251608,
     "weighted_f1":0.9646949927,
-    "fit_time_s":1.0637106895
+    "fit_time_s":0.9579138756
   },
   {
     "model_name":"xgboost",
     "accuracy":0.9769182782,
     "macro_f1":0.9312919915,
     "weighted_f1":0.9767772519,
-    "fit_time_s":1.847401619
+    "fit_time_s":1.800270319
   },
   {
     "model_name":"mlp",
     "accuracy":0.9436473279,
     "macro_f1":0.8114619928,
     "weighted_f1":0.943139732,
-    "fit_time_s":2.6800811291
+    "fit_time_s":2.7836463451
   }
 ]
