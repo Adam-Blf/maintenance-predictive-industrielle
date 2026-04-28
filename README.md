@@ -131,7 +131,7 @@ IoT Sensors (vibration, T°, RPM, pression, ...)
         ↓
     CSV Bronze (raw)  [data/raw/predictive_maintenance_v3.csv]
         ↓
-  01_generate_dataset.py  (si pas de CSV, synthétique seed=42)
+  01_generate_dataset.py  (verification CSV Kaggle officiel · jamais synthetique)
         ↓
     02_eda.py  (7 graphiques, stats descriptives)
         ↓
@@ -702,7 +702,7 @@ maintenance-predictive-industrielle/
 │   ├── rapport_projet_data_science.pdf   # Rapport final (20+ pages)
 │   └── presentation.pptx                 # Slides (11 slides EFREI, bonus)
 ├── scripts/
-│   ├── 01_generate_dataset.py            # Génération synthétique ou chargement Kaggle
+│   ├── 01_generate_dataset.py            # Verification CSV Kaggle officiel + schema
 │   ├── 02_eda.py                         # Analyse exploratoire (7 graphiques)
 │   ├── 03_train_models.py                # Entraînement 4 modèles + CV + évaluation
 │   ├── 04_interpret.py                   # SHAP + Permutation Importance
@@ -1069,10 +1069,12 @@ python scripts/03_train_models.py
 # → Résultats identiques à la machine d'origin Adam/Emilien
 ```
 
-### Dataset reproductible
+### Dataset · CSV Kaggle officiel uniquement
 
-- **Option 1 · Kaggle API** · `kaggle datasets download tatheerabbas/industrial-machine-predictive-maintenance`
-- **Option 2 · Synthétique** · `scripts/01_generate_dataset.py` génère 24 042 samples aléatoires avec seed=42, même schéma 15 colonnes.
+- **Source unique** · Kaggle CC0 · `tatheerabbas/industrial-machine-predictive-maintenance`
+- **Téléchargement** · `kaggle datasets download tatheerabbas/industrial-machine-predictive-maintenance` puis extraire `predictive_maintenance_v3.csv` dans `data/raw/`
+- **Vérification** · `python scripts/01_generate_dataset.py` valide la présence + le schéma 15 colonnes (échoue si absent, ne génère JAMAIS de synthétique)
+- **Note** · `src.data_loader.generate_synthetic_dataset()` reste disponible mais réservée aux **tests unitaires** (`tests/test_*.py`). Le pipeline production n'y a jamais recours.
 
 ### Vérification simple
 

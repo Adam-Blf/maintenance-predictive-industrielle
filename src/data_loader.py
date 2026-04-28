@@ -74,9 +74,13 @@ def load_dataset(path: Path | None = None) -> pd.DataFrame:
     if not target_path.exists():
         raise FileNotFoundError(
             f"Dataset introuvable · {target_path}\n"
-            f"Soit télécharger le CSV officiel Kaggle ({DATASET_KAGGLE_REF}) "
-            f"dans data/raw/, soit exécuter `python scripts/01_generate_dataset.py` "
-            "pour générer une version synthétique au schéma officiel."
+            f"Telecharger le CSV officiel Kaggle ({DATASET_KAGGLE_REF}) "
+            "depuis https://www.kaggle.com/datasets/tatheerabbas/"
+            "industrial-machine-predictive-maintenance, extraire le "
+            "fichier predictive_maintenance_v3.csv dans data/raw/, "
+            "puis relancer `python scripts/01_generate_dataset.py` pour valider. "
+            "Le projet n'utilise JAMAIS de dataset synthetique en production · "
+            "generate_synthetic_dataset() est reservee aux tests unitaires."
         )
     df = pd.read_csv(target_path, low_memory=False)
     _validate_schema(df)

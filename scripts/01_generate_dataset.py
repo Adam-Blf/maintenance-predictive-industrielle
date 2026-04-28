@@ -1,32 +1,42 @@
 # -*- coding: utf-8 -*-
-"""Script · génération du dataset synthétique reproductible.
+"""Script · vérification du dataset Kaggle officiel.
 
 Rôle dans le pipeline
 ----------------------
-Script n°1, à exécuter EN PREMIER si le fichier CSV Kaggle officiel
-n'est pas disponible localement. Il génère un dataset synthétique au
-schéma exact de `predictive_maintenance_v3.csv` pour que tous les
-scripts suivants puissent tourner sans connexion Internet ni clé API.
+Script n°1, étape de validation avant tout traitement. Vérifie que le
+CSV Kaggle officiel `predictive_maintenance_v3.csv` est bien présent
+dans `data/raw/`, qu'il respecte le schéma attendu (15 colonnes), et
+affiche un résumé statistique pour validation visuelle.
+
+**Règle stricte** · ce script ne crée JAMAIS de CSV. Le projet doit
+toujours utiliser le dataset Kaggle officiel CC0 ·
+`https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance`
+(téléchargement manuel ou via MCP Kaggle).
+
+Si le CSV est absent, le script échoue avec un message d'erreur clair
+indiquant comment l'obtenir. Aucune génération synthétique en
+production · `src.data_loader.generate_synthetic_dataset()` reste
+disponible **uniquement** pour les tests unitaires (`tests/test_*.py`).
 
 Entrées
 -------
-Aucun fichier d'entrée requis.
+data/raw/predictive_maintenance_v3.csv
+    Dataset Kaggle officiel · 24 042 lignes, 15 colonnes.
 
 Sorties
 -------
-data/raw/predictive_maintenance_v3.csv
-    Dataset synthétique · 24 042 lignes, 15 colonnes, schéma officiel
-    Kaggle v3.0, seedé à RANDOM_STATE=42 pour reproductibilité.
+Aucun fichier produit. Console uniquement (résumé stats).
 
 Pré-requis
 ----------
+- CSV Kaggle déjà présent dans `data/raw/`.
 - Package `src` accessible (ajouté via sys.path.insert).
-- Dossier `data/raw/` créé automatiquement par `ensure_directories()`.
 
 Lien cahier des charges
 -----------------------
-Répond à la contrainte "données reproductibles hors ligne" imposée par
-le sujet pour permettre la relecture par l'évaluateur sans accès Kaggle.
+Répond à C3.1 (préparation des données) en validant la qualité des
+données AVANT modélisation. Cohérent avec la règle anti-data-leakage ·
+on charge le dataset complet pour validation, sans le modifier.
 
 Usage ·
     python scripts/01_generate_dataset.py
@@ -43,56 +53,64 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.config import DATASET_PATH, RANDOM_STATE, ensure_directories  # noqa: E402
-from src.data_loader import generate_synthetic_dataset  # noqa: E402
+from src.config import DATASET_KAGGLE_REF, DATASET_PATH, ensure_directories  # noqa: E402
+from src.data_loader import load_dataset  # noqa: E402
 
 
 def main() -> None:
-    """Point d'entrée du script de génération du dataset synthétique.
+    """Vérifie la présence et la validité du CSV Kaggle officiel.
 
     Comportement ·
-    - Si `data/raw/predictive_maintenance_v3.csv` existe déjà (cas du
-      CSV Kaggle officiel téléchargé manuellement), on saute la
-      génération synthétique pour ne PAS écraser le vrai dataset.
-      Pour forcer une régénération synthétique, supprimer le CSV avant
-      de relancer le script.
-    - Sinon · on génère la version synthétique de secours (seedée à 42)
-      et on l'écrit. Affiche un résumé de validation rapide pour
-      confirmer que les proportions de pannes et la distribution RUL
-      sont cohérentes.
+    1. Vérifie l'existence du fichier `data/raw/predictive_maintenance_v3.csv`.
+    2. Si absent · affiche les instructions de téléchargement Kaggle puis
+       sort en code 1 (ne génère JAMAIS de CSV synthétique).
+    3. Si présent · charge via `load_dataset()` (qui valide le schéma à
+       15 colonnes) et affiche un résumé descriptif.
     """
-    # Crée l'arborescence si elle n'existe pas (idempotent).
     ensure_directories()
 
-    # Garde-fou anti-écrasement · si le CSV Kaggle officiel est déjà en
-    # place, on ne le remplace surtout pas par une version synthétique.
-    if DATASET_PATH.exists():
-        size_kb = DATASET_PATH.stat().st_size / 1024
-        print(f"[skip] CSV déjà présent · {DATASET_PATH} ({size_kb:.0f} Ko)")
-        print("       Pour forcer une régénération synthétique, supprimer le")
-        print("       fichier ci-dessus puis relancer ce script.")
-        return
+    if not DATASET_PATH.exists():
+        print("[ERROR] CSV Kaggle officiel introuvable.")
+        print(f"        Chemin attendu · {DATASET_PATH}")
+        print()
+        print("  Pour l'obtenir ·")
+        print(f"  1. Telecharger depuis Kaggle · {DATASET_KAGGLE_REF}")
+        print("     (URL · https://www.kaggle.com/datasets/"
+              "tatheerabbas/industrial-machine-predictive-maintenance)")
+        print("  2. Extraire le fichier predictive_maintenance_v3.csv")
+        print(f"  3. Le placer dans · {DATASET_PATH.parent}")
+        print("  4. Relancer ce script pour valider.")
+        print()
+        print("  Note · ce script NE genere PAS de CSV synthetique en")
+        print("  production. La fonction synthetique reste disponible")
+        print("  uniquement pour les tests unitaires (tests/test_*.py).")
+        sys.exit(1)
 
-    print(f"[1/3] Génération de 24 042 enregistrements (seed={RANDOM_STATE})...")
-    df = generate_synthetic_dataset(n_samples=24_042, seed=RANDOM_STATE)
+    size_kb = DATASET_PATH.stat().st_size / 1024
+    print(f"[1/3] CSV present · {DATASET_PATH} ({size_kb:.0f} Ko)")
 
-    print(f"[2/3] Sauvegarde vers {DATASET_PATH}")
-    df.to_csv(DATASET_PATH, index=False, encoding="utf-8")
+    # Charge + valide le schema (lance une exception si colonnes manquantes).
+    print("[2/3] Validation du schema (15 colonnes officielles)...")
+    df = load_dataset()
+    print(f"      OK · shape = {df.shape}")
 
-    # Petit résumé pour validation visuelle rapide en console.
+    # Resume descriptif pour validation visuelle rapide en console.
     print("[3/3] Statistiques rapides ·")
-    print(f"  - Shape · {df.shape}")
     print(f"  - Pannes 24h · {df['failure_within_24h'].mean():.2%}")
     print("  - Distribution failure_type ·")
     for k, v in df["failure_type"].value_counts().items():
-        print(f"      {k:<12} · {v:>6} ({v/len(df):.1%})")
+        print(f"      {k:<15} · {v:>6} ({v/len(df):.1%})")
     print(
         "  - RUL hours · "
         f"min={df['rul_hours'].min()}, "
         f"median={df['rul_hours'].median():.0f}, "
         f"max={df['rul_hours'].max()}"
     )
-    print("Done.")
+    nan_cells = int(df.isna().sum().sum())
+    nan_cols = int((df.isna().sum() > 0).sum())
+    print(f"  - NaN total · {nan_cells:,} cellules sur {nan_cols} colonnes")
+    print()
+    print("Done. CSV pret pour le pipeline (script 02_eda.py et suivants).")
 
 
 if __name__ == "__main__":
