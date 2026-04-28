@@ -66,9 +66,9 @@ def load_dataset(path: Path | None = None) -> pd.DataFrame:
     Raises
     ------
     FileNotFoundError
-        Si le fichier n'existe pas. Indique l'utilisateur de relancer
-        `python scripts/01_generate_dataset.py` qui génère un dataset
-        synthétique au schéma officiel à défaut du téléchargement Kaggle.
+        Si le fichier n'existe pas. Indique a l'utilisateur de
+        telecharger le CSV Kaggle officiel et de l'extraire dans
+        `data/raw/`. Aucun fallback synthetique en production.
     """
     target_path = path if path is not None else DATASET_PATH
     if not target_path.exists():
@@ -78,7 +78,7 @@ def load_dataset(path: Path | None = None) -> pd.DataFrame:
             "depuis https://www.kaggle.com/datasets/tatheerabbas/"
             "industrial-machine-predictive-maintenance, extraire le "
             "fichier predictive_maintenance_v3.csv dans data/raw/, "
-            "puis relancer `python scripts/01_generate_dataset.py` pour valider. "
+            "puis relancer `python scripts/02_eda.py`. "
             "Le projet n'utilise JAMAIS de dataset synthetique en production · "
             "generate_synthetic_dataset() est reservee aux tests unitaires."
         )

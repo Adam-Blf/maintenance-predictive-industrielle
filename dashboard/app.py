@@ -921,10 +921,9 @@ def main() -> None:
     if not (MODELS_DIR / "final_model.joblib").exists():
         st.error(
             "Modèle final introuvable. Exécuter dans l'ordre ·\n\n"
-            "1. `python scripts/01_generate_dataset.py`\n"
-            "2. `python scripts/02_eda.py`\n"
-            "3. `python scripts/03_train_models.py`\n"
-            "4. `python scripts/04_interpret.py`"
+            "1. `python scripts/02_eda.py`\n"
+            "2. `python scripts/03_train_models.py`\n"
+            "3. `python scripts/04_interpret.py`"
         )
         return
 

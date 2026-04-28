@@ -131,9 +131,7 @@ IoT Sensors (vibration, T°, RPM, pression, ...)
         ↓
     CSV Bronze (raw)  [data/raw/predictive_maintenance_v3.csv]
         ↓
-  01_generate_dataset.py  (verification CSV Kaggle officiel · jamais synthetique)
-        ↓
-    02_eda.py  (7 graphiques, stats descriptives)
+    02_eda.py  (8 graphiques + stats descriptives + analyse NaN)
         ↓
   DATA PREPARATION (SILVER LAYER)
   ├─ Validation schema (Pandera)
@@ -253,13 +251,12 @@ Les scripts doivent s'exécuter **strictement dans l'ordre** · chaque étape pr
 ### Exécution complète (~45 min)
 
 ```bash
-# 1. Génération dataset synthétique (si pas de CSV) ou chargement Kaggle
-python scripts/01_generate_dataset.py
+# Pré-requis · CSV Kaggle officiel placé dans data/raw/predictive_maintenance_v3.csv
 
-# 2. Analyse exploratoire (EDA) · 7 graphiques + stats
+# 1. Analyse exploratoire (EDA) · 8 graphiques + stats + analyse NaN
 python scripts/02_eda.py
 
-# 3. Entraînement 4 modèles + évaluation comparative + CV stratifiée
+# 2. Entraînement 4 modèles + évaluation comparative + CV stratifiée
 python scripts/03_train_models.py
 
 # 4. Interprétabilité (SHAP + Permutation Importance)
@@ -702,8 +699,7 @@ maintenance-predictive-industrielle/
 │   ├── rapport_projet_data_science.pdf   # Rapport final (20+ pages)
 │   └── presentation.pptx                 # Slides (11 slides EFREI, bonus)
 ├── scripts/
-│   ├── 01_generate_dataset.py            # Verification CSV Kaggle officiel + schema
-│   ├── 02_eda.py                         # Analyse exploratoire (7 graphiques)
+│   ├── 02_eda.py                         # Analyse exploratoire (8 graphiques + analyse NaN)
 │   ├── 03_train_models.py                # Entraînement 4 modèles + CV + évaluation
 │   ├── 04_interpret.py                   # SHAP + Permutation Importance
 │   ├── 05_generate_diagrams.py           # Schémas pédagogiques (4 PNG)
@@ -1064,7 +1060,8 @@ Relancer après clone ·
 
 ```bash
 pip install -r requirements.txt  # versions exactes
-python scripts/01_generate_dataset.py
+# Pré-requis · CSV Kaggle dans data/raw/predictive_maintenance_v3.csv
+python scripts/02_eda.py
 python scripts/03_train_models.py
 # → Résultats identiques à la machine d'origin Adam/Emilien
 ```
@@ -1073,7 +1070,7 @@ python scripts/03_train_models.py
 
 - **Source unique** · Kaggle CC0 · `tatheerabbas/industrial-machine-predictive-maintenance`
 - **Téléchargement** · `kaggle datasets download tatheerabbas/industrial-machine-predictive-maintenance` puis extraire `predictive_maintenance_v3.csv` dans `data/raw/`
-- **Vérification** · `python scripts/01_generate_dataset.py` valide la présence + le schéma 15 colonnes (échoue si absent, ne génère JAMAIS de synthétique)
+- **Validation auto** · `src.data_loader.load_dataset()` valide le schéma 15 colonnes à chaque chargement, lève `FileNotFoundError` avec instructions Kaggle si absent
 - **Note** · `src.data_loader.generate_synthetic_dataset()` reste disponible mais réservée aux **tests unitaires** (`tests/test_*.py`). Le pipeline production n'y a jamais recours.
 
 ### Vérification simple
@@ -1344,10 +1341,7 @@ Le preprocessing et les modèles se réajustent automatiquement.
 ```bash
 # Option 1 · télécharger Kaggle
 kaggle datasets download -d tatheerabbas/industrial-machine-predictive-maintenance
-unzip && mv data/raw/
-
-# Option 2 · générer synthétique
-python scripts/01_generate_dataset.py
+unzip archive.zip -d data/raw/
 ```
 
 ### Erreur · MemoryError lors de SHAP KernelExplainer
