@@ -1,9 +1,27 @@
 # -*- coding: utf-8 -*-
 """Configuration centrale du projet Maintenance Prédictive Industrielle.
 
-Ce module isole tous les chemins, constantes et hyperparamètres globaux pour
-éviter la duplication entre scripts et faciliter la maintenance. On adopte
-une approche `pathlib` pour rester portable Windows/Linux/macOS.
+Principe d'architecture
+-----------------------
+Ce module est le "single source of truth" de toutes les constantes du
+projet : chemins de fichiers, hyperparamètres de modélisation, noms de
+colonnes et charte graphique. Aucun autre module ne doit hardcoder ces
+valeurs ; ils importent depuis `src.config`.
+
+Cette approche offre trois avantages ·
+  1. **Maintenabilité** · un seul endroit à modifier pour changer le
+     chemin du dataset, la graine aléatoire ou les features.
+  2. **Portabilité** · tous les chemins sont calculés relativement à
+     `PROJECT_ROOT` (résolu via `__file__`), indépendamment du cwd.
+  3. **Reproductibilité** · la graine RANDOM_STATE est propagée à tous
+     les algorithmes stochastiques pour garantir des résultats
+     bit-à-bit identiques entre exécutions.
+
+Conventions d'import
+---------------------
+Les scripts dans `scripts/` ajoutent `PROJECT_ROOT` au `sys.path` et
+importent ainsi : `from src.config import DATASET_PATH, RANDOM_STATE`.
+Le dashboard et l'API font de même depuis leur propre répertoire.
 """
 
 from __future__ import annotations
@@ -131,9 +149,18 @@ COLOR_WARNING: str = "#FB8C00"  # Orange avertissement
 def ensure_directories() -> None:
     """Crée tous les dossiers de sortie s'ils n'existent pas déjà.
 
-    Cette fonction est idempotente · on peut l'appeler plusieurs fois sans
-    effet de bord. Elle est invoquée en début de chaque script du dossier
-    `scripts/` pour garantir que l'environnement d'exécution est prêt.
+    Idempotente · appeler plusieurs fois ne crée pas de doublons ni ne
+    lève d'exception si le dossier existe déjà (`exist_ok=True`).
+    Invoquée en début de chaque script de `scripts/` pour garantir que
+    l'environnement d'exécution est prêt avant tout accès disque.
+
+    Dossiers créés
+    --------------
+    - data/raw         · CSV Kaggle brut ou synthétique.
+    - data/processed   · exports train/test splits.
+    - models/          · artefacts joblib des modèles entraînés.
+    - reports/figures/ · PNG des graphiques (EDA, métriques, SHAP, etc.).
+    - reports/         · rapport PDF, CSV métriques, JSON résultats.
     """
     for directory in (
         DATA_RAW_DIR,

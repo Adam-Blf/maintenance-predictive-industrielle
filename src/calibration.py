@@ -1,16 +1,38 @@
 # -*- coding: utf-8 -*-
 """Calibration probabiliste + tuning du seuil de decision.
 
-Sur un probleme de maintenance predictive desequilibre, le seuil de
-decision par defaut (0.5) n'est presque jamais le bon · il faut le
-choisir en fonction du COUT relatif des faux negatifs (panne ratee)
-versus faux positifs (intervention inutile).
+Pourquoi calibrer les probabilités ?
+--------------------------------------
+Les modèles ML produisent des scores de confiance qui ne sont pas
+forcément des probabilités bien calibrées. Par exemple, un Random Forest
+qui retourne 0.8 ne signifie pas nécessairement que la panne survient
+8 fois sur 10 : les arbres ont tendance à saturer vers 0 et 1 (surcalibration
+vers les extrêmes). La calibration Platt (régression logistique sur les
+scores) ou Isotonic Regression corrige ce biais.
 
-On produit ·
-  - **Reliability diagram** + Brier score · qualite de la calibration.
-  - **Courbe cout/recall** · seuil optimal pour un ratio coût FN/FP donné.
-  - **Threshold optimal** · sauvegarde dans `models/optimal_threshold.json`
-    pour utilisation par l'API et le dashboard.
+Platt vs Isotonic
+------------------
+- **Platt (sigmoid)** : ajuste les scores via une sigmoïde S(x) = 1/(1+e^{-ax-b}).
+  Convient quand la distorsion est monotone et approximativement sigmoïdale.
+  Plus robuste avec peu de données de validation (~300 lignes).
+- **Isotonic Regression** : ajustement non-paramétrique par contrainte de
+  monotonie. Plus flexible mais nécessite plus de données (>1000 lignes)
+  pour éviter le surapprentissage. Choix préféré quand les données sont
+  suffisantes et que la distorsion n'est pas sigmoïdale.
+
+Dans notre cas, on évalue la qualité via le Brier Score et le reliability
+diagram plutôt qu'en appliquant une calibration post-hoc, car les pipelines
+sklearn incluent déjà une sortie `predict_proba` bien calibrée pour XGBoost
+et LogReg.
+
+Pourquoi le seuil 0.5 n'est pas le bon ?
+------------------------------------------
+Sur un problème de maintenance prédictive déséquilibré (15% de pannes),
+le seuil par défaut (0.5) favorise systématiquement les non-pannes.
+Le seuil optimal dépend du coût relatif des erreurs ·
+  - Faux négatif (panne ratée) : arrêt de production, ~1000 EUR.
+  - Faux positif (intervention inutile) : main d'oeuvre, ~100 EUR.
+Avec un ratio 10:1, le seuil optimal se situe généralement entre 0.2 et 0.4.
 """
 
 from __future__ import annotations
@@ -41,9 +63,34 @@ def reliability_diagram(
 ) -> tuple[Path, float]:
     """Trace le reliability diagram + retourne le Brier score.
 
-    Un modele parfaitement calibre suit la diagonale · la frequence
-    observee dans chaque bucket de probabilite egale la probabilite
-    moyenne predite.
+    Un modèle parfaitement calibré suit la diagonale · la fréquence
+    observée dans chaque bucket de probabilité égale la probabilité
+    moyenne prédite (ex. dans le bucket [0.6, 0.7], 65% des machines
+    tombent effectivement en panne).
+
+    Parameters
+    ----------
+    y_true : np.ndarray
+        Étiquettes réelles binaires (0 = sain, 1 = panne dans 24h).
+    y_proba : np.ndarray
+        Probabilités de la classe positive produites par le modèle.
+    model_name : str
+        Nom affiché sur le titre du graphique.
+    output_dir : Path
+        Dossier de sortie PNG.
+
+    Returns
+    -------
+    tuple[Path, float]
+        Chemin du PNG généré et valeur du Brier Score.
+        Brier score = MSE entre probabilités prédites et labels 0/1.
+        0 = calibration parfaite, 0.25 = modèle aléatoire, plus élevé = pire.
+
+    Notes
+    -----
+    `strategy="quantile"` : les bins contiennent le même nombre
+    d'observations (plus robuste que des bins de largeur fixe sur
+    des distributions asymétriques comme les scores de panne).
     """
     prob_true, prob_pred = calibration_curve(y_true, y_proba, n_bins=10, strategy="quantile")
     brier = float(brier_score_loss(y_true, y_proba))

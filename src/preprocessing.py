@@ -2,18 +2,32 @@
 """Pipeline de préparation des données.
 
 Ce module construit un `ColumnTransformer` sklearn qui applique en une
-seule passe :
+seule passe ·
   - imputation médiane sur les variables numériques (robuste aux outliers
     capteurs),
   - standardisation StandardScaler (centrage/réduction obligatoire pour
     le MLP et bénéfique pour les modèles à base de distance),
-  - encodage One-Hot pour `operating_mode` (faible cardinalité, pas de
-    risque d'explosion dimensionnelle).
+  - encodage One-Hot pour les variables catégorielles (faible cardinalité,
+    pas de risque d'explosion dimensionnelle).
 
+Garantie anti-data-leakage
+---------------------------
 Le pipeline est sérialisé via joblib pour être réappliqué à l'identique
-côté API et dashboard, ce qui élimine tout risque de **data leakage**
-(les statistiques d'imputation et de scaling sont calculées sur le
-train uniquement, jamais sur le test).
+côté API et dashboard. Le principe fondamental est que les statistiques
+de fit (médiane par colonne, moyenne/écart-type pour le scaling, classes
+connues pour l'OHE) sont UNIQUEMENT calculées sur le train set puis
+appliquées au test set. Ne jamais appeler `fit` ou `fit_transform` sur
+le test set.
+
+Ordre des transformations (numérique)
+---------------------------------------
+1. SimpleImputer (médiane) · remplace les NaN des capteurs IoT avant
+   toute opération arithmétique. L'ordre est crucial : standardiser
+   AVANT d'imputer produirait un StandardScaler dont la moyenne et
+   l'écart-type sont biaisés par les NaN (valeurs ignorées mais
+   comptées différemment selon les implémentations).
+2. StandardScaler · centrage/réduction après imputation sur des valeurs
+   toutes définies. Résultat : chaque feature a moyenne ~0, écart-type ~1.
 """
 
 from __future__ import annotations

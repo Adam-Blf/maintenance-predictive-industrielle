@@ -1,9 +1,46 @@
 # -*- coding: utf-8 -*-
 """Script · entraînement de la classification multi-classe (failure_type).
 
-Tâche bonus du sujet · identifier le type précis de panne. On filtre
-les machines en panne (failure_type != 'None') et on entraîne 4 modèles
-sur les types {Mechanical, Thermal, Electrical, Hydraulic}.
+Rôle dans le pipeline
+----------------------
+Script n°7, indépendant du script 03 (binaire). Peut être exécuté
+après le script 01 uniquement. Tâche bonus du sujet.
+
+Entrées
+-------
+data/raw/predictive_maintenance_v3.csv
+    Dataset complet (24 042 lignes). Filtrage sur les pannes dans le script.
+
+Sorties
+-------
+models/multiclass_{model}.joblib (x4)
+    Pipelines entraînés pour chacun des 4 modèles.
+models/multiclass_final.joblib
+    Copie du meilleur modèle (critère : macro-F1 sur test).
+models/multiclass_final_name.txt
+    Nom textuel du meilleur modèle.
+models/multiclass_classes.json
+    Liste ordonnée des classes (nécessaire pour décoder les prédictions
+    XGBoost qui retourne des entiers).
+reports/metrics_multiclass.csv / .json
+    Tableau comparatif des 4 modèles (accuracy, macro-F1, weighted-F1).
+reports/multiclass_confusion_matrix.png
+    Matrice de confusion normalisée du meilleur modèle.
+reports/multiclass_classification_report.json
+    Precision/Recall/F1 par classe pour le meilleur modèle.
+
+Pré-requis
+----------
+Script 01 exécuté (dataset disponible dans data/raw/).
+
+Lien cahier des charges
+-----------------------
+Classification multi-classe demandée explicitement comme tâche bonus
+dans le cahier des charges (section "Modélisation avancée"). Valorise
+la grille de notation sur les 5 types de pannes.
+
+Usage ·
+    python scripts/07_train_multiclass.py
 """
 
 from __future__ import annotations
@@ -53,7 +90,7 @@ from src.models_multiclass import (  # noqa: E402
 
 
 def main() -> None:
-    """Pipeline multi-classe."""
+    """Orchestre l'entraînement, l'évaluation et la persistance des 4 modèles multi-classe."""
     ensure_directories()
 
     print("[MULTICLASS] Chargement dataset...")

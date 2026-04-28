@@ -1,9 +1,42 @@
 # -*- coding: utf-8 -*-
 """Script · génération des schémas pédagogiques pour le rapport.
 
-Ces schémas (architecture, pipeline ML, biais-variance, workflow
-décisionnel) sont des illustrations conceptuelles construites avec
-matplotlib pur · aucune dépendance externe (PlantUML, Graphviz).
+Rôle dans le pipeline
+----------------------
+Script n°5, indépendant des données · peut être exécuté à tout moment.
+Génère des illustrations conceptuelles intégrées dans le rapport PDF
+par FPDF2 (script 06). Aucune dépendance au dataset ou aux modèles.
+
+Schémas produits (dans reports/figures/)
+-----------------------------------------
+pipeline_overview.png
+    Schéma du pipeline ML complet · données → preprocessing → modèles
+    → évaluation → calibration → API/dashboard.
+architecture_diagram.png
+    Architecture logicielle du projet (package src/, scripts, API,
+    dashboard, rapport).
+bias_variance_tradeoff.png
+    Illustration du compromis biais-variance avec les 4 modèles positionnés.
+decision_workflow.png
+    Workflow décisionnel de maintenance (capteurs → prédiction → action).
+
+Choix technique
+---------------
+Matplotlib pur, sans dépendance externe (PlantUML, Graphviz, draw.io).
+Garantit que le script tourne dans tout environnement minimal
+avec uniquement matplotlib installé.
+
+Pré-requis
+----------
+Aucun script préalable requis.
+
+Lien cahier des charges
+-----------------------
+Ces schémas répondent aux exigences de documentation et de présentation
+du pipeline imposées par le rapport final (section Architecture).
+
+Usage ·
+    python scripts/05_generate_diagrams.py
 """
 
 from __future__ import annotations
@@ -19,7 +52,7 @@ from src.diagrams import render_all_diagrams  # noqa: E402
 
 
 def main() -> None:
-    """Point d'entrée."""
+    """Génère et sauvegarde les 4 schémas pédagogiques du rapport."""
     ensure_directories()
     print("[DIAGRAMS] Génération des 4 schémas pédagogiques...")
     paths = render_all_diagrams()

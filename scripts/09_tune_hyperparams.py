@@ -1,9 +1,43 @@
 # -*- coding: utf-8 -*-
 """Script · hyperparameter tuning Optuna (RF, XGB, MLP).
 
-Recherche bayesienne TPE pour ne pas brûler du compute en grid
-exhaustif. Le sous-échantillon (8000 lignes) est suffisant pour
-identifier des bonnes regions de l'espace d'hyperparametres.
+Rôle dans le pipeline
+----------------------
+Script optionnel, peut être lancé après le script 01. Son résultat
+(tuning_results.json) est documentaire : les meilleurs hyperparamètres
+trouvés par Optuna peuvent être réinjectés manuellement dans
+`src/models.py` si une amélioration significative est observée.
+
+Entrées
+-------
+data/raw/predictive_maintenance_v3.csv
+    Dataset complet. Un sous-échantillon stratifié de 8000 lignes est
+    utilisé pour accélérer le tuning sans dégrader la qualité.
+
+Sorties
+-------
+reports/tuning_results.json
+    Dictionnaire {model_name: {best_params, best_value}} pour les 3
+    modèles tunés (RF, XGB, MLP). Consultable sans ré-exécuter le script.
+
+Pré-requis
+----------
+- Script 01 exécuté.
+- Package `optuna` installé (`pip install optuna`).
+
+Lien cahier des charges
+-----------------------
+Démontre la démarche scientifique rigoureuse (section "Optimisation des
+hyperparamètres") · justifie le choix des hyperparamètres finaux par
+rapport aux valeurs par défaut.
+
+Note de performance
+-------------------
+Durée typique · 3-5 minutes sur CPU moderne (3 modèles x 20 essais
+x 3 folds). Réduire n_trials_each pour accélérer si nécessaire.
+
+Usage ·
+    python scripts/09_tune_hyperparams.py
 """
 
 from __future__ import annotations
@@ -31,6 +65,7 @@ from src.tuning import tune_all  # noqa: E402
 
 
 def main() -> None:
+    """Lance le tuning Optuna sur RF, XGB et MLP, sauvegarde les résultats en JSON."""
     ensure_directories()
 
     print("[TUNING] Chargement dataset...")

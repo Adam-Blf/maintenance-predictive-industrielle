@@ -118,19 +118,29 @@ def generate_synthetic_dataset(
     rng = np.random.default_rng(seed)
 
     # Timestamps horaires sur ~3 ans à partir de 2024-01-01.
+    # L'espacement horaire reproduit le schéma observé dans le dataset
+    # Kaggle (une mesure par heure et par machine).
     base_time = pd.Timestamp("2024-01-01 00:00:00")
     timestamps = pd.to_datetime(base_time + pd.to_timedelta(np.arange(n_samples), unit="h"))
 
-    # 20 machines uniques (cf. métadonnées Kaggle), tirées uniformément.
+    # 20 machines uniques (cf. métadonnées Kaggle v3.0), tirées uniformément.
+    # high=21 car rng.integers est exclusif sur la borne supérieure.
     machine_ids = rng.integers(low=1, high=21, size=n_samples)
 
     # Types de machine · répartition équilibrée 4 catégories.
+    # Uniforme intentionnel : chaque type doit être suffisamment représenté
+    # pour que le ColumnTransformer OHE voit chaque modalité au fit.
     machine_type = rng.choice(MACHINE_TYPES, size=n_samples)
 
-    # Modes opératoires · distribution observée · 48% normal / 45% idle / 7% peak.
+    # Modes opératoires · distribution observée dans Kaggle v3.0 ·
+    # 48% normal / 45% idle / 7% peak. Le mode peak est rare car il
+    # correspond à des surcharges ponctuelles, pas au fonctionnement courant.
     operating_mode = rng.choice(OPERATING_MODES, size=n_samples, p=[0.48, 0.45, 0.07])
 
-    # Heures depuis maintenance · loi exponentielle (queue lourde).
+    # Heures depuis maintenance · loi exponentielle (queue lourde) reproduit
+    # la réalité industrielle : la plupart des machines ont été entretenues
+    # récemment, mais quelques-unes accumulent de longues périodes sans
+    # intervention (négligence, sous-effectif). Clip à 2000h = ~83 jours max.
     hours_since_maintenance = np.clip(
         rng.exponential(scale=200.0, size=n_samples), a_min=0, a_max=2000
     )
@@ -138,11 +148,16 @@ def generate_synthetic_dataset(
     # ------------------------------------------------------------------
     # Capteurs physiques · valeurs centrales selon le mode opératoire.
     # Plages calibrées pour reproduire la distribution observée Kaggle.
+    # La dépendance aux modes opératoires est intentionnelle : elle crée
+    # des corrélations réalistes entre features, ce qui rend le dataset
+    # plus difficile pour les modèles et plus représentatif du réel.
     # ------------------------------------------------------------------
     rpm_base = np.where(
         operating_mode == "idle", 850,
         np.where(operating_mode == "normal", 1500, 2200),
     )
+    # Bruit gaussien faible (sigma=80 rpm) pour simuler les fluctuations
+    # de régulation PID autour du setpoint.
     rpm = np.clip(rpm_base + rng.normal(0, 80, n_samples), 0, 3500)
 
     ambient_temp = np.clip(rng.normal(20.0, 6.0, n_samples), -10, 45)
@@ -185,32 +200,52 @@ def generate_synthetic_dataset(
     # ------------------------------------------------------------------
     # Cibles · règles physiquement cohérentes alignées Kaggle v3.0.
     # ------------------------------------------------------------------
+    # Le risque de panne est modélisé comme une régression logistique
+    # "oracle" dont on connaît les coefficients vrais. Cette approche
+    # garantit que les features contiennent effectivement l'information
+    # nécessaire pour prédire la cible (les modèles ML doivent pouvoir
+    # retrouver ces coefficients approximativement).
+    # Intercept = -2.5 → probabilité de base ~8% (taux de panne réaliste).
     risk_logit = (
         -2.5
-        + 0.45 * (vibration_rms - 3.0)
-        + 0.04 * (temperature_motor - 60.0)
-        + 0.003 * (hours_since_maintenance - 200)
-        + 0.06 * np.abs(pressure_level - 35.0) / 10.0
-        + np.where(operating_mode == "peak", 0.6, 0.0)
-        + rng.normal(0, 0.5, n_samples)
+        + 0.45 * (vibration_rms - 3.0)       # vibration : signal dominant
+        + 0.04 * (temperature_motor - 60.0)   # surchauffe : signal secondaire
+        + 0.003 * (hours_since_maintenance - 200)  # vieillissement progressif
+        + 0.06 * np.abs(pressure_level - 35.0) / 10.0  # anomalie hydraulique
+        + np.where(operating_mode == "peak", 0.6, 0.0)  # surcharge : facteur aggravant
+        + rng.normal(0, 0.5, n_samples)  # bruit aléatoire : irréductible
     )
     risk_proba = 1.0 / (1.0 + np.exp(-risk_logit))
+    # Simulation d'un tirage de Bernoulli pour chaque observation ·
+    # l'indicateur binaire est 1 si la probabilité de panne dépasse
+    # un seuil aléatoire uniforme (équivalent à un tirage Bernoulli(p)).
     failure_within_24h = (rng.uniform(0, 1, n_samples) < risk_proba).astype(int)
 
     # Failure type · multinomial selon les capteurs dominants.
+    # Logique physique : le type de panne est déterminé par le signal
+    # le plus anormal. Un softmax avec température 1.2 (légère accentuation)
+    # sur les scores bruts convertit les scores en probabilités de classe.
     failure_type = np.full(n_samples, "none", dtype=object)
     failure_mask = failure_within_24h == 1
     n_failed = int(failure_mask.sum())
     if n_failed > 0:
+        # Score bearing : vibration élevée + machine ancienne → usure roulement.
         bearing_score = vibration_rms[failure_mask] / 6.0 + 0.002 * hours_since_maintenance[failure_mask]
+        # Score thermique : température moteur très au-dessus de 50°C → surchauffe.
         thermal_score = np.maximum(temperature_motor[failure_mask] - 50.0, 0.0) / 30.0
+        # Score électrique : courant anormalement éloigné du nominal (8A) → défaut élec.
         elec_score = np.abs(current_phase_avg[failure_mask] - 8.0) / 5.0 + 0.2
+        # Score hydraulique : pression anormale (fuite ou blocage) → défaut hydraulique.
         hydro_score = np.abs(pressure_level[failure_mask] - 35.0) / 15.0 + 0.2
 
+        # Softmax avec facteur d'accentuation 1.2 pour que le type "dominant"
+        # soit choisi plus souvent (évite une distribution trop uniforme).
         scores = np.stack([bearing_score, thermal_score, elec_score, hydro_score], axis=1)
         exp_s = np.exp(1.2 * scores)
         probas = exp_s / exp_s.sum(axis=1, keepdims=True)
         cumprobas = probas.cumsum(axis=1)
+        # Tirage par inversion CDF : on cherche le premier bin dont la CDF
+        # dépasse un uniforme, équivalent à un tirage catégoriel pondéré.
         u = rng.uniform(0, 1, size=n_failed).reshape(-1, 1)
         chosen_idx = (u < cumprobas).argmax(axis=1)
         type_map = ["bearing", "motor_overheat", "electrical", "hydraulic"]

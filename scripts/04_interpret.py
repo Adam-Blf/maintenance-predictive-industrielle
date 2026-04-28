@@ -1,13 +1,47 @@
 # -*- coding: utf-8 -*-
-"""Script · interprétabilité du modèle final candidat.
+"""Script · interprétabilité du modèle final candidat (3 niveaux).
 
-Génère ·
-  - Feature importance native (modèles à base d'arbres).
-  - Permutation Importance (toujours, agnostique au modèle).
-  - SHAP summary + bar plot sur le modèle final.
+Rôle dans le pipeline
+----------------------
+Script n°4, à exécuter APRES le script 03 (entraînement binaire).
+Produit les visualisations d'explicabilité requises par le cahier des
+charges pour satisfaire le critère d'interprétabilité.
 
-Le sujet impose explicitement ces 3 niveaux d'explicabilité (basique /
-recommandé / avancé) · on les produit tous pour valider C4.3.
+Entrées
+-------
+models/final_model.joblib
+    Pipeline sklearn du meilleur modèle binaire (issu du script 03).
+models/final_model_name.txt
+    Nom textuel du modèle final (ex. "random_forest").
+data/processed/X_test.csv
+    Features du test set (sauvegardées par le script 03).
+data/processed/y_test.csv
+    Labels du test set (sauvegardées par le script 03).
+
+Sorties (dans reports/figures/)
+---------------------------------
+feature_importance_native_{model}.png
+    Importance des features par réduction d'impureté (si RF/XGB).
+permutation_importance_{model}.png
+    Perte de F1 lors de la permutation de chaque feature (tous modèles).
+shap_summary_{model}.png
+    SHAP dot plot · contribution de chaque feature par observation.
+shap_bar_{model}.png
+    SHAP bar plot · importance globale (moyenne des |SHAP|).
+
+Pré-requis
+----------
+- Scripts 01, 02, 03 exécutés.
+- Package `shap` installé (`pip install shap`) pour le niveau avancé.
+
+Lien cahier des charges
+-----------------------
+Répond aux exigences d'explicabilité C3.1 (feature importance basique),
+C3.2 (permutation, recommandé), C3.3 (SHAP, avancé). Les 3 niveaux
+sont produits systématiquement pour couvrir tous les critères.
+
+Usage ·
+    python scripts/04_interpret.py
 """
 
 from __future__ import annotations
@@ -36,7 +70,7 @@ from src.preprocessing import get_feature_names  # noqa: E402
 
 
 def main() -> None:
-    """Point d'entrée."""
+    """Orchestre les 3 niveaux d'interprétabilité sur le modèle final."""
     ensure_directories()
 
     # Lecture du nom du modèle final + chargement du pipeline.

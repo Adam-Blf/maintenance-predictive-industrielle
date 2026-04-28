@@ -1,9 +1,41 @@
 # -*- coding: utf-8 -*-
-"""Script · entraînement de la régression sur rul_hours (RUL).
+"""Script · entraînement de la régression sur rul_hours (Remaining Useful Life).
 
-Tâche bonus du sujet · estimer la durée de vie restante (Remaining
-Useful Life) d'un équipement. Cas métier · planifier les opérations
-de maintenance préventive en optimisant les fenêtres d'arrêt programmé.
+Rôle dans le pipeline
+----------------------
+Script n°8, indépendant du script 03 (binaire). Peut être exécuté
+après le script 01 uniquement. Tâche bonus du sujet.
+
+Entrées
+-------
+data/raw/predictive_maintenance_v3.csv
+    Dataset complet (24 042 lignes, colonne rul_hours continue [0.5, 99]).
+
+Sorties
+-------
+models/regression_{model}.joblib (x4)
+    Pipelines Ridge, RF, XGBoost, MLP entraînés.
+models/regression_final.joblib
+    Copie du meilleur modèle (critère : R² le plus élevé sur test set).
+models/regression_final_name.txt
+    Nom textuel du meilleur modèle.
+reports/metrics_regression.csv / .json
+    Tableau comparatif MAE (h), RMSE (h), R², temps d'entraînement.
+reports/figures/regression_pred_vs_true.png
+    Scatter plot prédictions vs valeurs réelles du meilleur modèle.
+
+Pré-requis
+----------
+Script 01 exécuté (dataset disponible dans data/raw/).
+
+Lien cahier des charges
+-----------------------
+Régression RUL demandée comme tâche bonus dans le cahier des charges.
+Le MAE en heures est la métrique la plus interprétable métier
+("en moyenne, on se trompe de X heures sur la durée de vie restante").
+
+Usage ·
+    python scripts/08_train_regression.py
 """
 
 from __future__ import annotations
@@ -45,6 +77,7 @@ from src.models_regression import (  # noqa: E402
 
 
 def main() -> None:
+    """Orchestre l'entraînement, l'évaluation et la persistance des 4 modèles de régression."""
     ensure_directories()
     print("[REGRESSION] Chargement dataset...")
     df = load_dataset()

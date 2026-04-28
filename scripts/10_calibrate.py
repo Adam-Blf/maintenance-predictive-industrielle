@@ -1,10 +1,53 @@
 # -*- coding: utf-8 -*-
-"""Script · calibration probabiliste + threshold tuning.
+"""Script · calibration probabiliste + threshold tuning du modèle binaire.
 
-Utilise le modele final binaire (failure_within_24h) pour produire ·
-  - Reliability diagram + Brier score
-  - Courbe coût/seuil avec hypothèses métier (FN=1000€, FP=100€)
-  - Threshold optimal sauvegardé dans models/optimal_threshold.json
+Rôle dans le pipeline
+----------------------
+Script n°10, à exécuter APRES le script 03 (entraînement binaire).
+Complète l'évaluation avec deux analyses avancées :
+  1. Qualité de la calibration probabiliste (reliability diagram + Brier score).
+  2. Optimisation du seuil de décision selon les coûts métier.
+
+Entrées
+-------
+models/final_model.joblib
+    Pipeline du meilleur modèle binaire (issu du script 03).
+models/final_model_name.txt
+    Nom textuel du modèle final.
+data/processed/X_test.csv
+    Features du test set (sauvegardées par le script 03).
+data/processed/y_test.csv
+    Labels du test set (sauvegardées par le script 03).
+
+Sorties
+-------
+reports/figures/reliability_diagram_{model}.png
+    Diagramme de fiabilité + Brier score. Un modèle parfaitement calibré
+    suit la diagonale.
+reports/figures/cost_threshold_{model}.png
+    Courbe coût total (FN + FP) en fonction du seuil de décision.
+models/optimal_threshold.json
+    Seuil optimal et info associée (coûts, FN/FP comparés). Consommé
+    par l'API FastAPI et le dashboard Streamlit pour appliquer le bon seuil.
+
+Pré-requis
+----------
+Scripts 01 et 03 exécutés.
+
+Lien cahier des charges
+-----------------------
+Répond à l'exigence de "démarche métier" du cahier des charges : justifier
+le seuil de décision par une analyse coût-bénéfice plutôt que d'utiliser
+le seuil par défaut de 0.5.
+
+Hypothèses métier utilisées
+-----------------------------
+- Coût faux négatif (panne ratée) · 1000 EUR (arrêt de production).
+- Coût faux positif (intervention inutile) · 100 EUR (main d'oeuvre).
+- Ratio 10:1 cohérent avec la littérature industrielle.
+
+Usage ·
+    python scripts/10_calibrate.py
 """
 
 from __future__ import annotations
@@ -31,6 +74,7 @@ from src.config import (  # noqa: E402
 
 
 def main() -> None:
+    """Évalue la calibration et optimise le seuil de décision métier."""
     ensure_directories()
 
     final_name = (MODELS_DIR / "final_model_name.txt").read_text(encoding="utf-8").strip()

@@ -1,16 +1,33 @@
 # -*- coding: utf-8 -*-
 """Module d'interprétabilité des modèles entraînés.
 
-Le sujet impose explicitement (cf. cahier des charges, page 12-14) ·
-  - **Feature Importance native** (Random Forest / XGBoost) · niveau basique.
-  - **Permutation Importance** · niveau recommandé, agnostique au modèle.
-  - **SHAP** · niveau avancé, explicabilité locale + globale, à appliquer
-    sur le modèle final sélectionné.
+Trois niveaux d'explicabilité (correspondant au cahier des charges)
+---------------------------------------------------------------------
+1. **Feature Importance native** (basique) · calculée pendant l'entraînement
+   par réduction d'impureté Gini (RF) ou gain moyen (XGB). Rapide mais biaisée
+   vers les variables continues et instable si les features sont corrélées.
+   Disponible uniquement pour les modèles à base d'arbres.
 
-Ce module produit les graphiques associés à chaque technique, qui sont
-intégrés dans le rapport PDF final. La logique métier sous-jacente est
-qu'un responsable maintenance doit pouvoir répondre à la question ·
-"Pourquoi le modèle indique un risque de panne élevé ?".
+2. **Permutation Importance** (recommandé) · agnostique au modèle. Permute
+   aléatoirement chaque feature sur le test set et mesure la perte de
+   performance (F1). Plus fiable que l'importance native car elle mesure
+   l'effet réel sur la prédiction, pas un artefact de l'algorithme interne.
+   Inconvénient : coûteuse en calcul (n_features x n_repeats x 1 inférence).
+
+3. **SHAP** (avancé) · SHapley Additive exPlanations, fondées sur la théorie
+   des jeux coopératifs. Attribue à chaque feature une contribution chiffrée
+   à la prédiction individuelle (explicabilité locale) et agrège en importance
+   globale (explicabilité globale). Propriétés ·
+     - Additivité garantie : somme des SHAP values = prédiction.
+     - Cohérence : si f(x) augmente quand x_i augmente, SHAP(x_i) >= 0.
+     - Comparabilité inter-modèles.
+
+Utilité métier
+--------------
+Un responsable maintenance doit pouvoir répondre · "Pourquoi le modèle
+indique un risque de panne élevé pour cette machine ?". Les SHAP values
+permettent de dire "principalement à cause d'une vibration de 8.2mm/s
+(+0.34 log-odds) et de 450h sans maintenance (+0.18 log-odds)".
 """
 
 from __future__ import annotations

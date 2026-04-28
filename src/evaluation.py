@@ -2,19 +2,27 @@
 """Évaluation comparative des modèles.
 
 Métriques sélectionnées pour la classification binaire (failure_within_24h) ·
-  - **Accuracy** · classique mais trompeuse en cas de déséquilibre, on la
-    garde pour comparaison.
+  - **Accuracy** · classique mais trompeuse en cas de déséquilibre (85%
+    de non-pannes : un modèle qui prédit toujours 0 aurait 85% d'accuracy).
+    Conservée pour comparaison avec la littérature.
   - **Precision / Recall / F1** · le couple Precision/Recall est essentiel
     en maintenance prédictive · un faux négatif (panne ratée) coûte des
-    arrêts de production, un faux positif coûte une intervention inutile.
-  - **ROC-AUC** · invariant par seuil, mesure la capacité de
-    discrimination globale.
-  - **PR-AUC (Average Precision)** · plus fiable que ROC-AUC quand les
-    classes sont déséquilibrées · pertinence métier supérieure.
-  - **Matrice de confusion** · pour analyse d'erreurs (FN/FP).
+    arrêts de production (~1000 EUR), un faux positif coûte une intervention
+    inutile (~100 EUR). Le F1 est leur moyenne harmonique.
+  - **ROC-AUC** · invariant par seuil, mesure la capacité de discrimination
+    globale. Vaut 0.5 pour un classifieur aléatoire, 1.0 pour un modèle
+    parfait. Robuste au déséquilibre mais insensible aux erreurs rares.
+  - **PR-AUC (Average Precision)** · aire sous la courbe Precision-Recall,
+    plus fiable que ROC-AUC quand les classes sont déséquilibrées car elle
+    pénalise davantage les faux positifs sur la classe minoritaire (pannes).
+    Métrique recommandée pour les datasets déséquilibrés.
+  - **Matrice de confusion** · pour analyse détaillée des types d'erreurs
+    (FN = pannes non détectées, FP = fausses alarmes).
+  - **Temps d'entraînement / latence** · métriques d'écoresponsabilité
+    requises par le critère C4.3 RNCP40875.
 
 Toutes les métriques sont calculées sur le **test set isolé**, jamais sur
-les données vues à l'entraînement (anti data-leakage).
+les données vues à l'entraînement (anti data-leakage strict).
 """
 
 from __future__ import annotations

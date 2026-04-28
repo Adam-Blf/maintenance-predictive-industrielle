@@ -1,14 +1,31 @@
 # -*- coding: utf-8 -*-
 """Hyperparameter tuning via Optuna · TPE sampler.
 
-Optuna est plus efficace que GridSearchCV exhaustif sur des espaces
-larges · le sampler TPE (Tree-Parzen Estimator) apprend ou chercher
-prometteur a partir des essais precedents, ce qui converge vers les
-bonnes regions en quelques dizaines d'essais.
+GridSearchCV vs RandomizedSearch vs Optuna
+--------------------------------------------
+- **GridSearchCV** : explore exhaustivement toutes les combinaisons.
+  Coût = produit cartésien des grilles. Impraticable dès que l'espace
+  dépasse 3-4 dimensions ou que les plages sont larges.
+- **RandomizedSearchCV** : échantillonnage aléatoire uniforme dans
+  l'espace. Meilleur que Grid sur grands espaces, mais aveugle : il ne
+  tire aucun enseignement des essais précédents.
+- **Optuna TPE (Tree-Parzen Estimator)** : modèle probabiliste bayésien
+  qui apprend quelles régions de l'espace donnent de bons résultats et
+  y concentre les essais suivants. Converge vers un bon optimum local
+  en 20-50 essais là où GridSearch en nécessiterait des centaines.
 
-On expose une fonction par modele tunable (RF, XGB, MLP). Logistic
-Regression est skip · trop peu d'hyperparametres pour justifier le
-tuning (juste C avec class_weight='balanced').
+Pourquoi 3-fold au lieu de 5-fold dans `_cv_f1` ?
+---------------------------------------------------
+Le tuning est lancé sur un sous-échantillon de 8000 lignes. Avec 3-fold,
+chaque fold de validation a ~2700 lignes, suffisant pour une estimation
+stable du F1. 5-fold doublerait le temps de tuning sans gain significatif.
+
+Logistic Regression non tunée
+-------------------------------
+LogReg a seulement C (inverse de la régularisation) comme hyperparamètre
+impactant, et `class_weight='balanced'` est déjà optimal pour les données
+déséquilibrées. Le gain attendu d'un tuning Optuna est trop faible pour
+justifier le coût computationnel.
 """
 
 from __future__ import annotations
@@ -49,7 +66,33 @@ def tune_random_forest(
     y: pd.Series,
     n_trials: int = 25,
 ) -> dict:
-    """Optimise RF · n_estimators, max_depth, min_samples_leaf, max_features."""
+    """Optimise les hyperparamètres du Random Forest via Optuna TPE.
+
+    Espace de recherche
+    --------------------
+    - `n_estimators` : [100, 400, pas 50] · peu d'impact au-delà de 300.
+    - `max_depth` : [4, 30] · profondeur totalement libre non testée car
+      risk de mémorisation sur les petits sous-échantillons.
+    - `min_samples_leaf` : [1, 10] · contrôle la granularité des feuilles.
+    - `max_features` : {sqrt, log2, None} · sqrt est le défaut RF classique,
+      log2 plus agressif (moins de features par split = plus de diversité),
+      None = toutes les features (converge vers Bagging).
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        Features d'entraînement (sous-échantillon de 8000 lignes).
+    y : pd.Series
+        Cible binaire failure_within_24h.
+    n_trials : int, default=25
+        Nombre d'essais Optuna. 25 est un compromis qualité/temps
+        (chaque essai = 1 entraînement RF x 3 folds = 3 fits).
+
+    Returns
+    -------
+    dict
+        Dictionnaire avec "best_params" et "best_value" (F1 moyen CV).
+    """
     import optuna
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.pipeline import Pipeline
@@ -97,7 +140,36 @@ def tune_xgboost(
     scale_pos_weight: float,
     n_trials: int = 25,
 ) -> dict:
-    """Optimise XGBoost · learning_rate, max_depth, subsample, colsample."""
+    """Optimise les hyperparamètres XGBoost via Optuna TPE.
+
+    Espace de recherche
+    --------------------
+    - `n_estimators` : [150, 500] · plus large que RF car XGB utilise
+      un faible learning_rate (besoin de plus d'itérations).
+    - `learning_rate` : [0.02, 0.2] en log-scale · la log-scale explore
+      équitablement les ordres de grandeur (0.02, 0.05, 0.1, 0.2).
+    - `max_depth` : [3, 10] · arbres peu profonds pour un boosting rapide.
+    - `subsample`, `colsample_bytree` : [0.6, 1.0] · régularisation.
+    - `min_child_weight` : [1, 10] · poids minimum dans un noeud fils,
+      équivalent XGBoost du `min_samples_leaf` de RF.
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        Features d'entraînement.
+    y : pd.Series
+        Cible binaire.
+    scale_pos_weight : float
+        Ratio négatifs/positifs pour compenser le déséquilibre de classes.
+        Calculé depuis le script appelant : (y==0).sum() / (y==1).sum().
+    n_trials : int, default=25
+        Nombre d'essais Optuna.
+
+    Returns
+    -------
+    dict
+        Dictionnaire avec "best_params" et "best_value" (F1 moyen CV).
+    """
     import optuna
     from sklearn.pipeline import Pipeline
     from xgboost import XGBClassifier
@@ -146,7 +218,35 @@ def tune_mlp(
     y: pd.Series,
     n_trials: int = 15,
 ) -> dict:
-    """Optimise MLP · hidden_layer_sizes, alpha, learning_rate_init."""
+    """Optimise les hyperparamètres MLP via Optuna TPE.
+
+    Espace de recherche
+    --------------------
+    - `architecture` : 6 architectures candidates prédéfinies plutôt
+      qu'un espace continu (évite des configurations absurdes comme
+      128-8-256 et limite l'espace à des entonnoirs décroissants sensés).
+    - `alpha` : [1e-5, 1e-2] en log-scale · régularisation L2.
+    - `learning_rate_init` : [1e-4, 1e-2] en log-scale · step de l'
+      optimiseur Adam. Trop grand → divergence, trop petit → lenteur.
+
+    Note : seulement 15 essais par défaut (vs 25 pour RF/XGB) car
+    chaque essai MLP est plus long à entraîner (forward + backward pass
+    sur 200 epochs max) et l'espace est plus petit (3 hyperparamètres).
+
+    Parameters
+    ----------
+    X : pd.DataFrame
+        Features d'entraînement.
+    y : pd.Series
+        Cible binaire.
+    n_trials : int, default=15
+        Nombre d'essais Optuna (réduit vs RF/XGB pour équilibrer le temps).
+
+    Returns
+    -------
+    dict
+        Dictionnaire avec "best_params" et "best_value" (F1 moyen CV).
+    """
     import optuna
     from sklearn.neural_network import MLPClassifier
     from sklearn.pipeline import Pipeline
