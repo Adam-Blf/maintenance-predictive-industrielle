@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
 """Script · Analyse Exploratoire des Données (EDA).
 
+Rappel méthodologique · l'EDA décrit les données telles qu'elles sont
+(distributions, valeurs manquantes, corrélations, outliers). Elle
+n'effectue AUCUNE transformation et AUCUN split train/test · ces
+étapes appartiennent à la préparation des données (script 03).
+
 Produit l'ensemble des graphiques d'EDA dans `reports/figures/` ·
-  - Distribution de chaque capteur (histogramme + KDE).
+  - Distribution de la cible binaire failure_within_24h (déséquilibre).
+  - Distribution des 5 types de panne (multi-classe bonus).
+  - Histogrammes + KDE des 10 capteurs numériques.
   - Boxplot des capteurs par classe (panne / pas panne).
   - Matrice de corrélation (heatmap).
-  - Distribution des classes cibles.
-  - Distribution des modes opératoires.
+  - Distribution des modes opératoires + taux de panne par mode.
   - Scatterplot vibration × température coloré par panne.
+  - **Analyse des valeurs manquantes** (% NaN par colonne) +
+    recommandation de stratégie de traitement (imputation médiane
+    pour les capteurs continus, encodage one-hot pour les catégoriels).
 
 Tous ces visuels servent à la fois à la qualité analytique du rapport
 et à la justification des choix de modélisation (ex. justifier la
-standardisation par les distributions hétérogènes des capteurs).
+standardisation par les distributions hétérogènes des capteurs, ou
+l'imputation médiane par la présence de NaN ~3-4% sur 5 capteurs).
 """
 
 from __future__ import annotations
@@ -285,13 +295,98 @@ def plot_operating_mode(df: pd.DataFrame) -> Path:
     return output
 
 
+def plot_missing_values(df: pd.DataFrame) -> Path:
+    """Analyse des valeurs manquantes · % NaN par colonne.
+
+    Le dataset Kaggle officiel injecte volontairement ~3-4% de NaN sur
+    5 capteurs (vibration_rms, temperature_motor, current_phase_avg,
+    pressure_level, rpm) pour mimer la réalité des capteurs IoT (drops,
+    pannes de transmission). Cette figure quantifie le phénomène et
+    justifie le choix d'imputation médiane dans le préprocesseur
+    (cf. `src/preprocessing.py`).
+
+    Conclusion EDA · imputation médiane sur les capteurs numériques
+    (robuste aux outliers), one-hot encoding sur les catégoriels avec
+    `handle_unknown="ignore"` pour gérer les modalités inconnues en
+    inférence.
+    """
+    missing_count = df.isna().sum()
+    missing_pct = (missing_count / len(df) * 100).round(2)
+    missing_df = (
+        pd.DataFrame({"count": missing_count, "pct": missing_pct})
+        .query("count > 0")
+        .sort_values("pct", ascending=True)
+    )
+
+    if missing_df.empty:
+        # Cas dégénéré · pas de NaN, on génère quand même un visuel
+        # informatif (utile pour le rapport).
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.text(
+            0.5,
+            0.5,
+            "Aucune valeur manquante détectée dans le dataset",
+            ha="center",
+            va="center",
+            fontsize=13,
+            color=COLOR_OK_GREEN,
+            fontweight="bold",
+        )
+        ax.axis("off")
+    else:
+        fig, ax = plt.subplots(figsize=(10, 5))
+        bars = ax.barh(
+            missing_df.index,
+            missing_df["pct"],
+            color=COLOR_ALERT_RED,
+            edgecolor="black",
+            alpha=0.85,
+        )
+        for bar, pct, count in zip(
+            bars, missing_df["pct"].values, missing_df["count"].values
+        ):
+            ax.text(
+                bar.get_width() + 0.05,
+                bar.get_y() + bar.get_height() / 2,
+                f"{pct:.2f}% ({count:,})",
+                va="center",
+                fontsize=10,
+                fontweight="bold",
+            )
+        ax.set_xlabel("Pourcentage de valeurs manquantes (%)", fontsize=11)
+        ax.set_title(
+            "Valeurs manquantes par colonne · stratégie · imputation médiane",
+            fontsize=13,
+            color=COLOR_EFREI_DARK,
+            fontweight="bold",
+        )
+        ax.grid(axis="x", alpha=0.3)
+        ax.set_xlim(0, max(missing_df["pct"].max() * 1.25, 1))
+
+    plt.tight_layout()
+    output = REPORTS_FIGURES_DIR / "eda_missing_values.png"
+    fig.savefig(output, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    return output
+
+
 def main() -> None:
-    """Point d'entrée · génère tous les graphiques d'EDA."""
+    """Point d'entrée · génère tous les graphiques d'EDA + stats."""
     ensure_directories()
     df = load_dataset()
     print(f"[EDA] Dataset chargé · {df.shape}")
 
-    print("[EDA] Génération des 7 graphiques d'analyse...")
+    # Synthèse rapide en console des valeurs manquantes (utile dans la
+    # conclusion de l'EDA · cf. note méthodo du dossier de référence).
+    missing_total = int(df.isna().sum().sum())
+    missing_cols = int((df.isna().sum() > 0).sum())
+    print(
+        f"[EDA] Valeurs manquantes · {missing_total:,} cellules sur "
+        f"{missing_cols} colonnes (stratégie · imputation médiane numérique, "
+        "OHE catégoriel)"
+    )
+
+    print("[EDA] Génération des 8 graphiques d'analyse...")
     outputs = {
         "target_dist": plot_target_distribution(df),
         "failure_type": plot_failure_type_distribution(df),
@@ -300,6 +395,7 @@ def main() -> None:
         "correlation": plot_correlation_heatmap(df),
         "scatter_vt": plot_scatter_vib_temp(df),
         "operating_mode": plot_operating_mode(df),
+        "missing_values": plot_missing_values(df),
     }
     for name, path in outputs.items():
         print(f"  - {name:<14} · {path}")
@@ -308,6 +404,18 @@ def main() -> None:
     stats_path = REPORTS_FIGURES_DIR.parent / "eda_descriptive_stats.csv"
     df[NUMERIC_FEATURES].describe().to_csv(stats_path)
     print(f"[EDA] Stats descriptives · {stats_path}")
+
+    # Sauvegarde du % NaN par colonne (consommé par le rapport PDF).
+    nan_path = REPORTS_FIGURES_DIR.parent / "eda_missing_values.csv"
+    nan_summary = pd.DataFrame(
+        {
+            "column": df.columns,
+            "n_missing": df.isna().sum().values,
+            "pct_missing": (df.isna().sum() / len(df) * 100).round(2).values,
+        }
+    ).sort_values("pct_missing", ascending=False)
+    nan_summary.to_csv(nan_path, index=False)
+    print(f"[EDA] Synthèse NaN · {nan_path}")
     print("Done.")
 
 
