@@ -69,12 +69,13 @@ S02_DIR: Path = REPORTS_DIR / "02"  # EDA descriptive
 S03_DIR: Path = REPORTS_DIR / "03"  # Train binaire (3 modèles + baseline)
 S04_DIR: Path = REPORTS_DIR / "04"  # Interprétabilité (SHAP, permutation)
 S05_DIR: Path = REPORTS_DIR / "05"  # Schémas pédagogiques
-S06_DIR: Path = REPORTS_DIR / "06"  # Rapport PDF final
 S07_DIR: Path = REPORTS_DIR / "07"  # Train multiclass
 S08_DIR: Path = REPORTS_DIR / "08"  # Train régression RUL
 S09_DIR: Path = REPORTS_DIR / "09"  # Tuning Optuna
 S10_DIR: Path = REPORTS_DIR / "10"  # Calibration + cost-sensitive threshold
-S11_DIR: Path = REPORTS_DIR / "11"  # Slides PowerPoint
+# Note · le rapport PDF (06) et la présentation PPTX (11) sont produits
+# manuellement (Word/LaTeX → PDF, PowerPoint pour les slides). Pas de
+# scripts de génération · livrables auteur, pas de pipeline.
 
 # Logo EFREI utilisé en page de garde du rapport et dans le dashboard.
 ASSETS_DIR: Path = PROJECT_ROOT / "assets"
@@ -194,8 +195,8 @@ def ensure_directories() -> None:
         REPORTS_DIR,
     )
     script_dirs = (
-        S02_DIR, S03_DIR, S04_DIR, S05_DIR, S06_DIR,
-        S07_DIR, S08_DIR, S09_DIR, S10_DIR, S11_DIR,
+        S02_DIR, S03_DIR, S04_DIR, S05_DIR,
+        S07_DIR, S08_DIR, S09_DIR, S10_DIR,
     )
     for directory in base_dirs + script_dirs:
         directory.mkdir(parents=True, exist_ok=True)

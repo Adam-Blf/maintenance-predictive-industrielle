@@ -167,15 +167,13 @@ IoT Sensors (vibration, T°, RPM, pression, ...)
   ├─ Imbalance ratio stratégie (PNG)
   └─ Modèle sélectionné performance (PNG)
         ↓
-  06_generate_report.py  (FPDF2, 20+ pages)
-  └─ rapport_projet_data_science.pdf
-        ↓
   [BONUS] Multi-tâches
   ├─ 07_train_multiclass.py  (failure_type, 5 classes, F1 macro)
   ├─ 08_train_regression.py  (rul_hours, MAE/RMSE/R²)
   ├─ 09_tune_hyperparams.py  (Optuna, 100 trials, TPE sampler)
-  ├─ 10_calibrate.py  (Reliability diagram, Brier score, seuil métier)
-  └─ 11_generate_slides.py  (python-pptx, 11 slides EFREI)
+  └─ 10_calibrate.py  (Reliability diagram, Brier score, seuil métier)
+        ↓
+  Rapport PDF + Présentation PPTX · livrables auteur (Word/LaTeX → PDF, PowerPoint)
         ↓
   SERVING
   ├─ dashboard/app.py  (Streamlit, http://localhost:8501)
@@ -191,7 +189,7 @@ IoT Sensors (vibration, T°, RPM, pression, ...)
 | 03    | `models/final_model.joblib` + `reports/03/*` | 8 MB | Pipeline compressé (seed=42) + métriques |
 | 04    | `reports/04/shap_*.png` (5 figures) | 12 MB | Force, Waterfall, Summary plots |
 | 05    | `reports/05/diagram_*.png` (4 schémas) | 8 MB | Diagrams pédagogiques |
-| 06    | `reports/06/rapport_projet_data_science.pdf` | 22 MB | 20 pages + figures embarquées |
+| Rapport | `reports/rapport_projet_data_science.pdf` (livré manuellement) | ~22 MB | 20 pages + figures embarquées |
 
 ### Prérequis machine
 
@@ -262,14 +260,11 @@ python scripts/03_train_models.py
 # 4. Interprétabilité (SHAP + Permutation Importance)
 python scripts/04_interpret.py
 
-# 5. Génération schémas pédagogiques (4 PNG)
+# 5. Génération schémas pédagogiques (4 PNG, à insérer dans le rapport)
 python scripts/05_generate_diagrams.py
-
-# 6. Rapport PDF final (20+ pages, figures embarquées)
-python scripts/06_generate_report.py
 ```
 
-Sortie principale · `reports/06/rapport_projet_data_science.pdf`.
+Le **rapport PDF** et le **support PPTX** sont rédigés à la main (Word/LaTeX, PowerPoint) à partir des artefacts produits par 02-05 + 07-10. Pas de pipeline de génération automatique.
 
 ### Tâches bonus (optionnelles, exécutables après 03)
 
@@ -285,9 +280,6 @@ python scripts/09_tune_hyperparams.py
 
 # Calibration probabiliste (reliability diagram, seuil métier)
 python scripts/10_calibrate.py
-
-# Génération slides PPTX
-python scripts/11_generate_slides.py
 ```
 
 ### Temps d'exécution par étape
@@ -686,25 +678,19 @@ maintenance-predictive-industrielle/
 │   ├── 03/                               # Sorties scripts/03_train_models.py (métriques + CM + ROC/PR)
 │   ├── 04/                               # Sorties scripts/04_interpret.py (SHAP + permutation)
 │   ├── 05/                               # Sorties scripts/05_generate_diagrams.py (4 schémas)
-│   ├── 06/                               # Sorties scripts/06_generate_report.py (rapport PDF)
-│   │   └── rapport_projet_data_science.pdf
 │   ├── 07/                               # Sorties scripts/07_train_multiclass.py (bonus)
 │   ├── 08/                               # Sorties scripts/08_train_regression.py (RUL, bonus)
 │   ├── 09/                               # Sorties scripts/09_tune_hyperparams.py (Optuna, bonus)
-│   ├── 10/                               # Sorties scripts/10_calibrate.py (calibration, bonus)
-│   ├── 11/                               # Sorties scripts/11_generate_slides.py (PPTX bonus)
-│   └── codecarbon/                       # Émissions CO₂ par modèle (transverse)
+│   └── 10/                               # Sorties scripts/10_calibrate.py (calibration, bonus)
 ├── scripts/
 │   ├── 02_eda.py                         # Analyse exploratoire (8 graphiques + analyse NaN)
 │   ├── 03_train_models.py                # Entraînement 4 modèles + CV + évaluation
 │   ├── 04_interpret.py                   # SHAP + Permutation Importance
 │   ├── 05_generate_diagrams.py           # Schémas pédagogiques (4 PNG)
-│   ├── 06_generate_report.py             # Génération PDF final (FPDF2)
 │   ├── 07_train_multiclass.py            # Classification multi-classe (bonus)
 │   ├── 08_train_regression.py            # Régression RUL (bonus)
 │   ├── 09_tune_hyperparams.py            # Optuna tuning (bonus)
-│   ├── 10_calibrate.py                   # Calibration probabiliste (bonus)
-│   └── 11_generate_slides.py             # Génération PPTX (bonus)
+│   └── 10_calibrate.py                   # Calibration probabiliste (bonus)
 ├── src/
 │   ├── __init__.py                       # Version + métadonnées du package
 │   ├── bootstrap.py                      # Auto-install des deps pip au lancement
@@ -719,7 +705,6 @@ maintenance-predictive-industrielle/
 │   ├── calibration.py                    # Reliability diagram + calibration (bonus)
 │   ├── tuning.py                         # Optuna wrapper (bonus)
 │   ├── diagrams.py                       # 4 schémas matplotlib
-│   └── report.py                         # Générateur FPDF2 (20+ pages)
 ├── tests/
 │   ├── test_preprocessing.py             # Tests preprocessing + ColumnTransformer
 │   ├── test_models.py                    # Tests factories + fit + predict
@@ -1070,13 +1055,13 @@ python scripts/03_train_models.py
 ### Vérification simple
 
 ```bash
-# Après exécution complète
-cd reports
-md5sum rapport_projet_data_science.pdf
-# Devrait match le fichier d'origin (ou PDF metadata peut varier tempo)
+# Après exécution complète, vérifier les métriques
+cat reports/03/metrics_summary.csv | head -5
+# Doit montrer 4 lignes (logistic_regression, random_forest, xgboost, mlp)
+# avec F1 ≈ 0.74 / 0.86 / 0.89 / 0.83 sur seed=42
 
-# Pour métrique brutes
-grep "F1.*XGBoost" .../*.log
+# Vérifier le seuil optimal calibration
+cat models/optimal_threshold.json
 # Doit être 0.928 (tolérance ±0.001 selon machine)
 ```
 
@@ -1106,7 +1091,6 @@ grep "F1.*XGBoost" .../*.log
 | Régression (RUL hours) | Approfondit C4.2 (prédiction continue) | `scripts/08_train_regression.py` |
 | Hyperparameter tuning (Optuna) | Renforce C4.2 (optimisation) | `scripts/09_tune_hyperparams.py` |
 | Calibration probabiliste | Avance C4.3 (évaluation + métier) | `scripts/10_calibrate.py` |
-| Présentation PPTX automatisée | Bonus communication / reporting | `scripts/11_generate_slides.py` |
 
 ---
 
@@ -1173,28 +1157,6 @@ python scripts/10_calibrate.py
 - Optimal threshold · seuil Youden ou custom cost-sensitive
 
 **Output** · `reports/10/reliability_diagram_*.png` + `reports/10/cost_threshold_*.png`, seuil optimal recommandé dans `models/optimal_threshold.json`.
-
-### 5. Présentation PPTX
-
-Génération automatique de 11 slides PPTX avec charte EFREI.
-
-```bash
-python scripts/11_generate_slides.py
-```
-
-**Contenu** ·
-
-1. Page titre (EFREI logo, projet)
-2. Contexte métier
-3. Données (24 042 samples, 15 variables)
-4. EDA (distributions, corrélations)
-5. Modèles comparés (table 4 modèles)
-6. Résultats (courbes ROC/PR)
-7. Interprétabilité (SHAP top features)
-8. Conclusion
-9-11. Annexes (architecture, references)
-
-**Output** · `reports/11/presentation.pptx`.
 
 ---
 

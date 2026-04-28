@@ -26,7 +26,6 @@ def test_imports() -> None:
         interpretability,
         models,
         preprocessing,
-        report,
     )
 
 

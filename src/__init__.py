@@ -19,7 +19,6 @@ Structure des modules
 - tuning         · recherche bayésienne Optuna (TPE) sur RF, XGB, MLP.
 - interpretability    · feature importance native, permutation importance, SHAP.
 - diagrams       · schémas pédagogiques matplotlib pur (pipeline, biais-variance, etc.).
-- report         · génération du rapport PDF complet via FPDF2.
 
 Exports publics
 ---------------
