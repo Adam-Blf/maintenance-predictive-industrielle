@@ -182,7 +182,7 @@ def build_title_slide(prs: Presentation) -> None:
                  0.5, 4.5, 12.33, 0.5, size=18, color=COLOR_NAVY, align="center")
     _add_textbox(slide, "Bloc 2 · BC2 RNCP40875 · Année 2025-2026",
                  0.5, 5.0, 12.33, 0.5, size=14, color=COLOR_GRAY, align="center")
-    _add_textbox(slide, "Adam BELOUCIF  ·  Emilien MORICE",
+    _add_textbox(slide, "Adam BELOUCIF (20220055)  ·  Emilien MORICE (20241824)",
                  0.5, 5.9, 12.33, 0.6, size=22, bold=True, color=COLOR_NAVY, align="center")
     _add_textbox(slide, "EFREI Paris Panthéon-Assas Université  ·  www.efrei.fr",
                  0.5, 6.6, 12.33, 0.4, size=12, color=COLOR_GRAY, align="center")
@@ -898,8 +898,8 @@ def build_thanks_slide(prs: Presentation) -> None:
                  0.5, 4.0, 12.33, 0.6, size=22, color=COLOR_WHITE, align="center")
 
     contact = (
-        "Adam BELOUCIF · adam.beloucif@efrei.net\n"
-        "Emilien MORICE · emilien.morice@efrei.net"
+        "Adam BELOUCIF (N° 20220055) · adam.beloucif@efrei.net\n"
+        "Emilien MORICE (N° 20241824) · emilien.morice@efrei.net"
     )
     _add_textbox(slide, contact, 0.5, 5.1, 12.33, 0.9, size=16, color=COLOR_WHITE, align="center")
     _add_textbox(slide, "EFREI Paris Panthéon-Assas Université  ·  www.efrei.fr",

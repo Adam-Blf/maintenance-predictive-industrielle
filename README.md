@@ -1501,6 +1501,6 @@ Si vous réutilisez ce projet ·
 
 **Version** · 2.0.0
 
-**Auteurs** · Adam BELOUCIF · Emilien MORICE
+**Auteurs** · Adam BELOUCIF (n° 20220055) · Emilien MORICE (n° 20241824)
 
 **Status** · Production ready (v2.0 + 7 bonus scripts) · Reproductibilité certifiée seed=42
