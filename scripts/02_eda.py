@@ -1,42 +1,92 @@
 # -*- coding: utf-8 -*-
-"""Script · Analyse Exploratoire des Données (EDA).
+"""Script 02 · Analyse Exploratoire des Données (EDA).
 
-Rappel méthodologique · l'EDA décrit les données telles qu'elles sont
-(distributions, valeurs manquantes, corrélations, outliers). Elle
-n'effectue AUCUNE transformation et AUCUN split train/test · ces
-étapes appartiennent à la préparation des données (script 03).
+À QUOI ÇA SERT ?
+----------------
+EDA = "Exploratory Data Analysis". Avant de construire un modèle de Machine
+Learning, on REGARDE les données pour comprendre ·
+  - Quelle est la forme du dataset (combien de lignes, de colonnes) ?
+  - Y a-t-il des valeurs manquantes (NaN) ? Combien ?
+  - Comment sont distribuées les variables (gaussienne ? asymétrique ?) ?
+  - Y a-t-il des corrélations entre variables capteurs ?
+  - La cible (panne oui/non) est-elle équilibrée ou déséquilibrée ?
 
-Produit l'ensemble des graphiques d'EDA dans `reports/02/` ·
-  - Distribution de la cible binaire failure_within_24h (déséquilibre).
-  - Distribution des 5 types de panne (multi-classe bonus).
-  - Histogrammes + KDE des 10 capteurs numériques.
-  - Boxplot des capteurs par classe (panne / pas panne).
-  - Matrice de corrélation (heatmap).
-  - Distribution des modes opératoires + taux de panne par mode.
-  - Scatterplot vibration × température coloré par panne.
-  - **Analyse des valeurs manquantes** (% NaN par colonne) +
-    recommandation de stratégie de traitement (imputation médiane
-    pour les capteurs continus, encodage one-hot pour les catégoriels).
+C'est l'étape n°1 obligatoire en data science · si on saute l'EDA, on risque
+d'entraîner un modèle sur des données qu'on ne comprend pas (et donc on ne
+saura pas si les résultats sont crédibles).
 
-Tous ces visuels servent à la fois à la qualité analytique du rapport
-et à la justification des choix de modélisation (ex. justifier la
-standardisation par les distributions hétérogènes des capteurs, ou
-l'imputation médiane par la présence de NaN ~3-4% sur 5 capteurs).
+Important · l'EDA NE MODIFIE PAS les données. Pas de cleaning, pas de split,
+pas de scaling · juste de l'observation. Les transformations viennent dans
+le script 03 (preprocessing + modélisation).
+
+CE QUE CE SCRIPT PRODUIT (dans reports/02/)
+-------------------------------------------
+  - eda_target_distribution.png · combien de pannes vs sain ?
+  - eda_failure_type_distribution.png · types de panne (5 classes)
+  - eda_sensor_distributions.png · histogrammes des 7 capteurs numériques
+  - eda_boxplots_by_class.png · capteurs séparés par classe (panne/sain)
+  - eda_correlation_heatmap.png · corrélations entre capteurs
+  - eda_scatter_vib_temp.png · vibration vs température, coloré par panne
+  - eda_operating_mode.png · taux de panne par mode opératoire
+  - eda_missing_values.png · % de NaN par colonne
+  - eda_descriptive_stats.csv · stats (min/max/mean/std) en CSV
+  - eda_missing_values.csv · synthèse des NaN en CSV
+
+LES INSIGHTS DE CETTE EDA SERVENT À ·
+  - Justifier la stratégie de gestion des NaN (imputation médiane).
+  - Justifier le choix des modèles (classes déséquilibrées → privilégier
+    F1, PR-AUC plutôt qu'accuracy).
+  - Identifier les capteurs les plus discriminants (vibration et
+    température sortent du lot).
+
+USAGE
+-----
+    python scripts/02_eda.py
 """
 
+# Cette ligne `from __future__` permet d'utiliser les annotations de type
+# Python 3.10+ (ex. `list[str]` au lieu de `List[str]`) même sur Python 3.8/3.9.
 from __future__ import annotations
 
+# `sys` · pour ajouter le dossier projet au PYTHONPATH (sinon `from src...` casse).
 import sys
+# `Path` · alternative moderne aux strings pour manipuler les chemins de fichiers.
+# Avantages · indépendant de l'OS (Windows/Linux/Mac), méthodes utiles (.exists(), .parent).
 from pathlib import Path
 
+# Matplotlib · la bibliothèque de référence pour faire des graphes en Python.
+# `pyplot` (alias `plt`) est l'API simple "comme MATLAB" qu'on utilise ici.
 import matplotlib.pyplot as plt
+# Numpy · calcul numérique vectorisé (tableaux N-dimensions ultra-rapides).
+# Toutes les libs ML (sklearn, pandas, ...) reposent dessus.
 import numpy as np
+# Pandas · manipulation de tableaux de données type Excel/CSV (DataFrames).
+# `pd.read_csv()`, `df.groupby()`, `df.merge()` · les outils du data scientist.
 import pandas as pd
+# Seaborn · surcouche matplotlib avec des graphiques statistiques plus jolis
+# (boxplots, heatmaps, kdeplots) en une ligne au lieu de 10.
 import seaborn as sns
 
+# `__file__` · chemin absolu du présent script.
+# `.resolve().parent.parent` remonte de 2 niveaux · scripts/ → projet racine.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# `sys.path.insert(0, ...)` ajoute la racine au début du PYTHONPATH ·
+# permet `from src.config import ...` même quand on lance depuis un autre dossier.
 sys.path.insert(0, str(PROJECT_ROOT))
 
+# Bootstrap · auto-install des dépendances manquantes (rend le repo
+# clonable et exécutable sur n'importe quelle machine sans setup manuel).
+from src.bootstrap import ensure_dependencies  # noqa: E402
+ensure_dependencies()
+
+# On importe nos constantes depuis src/config.py (single source of truth) ·
+#   - COLOR_* · palette de couleurs cohérente dans tout le projet
+#   - NUMERIC_FEATURES · liste des 7 capteurs numériques (vibration, temp, ...)
+#   - S02_DIR · raccourci vers reports/02/ où ce script écrit ses sorties
+#   - TARGET_BINARY · nom de la colonne cible ("failure_within_24h")
+#   - ensure_directories · crée les dossiers de sortie si absents
+# Le `# noqa: E402` désactive le warning "import après code" du linter
+# (attendu ici puisqu'on doit d'abord modifier sys.path).
 from src.config import (  # noqa: E402
     COLOR_ALERT_RED,
     COLOR_EFREI_BLUE,
@@ -47,10 +97,14 @@ from src.config import (  # noqa: E402
     TARGET_BINARY,
     ensure_directories,
 )
+# `load_dataset()` · charge le CSV Kaggle depuis data/raw/ et retourne un DataFrame.
 from src.data_loader import load_dataset  # noqa: E402
 
-# Configuration globale des graphiques · style cohérent dans tout le rapport.
+# Configuration globale matplotlib/seaborn · une fois ici, valable pour tous les graphes.
+# `style="whitegrid"` · fond blanc + grille discrète (lisible en impression).
+# `palette="deep"` · palette par défaut seaborn, cohérente entre graphes.
 sns.set_theme(style="whitegrid", palette="deep")
+# Tous les titres de graphes seront automatiquement en gras + couleur EFREI.
 plt.rcParams["axes.titleweight"] = "bold"
 plt.rcParams["axes.titlecolor"] = COLOR_EFREI_DARK
 

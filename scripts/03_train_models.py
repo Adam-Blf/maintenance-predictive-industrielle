@@ -1,62 +1,131 @@
 # -*- coding: utf-8 -*-
-"""Script unique · entraînement et évaluation comparative des 4 modèles.
+"""Script 03 · Entraînement et comparaison des 4 modèles ML.
 
-Architecture pédagogique du fichier (lecture top-down) ·
+À QUOI ÇA SERT ?
+----------------
+C'est le COEUR du projet ML. Ce script ·
+  1. Charge le dataset (24042 lignes, 7 capteurs + 2 catégorielles).
+  2. Découpe en train/test (80% / 20%) pour évaluer honnêtement.
+  3. Entraîne 4 modèles différents sur les mêmes données.
+  4. Compare leurs performances (Accuracy, Precision, Recall, F1, AUC).
+  5. Sélectionne le "meilleur" modèle (compromis perf + stabilité).
 
-  ÉTAPE 1 · Chargement du dataset Kaggle officiel + split stratifié 80/20.
-  ÉTAPE 2 · Préprocesseur scikit-learn (Imputer + Scaler + OHE) · inline.
-  ÉTAPE 3 · MODÉLISATION BASELINE · Logistic Regression sur données
-            prétraitées. Sert de point de référence aux 3 modèles suivants.
-  ÉTAPE 4 · 3 modèles avancés sur les mêmes données prétraitées ·
-            4.1 · Random Forest (bagging d'arbres CART).
+POURQUOI 4 MODÈLES ?
+--------------------
+Le sujet RNCP exige ≥ 4 modèles dont 1 Deep Learning. Pourquoi ? Parce qu'on
+ne peut pas savoir A PRIORI quel modèle est le meilleur sur un dataset donné
+("No Free Lunch theorem"). On en teste plusieurs pour ·
+  - comprendre quelles familles de modèles "matchent" notre problème,
+  - éviter de sur-vendre un modèle qui marche par hasard,
+  - donner au jury une comparaison rigoureuse avec des trade-offs.
+
+Les 4 modèles choisis ont des PHILOSOPHIES TRÈS DIFFÉRENTES ·
+  - Logistic Regression · linéaire, simple, INTERPRÉTABLE. C'est notre
+    BASELINE · si un modèle complexe ne fait pas mieux, autant garder
+    le simple (rasoir d'Occam).
+  - Random Forest · ensemble de 100+ arbres de décision votant à la
+    majorité. Capture des non-linéarités. Robuste au bruit.
+  - XGBoost · gradient boosting · construit les arbres séquentiellement,
+    chaque nouvel arbre corrige les erreurs du précédent. Souvent le
+    plus performant en compétition Kaggle.
+  - MLP (Multi-Layer Perceptron) · réseau de neurones (Deep Learning).
+    Capable d'apprendre des interactions complexes mais nécessite plus
+    de données et de tuning.
+
+ARCHITECTURE PÉDAGOGIQUE (lecture top-down)
+-------------------------------------------
+  ÉTAPE 1 · Chargement du dataset + split stratifié 80/20.
+            "Stratifié" = on garde la même proportion de pannes dans
+            train et test (sinon test biaisé vers les machines saines).
+
+  ÉTAPE 2 · Préprocesseur scikit-learn (Imputer + Scaler + OneHotEncoder).
+            - Imputer · remplit les NaN par la médiane (capteurs en panne).
+            - Scaler · standardise les capteurs (moyenne 0, std 1) pour
+              les modèles linéaires/MLP qui sont sensibles à l'échelle.
+            - OneHotEncoder · transforme "operating_mode=normal" en
+              colonnes booléennes (les modèles ne savent pas lire du texte).
+            ATTENTION DATA LEAKAGE · le préprocesseur est ENTRAÎNÉ sur
+            train UNIQUEMENT puis appliqué au test. Sinon on triche.
+
+  ÉTAPE 3 · MODÉLISATION BASELINE · Logistic Regression. Le minimum
+            qu'on doit battre. Si XGBoost ne fait pas mieux, c'est suspect.
+
+  ÉTAPE 4 · 3 modèles plus puissants ·
+            4.1 · Random Forest (bagging d'arbres).
             4.2 · XGBoost (gradient boosting).
-            4.3 · MLP · Multi-Layer Perceptron (Deep Learning exigé).
-  ÉTAPE 5 · Cross-validation 5-fold stratifiée sur les 4 modèles.
-  ÉTAPE 6 · Comparaison globale, sélection du modèle final candidat.
+            4.3 · MLP · le Deep Learning exigé par le sujet.
 
-Ce script est **autonome** · il contient toute la logique de modélisation
-(loading, preprocessing, définition des 4 modèles, training, CV,
-évaluation, sélection finale) dans un seul fichier lisible top-down.
+  ÉTAPE 5 · Cross-validation 5-fold stratifiée. Au lieu de tester sur 1
+            seul split, on en fait 5 et on prend la moyenne. Plus robuste.
 
-Les seuls imports externes restants vers `src/` concernent ·
-  - les **constantes de configuration** (chemins, seed, etc.) · `src.config`
-  - les **fonctions de plotting** matplotlib (matrices de confusion,
-    courbes ROC/PR, barplots) · `src.evaluation`
-Cela évite ~600 lignes de matplotlib dupliquées sans nuire à la lisibilité
-de la chaîne d'apprentissage.
+  ÉTAPE 6 · Comparaison + sélection du modèle final via le score ·
+            score = F1_test - 0.5 × σ(F1_CV)
+            On pénalise l'instabilité · un modèle qui varie de ±5% selon
+            les folds est risqué en prod, même s'il a un meilleur F1 max.
+
+CE QUI EST ENREGISTRÉ
+---------------------
+  - models/{4 .joblib} · les 4 modèles entraînés.
+  - models/final_model.joblib · copie du meilleur (chargé par dashboard/API).
+  - reports/03/metrics_summary.{csv,json} · tableau comparatif.
+  - reports/03/cv_results.json · scores cross-validation.
+  - reports/03/{ROC, PR, confusion_matrix, barplot}.png · visus rapport.
+
+USAGE
+-----
+    python scripts/03_train_models.py
 """
 
 from __future__ import annotations
 
-import json
-import sys
-import time
+# ---- Standard library (livré avec Python) ----
+import json   # sérialisation Python ↔ JSON (pour exports machine-readable)
+import sys    # accès au PYTHONPATH
+import time   # mesure de la durée d'entraînement (pour l'écoresponsabilité)
+# `dataclass` · décorateur pour créer des classes "structures de données"
+# sans écrire __init__/__repr__ à la main. `asdict` les convertit en dict.
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-import joblib
+# ---- Bibliothèques scientifiques ----
+import joblib  # sérialisation modèles sklearn (plus rapide que pickle pour les arrays)
 import numpy as np
 import pandas as pd
+
+# ---- Scikit-learn · le couteau suisse du ML en Python ----
+# `ColumnTransformer` · applique des transformations différentes à des colonnes
+# différentes (ex. scaler les numériques, encoder les catégorielles).
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
+# Les modèles ML ·
+from sklearn.ensemble import RandomForestClassifier  # forêt d'arbres
+from sklearn.impute import SimpleImputer             # remplit les NaN
+from sklearn.linear_model import LogisticRegression  # baseline linéaire
+# Les métriques d'évaluation pour la classification binaire ·
 from sklearn.metrics import (
-    accuracy_score,
-    average_precision_score,
-    f1_score,
-    precision_score,
-    recall_score,
-    roc_auc_score,
+    accuracy_score,            # % de prédictions correctes (peu utile si déséquilibre)
+    average_precision_score,   # PR-AUC · mieux qu'accuracy si classes déséquilibrées
+    f1_score,                  # moyenne harmonique precision/recall
+    precision_score,           # parmi mes alertes, combien sont vraies ?
+    recall_score,              # parmi les vraies pannes, combien j'ai détectées ?
+    roc_auc_score,             # aire sous la courbe ROC · qualité globale
 )
+# `StratifiedKFold` · cross-validation qui préserve la proportion de classes.
+# `train_test_split` · découpage 80/20 stratifié.
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
-from sklearn.neural_network import MLPClassifier
-from sklearn.pipeline import Pipeline
+from sklearn.neural_network import MLPClassifier   # le Deep Learning exigé par le sujet
+from sklearn.pipeline import Pipeline              # enchaîne preprocessing + modèle
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+# XGBoost · librairie externe (`pip install xgboost`). Gradient boosting très perf.
 from xgboost import XGBClassifier
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+
+# Bootstrap · auto-install des dépendances manquantes (rend le repo
+# clonable et exécutable sur n'importe quelle machine sans setup manuel).
+from src.bootstrap import ensure_dependencies  # noqa: E402
+ensure_dependencies()
 
 # Constantes projet (chemins, seed, listes de features) · centralisees
 # dans src/config.py pour eviter la duplication entre tous les scripts.

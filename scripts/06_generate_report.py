@@ -49,6 +49,11 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+# Bootstrap · auto-install des dépendances manquantes (rend le repo
+# clonable et exécutable sur n'importe quelle machine sans setup manuel).
+from src.bootstrap import ensure_dependencies  # noqa: E402
+ensure_dependencies()
+
 from src.config import ensure_directories  # noqa: E402
 from src.report import render_full_report  # noqa: E402
 
