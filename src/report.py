@@ -30,7 +30,19 @@ from pathlib import Path
 import pandas as pd
 from fpdf import FPDF, XPos, YPos
 
-from .config import EFREI_LOGO, REPORTS_DIR, REPORTS_FIGURES_DIR
+from .config import (
+    EFREI_LOGO,
+    MODELS_DIR,
+    S02_DIR,
+    S03_DIR,
+    S04_DIR,
+    S05_DIR,
+    S06_DIR,
+    S07_DIR,
+    S08_DIR,
+    S09_DIR,
+    S10_DIR,
+)
 
 # ---------------------------------------------------------------------------
 # Charte couleurs RGB (FPDF utilise des tuples 0-255).
@@ -678,12 +690,12 @@ def build_section_dataset(pdf: ProjectReportPDF) -> None:
         "d'une fonction de coût asymetrique (section 8)."
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_target_distribution.png",
+        S02_DIR / "eda_target_distribution.png",
         "Figure 1 - Repartition binaire : ~85 % saines vs ~15 % pannes. "
         "L'accuracy seule est une metrique trompeuse dans ce contexte.",
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_failure_type_distribution.png",
+        S02_DIR / "eda_failure_type_distribution.png",
         "Figure 2 - Repartition des 5 types de panne parmi les cas positifs. "
         "Bearing et motor_overheat sont les plus frequents.",
     )
@@ -731,13 +743,13 @@ def build_section_dataset(pdf: ProjectReportPDF) -> None:
         "homogeneite du pipeline."
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_sensor_distributions.png",
+        S02_DIR / "eda_sensor_distributions.png",
         "Figure 3 - Distributions des capteurs numeriques. Les queues droites "
         "de vibration_rms et hours_since_maintenance signalent des outliers hauts.",
         max_width=180,
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_boxplots_by_class.png",
+        S02_DIR / "eda_boxplots_by_class.png",
         "Figure 4 - Boxplots par classe (0=sain, 1=panne). Vibration et "
         "temperature montrent la separation la plus nette entre les classes.",
         max_width=180,
@@ -763,17 +775,17 @@ def build_section_dataset(pdf: ProjectReportPDF) -> None:
         "de l'imputation des NaN."
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_correlation_heatmap.png",
+        S02_DIR / "eda_correlation_heatmap.png",
         "Figure 5 - Matrice de correlation. Couples rpm/current et "
         "temperature_motor/ambient_temp a surveiller (multicolinearite moderee).",
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_scatter_vib_temp.png",
+        S02_DIR / "eda_scatter_vib_temp.png",
         "Figure 6 - Scatter vibration x temperature. Les pannes (rouge) "
         "occupent le quadrant haut-droit : fort signal pour les modeles.",
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "eda_operating_mode.png",
+        S02_DIR / "eda_operating_mode.png",
         "Figure 7 - Taux de panne par mode operatoire. Le mode peak concentre "
         "les defaillances malgre un volume minoritaire : feature discriminante forte.",
     )
@@ -818,7 +830,7 @@ def build_section_methodology(pdf: ProjectReportPDF) -> None:
         "en local."
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "diagram_architecture.png",
+        S05_DIR / "diagram_architecture.png",
         "Schema 1 - Architecture cible du systeme intelligent (3 couches "
         "Medallion + API REST + Dashboard).",
         max_width=180,
@@ -852,7 +864,7 @@ def build_section_methodology(pdf: ProjectReportPDF) -> None:
         "applique sans reapprendre."
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "diagram_ml_pipeline.png",
+        S05_DIR / "diagram_ml_pipeline.png",
         "Schema 2 - Pipeline ML sequentiel : 8 etapes du brut au modele "
         "deployable. Chaque etape est un script Python autonome reproductible.",
         max_width=180,
@@ -899,16 +911,16 @@ def build_section_methodology(pdf: ProjectReportPDF) -> None:
         "bayesienne. Le TPE (Tree-structured Parzen Estimator) modele "
         "probabilistement les regions prometteuses de l'espace de recherche "
         "et converge 3 a 5 fois plus vite qu'un grid search sur des espaces "
-        "larges. Les resultats Optuna sont exportes dans `reports/tuning_results.json` "
+        "larges. Les resultats Optuna sont exportes dans `reports/09/tuning_results.json` "
         "et presentes en section 11."
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "diagram_bias_variance.png",
+        S05_DIR / "diagram_bias_variance.png",
         "Schema 3 - Positionnement des 4 modeles sur le spectre biais/variance. "
         "Le minimum d'erreur de generalisation n'est pas le modele le plus complexe.",
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "diagram_decision_workflow.png",
+        S05_DIR / "diagram_decision_workflow.png",
         "Schema 4 - Du signal capteur a l'action terrain. SHAP intervient "
         "post-prediction pour expliquer la decision a l'operateur.",
         max_width=180,
@@ -1041,7 +1053,7 @@ def build_section_évaluation(pdf: ProjectReportPDF) -> None:
     pdf.add_page()
     pdf.h1("5. Evaluation comparative des modeles")
 
-    metrics_csv = REPORTS_DIR / "metrics_summary.csv"
+    metrics_csv = S03_DIR / "metrics_summary.csv"
     if metrics_csv.exists():
         metrics_df = pd.read_csv(metrics_csv)
         cols = ["model_name", "accuracy", "precision", "recall", "f1", "roc_auc"]
@@ -1114,31 +1126,31 @@ def build_section_évaluation(pdf: ProjectReportPDF) -> None:
 
     pdf.h2("5.5 Visualisation comparative")
     pdf.figure(
-        REPORTS_FIGURES_DIR / "metrics_comparison_barplot.png",
+        S03_DIR / "metrics_comparison_barplot.png",
         "Figure 8 - Histogramme groupe des 6 metriques cles. Le compromis "
         "Precision/Recall est directement visible par modele.",
         max_width=180,
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "roc_curves_comparison.png",
+        S03_DIR / "roc_curves_comparison.png",
         "Figure 9 - Courbes ROC superposees. L'AUC mesure la capacite "
         "discriminante globale independamment du seuil.",
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "pr_curves_comparison.png",
+        S03_DIR / "pr_curves_comparison.png",
         "Figure 10 - Courbes Precision-Recall. Plus informative que ROC "
         "en regime desequilibre : une PR-AUC elevee signifie peu de FP "
         "pour un Recall donne.",
     )
     pdf.figure(
-        REPORTS_FIGURES_DIR / "compute_cost_comparison.png",
+        S03_DIR / "compute_cost_comparison.png",
         "Figure 11 - Temps d'entraînement et latence d'inference. "
         "Le MLP est le plus coûteux, la Reg. Log. la plus rapide.",
         max_width=180,
     )
 
     pdf.h2("5.6 Selection du modele final candidat")
-    final_name_path = REPORTS_DIR.parent / "models" / "final_model_name.txt"
+    final_name_path = MODELS_DIR / "final_model_name.txt"
     final_name = (
         final_name_path.read_text(encoding="utf-8").strip()
         if final_name_path.exists()
@@ -1164,7 +1176,7 @@ def build_section_évaluation(pdf: ProjectReportPDF) -> None:
         "les FP dans la case (0,1)."
     )
     for model_name in ["logistic_regression", "random_forest", "xgboost", "mlp"]:
-        cm_path = REPORTS_FIGURES_DIR / f"confusion_matrix_{model_name}.png"
+        cm_path = S03_DIR / f"confusion_matrix_{model_name}.png"
         if cm_path.exists():
             pdf.figure(
                 cm_path,
@@ -1231,7 +1243,7 @@ def build_section_interpretability(pdf: ProjectReportPDF, final_name: str) -> No
         "des 200 arbres. Pour XGBoost c'est le gain moyen par split "
         "sur tous les arbres. Ces deux mesures sont normalisees a 1."
     )
-    native_fig = REPORTS_FIGURES_DIR / f"feature_importance_native_{final_name}.png"
+    native_fig = S04_DIR / f"feature_importance_native_{final_name}.png"
     if native_fig.exists():
         pdf.figure(
             native_fig,
@@ -1250,7 +1262,7 @@ def build_section_interpretability(pdf: ProjectReportPDF, final_name: str) -> No
         "peuvent etre supprimees sans perte significative de performance "
         "(candidats a la simplification du modele)."
     )
-    perm_fig = REPORTS_FIGURES_DIR / f"permutation_importance_{final_name}.png"
+    perm_fig = S04_DIR / f"permutation_importance_{final_name}.png"
     if perm_fig.exists():
         pdf.figure(
             perm_fig,
@@ -1271,8 +1283,8 @@ def build_section_interpretability(pdf: ProjectReportPDF, final_name: str) -> No
         "positive au risque de panne), les points bleus (faible vibration) "
         "sont a gauche. Ce schema est parfaitement coherent avec la physique."
     )
-    shap_summary = REPORTS_FIGURES_DIR / f"shap_summary_{final_name}.png"
-    shap_bar = REPORTS_FIGURES_DIR / f"shap_bar_{final_name}.png"
+    shap_summary = S04_DIR / f"shap_summary_{final_name}.png"
+    shap_bar = S04_DIR / f"shap_bar_{final_name}.png"
     if shap_summary.exists():
         pdf.figure(
             shap_summary,
@@ -1449,7 +1461,7 @@ def build_section_conclusion(pdf: ProjectReportPDF) -> None:
         "predictive industrielle integrant l'ensemble des briques "
         "fondamentales d'un systeme d'IA en production."
     )
-    final_name_path = REPORTS_DIR.parent / "models" / "final_model_name.txt"
+    final_name_path = MODELS_DIR / "final_model_name.txt"
     final_name = (
         final_name_path.read_text(encoding="utf-8").strip()
         if final_name_path.exists()
@@ -1604,11 +1616,11 @@ def build_section_calibration(pdf: ProjectReportPDF) -> None:
         "0.25 = modele aleatoire). Un Brier score < 0.15 est generalement "
         "considere comme bien calibre pour un dataset desequilibre a 15%."
     )
-    final_name_path = REPORTS_DIR.parent / "models" / "final_model_name.txt"
+    final_name_path = MODELS_DIR / "final_model_name.txt"
     final_name = (
         final_name_path.read_text(encoding="utf-8").strip() if final_name_path.exists() else "model"
     )
-    rel_fig = REPORTS_FIGURES_DIR / f"reliability_diagram_{final_name}.png"
+    rel_fig = S10_DIR / f"reliability_diagram_{final_name}.png"
     if rel_fig.exists():
         pdf.figure(
             rel_fig,
@@ -1634,7 +1646,7 @@ def build_section_calibration(pdf: ProjectReportPDF) -> None:
         "Le ratio 10:1 est typique des cas de maintenance predictive "
         "en manufacturing et reflète l'asymetrie reelle des consequences."
     )
-    cost_fig = REPORTS_FIGURES_DIR / f"cost_threshold_{final_name}.png"
+    cost_fig = S10_DIR / f"cost_threshold_{final_name}.png"
     if cost_fig.exists():
         pdf.figure(
             cost_fig,
@@ -1643,7 +1655,7 @@ def build_section_calibration(pdf: ProjectReportPDF) -> None:
             "La zone grisee represente l'economie realisee vs seuil par defaut.",
         )
 
-    threshold_path = REPORTS_DIR.parent / "models" / "optimal_threshold.json"
+    threshold_path = MODELS_DIR / "optimal_threshold.json"
     if threshold_path.exists():
         info = json.loads(threshold_path.read_text(encoding="utf-8"))
         cost_default = (
@@ -1695,7 +1707,7 @@ def build_section_bonus_tasks(pdf: ProjectReportPDF) -> None:
         "systematiquement les defauts electriques serait inacceptable "
         "meme s'ils sont rares."
     )
-    multi_csv = REPORTS_DIR / "metrics_multiclass.csv"
+    multi_csv = S07_DIR / "metrics_multiclass.csv"
     if multi_csv.exists():
         df_multi = pd.read_csv(multi_csv)
         pdf.metrics_table(
@@ -1703,7 +1715,7 @@ def build_section_bonus_tasks(pdf: ProjectReportPDF) -> None:
             "Metriques multi-classe (5 classes : none/bearing/motor_overheat/"
             "hydraulic/electrical). Macro-F1 = metrique principale.",
         )
-    cm_fig = REPORTS_FIGURES_DIR / "multiclass_confusion_matrix.png"
+    cm_fig = S07_DIR / "multiclass_confusion_matrix.png"
     if cm_fig.exists():
         pdf.figure(
             cm_fig,
@@ -1735,14 +1747,14 @@ def build_section_bonus_tasks(pdf: ProjectReportPDF) -> None:
         "(coefficient de determination, 1 = prediction parfaite, "
         "0 = modele constant sur la moyenne)."
     )
-    reg_csv = REPORTS_DIR / "metrics_regression.csv"
+    reg_csv = S08_DIR / "metrics_regression.csv"
     if reg_csv.exists():
         df_reg = pd.read_csv(reg_csv)
         pdf.metrics_table(
             df_reg,
             "Metriques regression RUL (MAE en heures, RMSE en heures, R2).",
         )
-    pred_fig = REPORTS_FIGURES_DIR / "regression_pred_vs_true.png"
+    pred_fig = S08_DIR / "regression_pred_vs_true.png"
     if pred_fig.exists():
         pdf.figure(
             pred_fig,
@@ -1776,7 +1788,7 @@ def build_section_bonus_tasks(pdf: ProjectReportPDF) -> None:
 
 def build_section_tuning(pdf: ProjectReportPDF) -> None:
     """Section · hyperparameter tuning Optuna (si résultats disponibles)."""
-    tuning_path = REPORTS_DIR / "tuning_results.json"
+    tuning_path = S09_DIR / "tuning_results.json"
     if not tuning_path.exists():
         return
     pdf.add_page()
@@ -1838,7 +1850,7 @@ def build_section_ecoresponsabilite(pdf: ProjectReportPDF) -> None:
         "Les metriques collectees sont : kWh consommes, gCO2eq emis, "
         "duree en secondes, type de materiel (CPU/GPU), pays et region "
         "detectes. Les resultats sont persistes dans "
-        "`codecarbon_emissions.csv` et agreges dans `reports/metrics_summary.csv`."
+        "`codecarbon_emissions.csv` et agreges dans `reports/03/metrics_summary.csv`."
     )
 
     pdf.h2("9.3 Comparaison energetique des 4 modeles")
@@ -1948,7 +1960,7 @@ def build_annex_rncp(pdf: ProjectReportPDF) -> None:
             "7 figures EDA (distributions, boxplots, correlations, scatter, "
             "operating_mode). Statistiques descriptives. Detection d'aberrations. "
             "Multicolinearite analysee. Section 2 du present rapport. "
-            "Preuve : scripts/02_eda.py genere les figures dans reports/figures/.",
+            "Preuve : scripts/02_eda.py genere les figures dans reports/02/.",
         ),
         (
             "C4.1",
@@ -1971,7 +1983,7 @@ def build_annex_rncp(pdf: ProjectReportPDF) -> None:
             "6 metriques (Acc/Prec/Rec/F1/ROC-AUC/PR-AUC). Courbes ROC/PR. "
             "Matrices de confusion. Threshold metier optimise. "
             "Ecoresponsabilite CodeCarbon (section 9). SHAP 3 niveaux (section 6). "
-            "Fichier : src/evaluation.py. Preuve : reports/metrics_summary.csv genere.",
+            "Fichier : src/evaluation.py. Preuve : reports/03/metrics_summary.csv genere.",
         ),
     ]
 
@@ -2012,9 +2024,9 @@ def build_annex_rncp(pdf: ProjectReportPDF) -> None:
     pdf.bullet("Dashboard : dashboard/app.py (Streamlit).")
     pdf.bullet("API : api/main.py (FastAPI) avec validation Pydantic v2.")
     pdf.bullet("Modeles serialises : models/*.joblib.")
-    pdf.bullet("Figures : reports/figures/ (33 fichiers PNG).")
-    pdf.bullet("Metriques : reports/metrics_summary.csv, reports/tuning_results.json.")
-    pdf.bullet("Rapport PDF : reports/rapport_projet_data_science.pdf (le present document).")
+    pdf.bullet("Figures : reports/NN/ (un sous-dossier par script, ~33 PNG total).")
+    pdf.bullet("Metriques : reports/03/metrics_summary.csv, reports/09/tuning_results.json.")
+    pdf.bullet("Rapport PDF : reports/06/rapport_projet_data_science.pdf (le present document).")
 
 
 def build_annex_bibliography(pdf: ProjectReportPDF) -> None:
@@ -2187,7 +2199,7 @@ def render_full_report(output_path: Path | None = None) -> Path:
     pdf.set_compression(True)
 
     # Recuperation du nom du modèle final pour la section interprétabilité.
-    final_name_path = REPORTS_DIR.parent / "models" / "final_model_name.txt"
+    final_name_path = MODELS_DIR / "final_model_name.txt"
     final_name = (
         final_name_path.read_text(encoding="utf-8").strip() if final_name_path.exists() else "model"
     )
@@ -2210,6 +2222,6 @@ def render_full_report(output_path: Path | None = None) -> Path:
     build_annex_bibliography(pdf)
     build_annex_glossary(pdf)
 
-    target = output_path or (REPORTS_DIR / "rapport_projet_data_science.pdf")
+    target = output_path or (S06_DIR / "rapport_projet_data_science.pdf")
     pdf.output(str(target))
     return target

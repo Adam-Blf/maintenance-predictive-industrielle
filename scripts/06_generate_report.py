@@ -8,11 +8,13 @@ toutes les figures, métriques et textes en un rapport PDF structuré.
 
 Entrées requises
 ----------------
-reports/figures/*.png
-    Toutes les figures générées par les scripts 02 à 05 :
-    matrices de confusion, courbes ROC/PR, SHAP plots, schémas.
-reports/metrics_*.csv / metrics_*.json
-    Tableaux de métriques générés par les scripts 03, 07, 08.
+reports/02..05/*.png, reports/07/*.png, reports/08/*.png, reports/10/*.png
+    Toutes les figures générées par les scripts 02 à 10 :
+    EDA, schémas, matrices de confusion, courbes ROC/PR, SHAP plots,
+    multiclass, régression, calibration.
+reports/03/metrics_summary.csv, reports/07/metrics_multiclass.csv,
+reports/08/metrics_regression.csv, reports/09/tuning_results.json
+    Tableaux de métriques générés par les scripts 03, 07, 08, 09.
 models/final_model_name.txt
     Nom du modèle retenu (pour personnaliser les sections du rapport).
 assets/logo_efrei*.png
@@ -20,7 +22,7 @@ assets/logo_efrei*.png
 
 Sortie
 ------
-reports/rapport_maintenance_predictive.pdf
+reports/06/rapport_projet_data_science.pdf
     Rapport complet ~30 pages : page de garde, contexte, données,
     modélisation, résultats, interprétabilité, calibration, annexes.
     Encodé UTF-8 pour les caractères accentués.

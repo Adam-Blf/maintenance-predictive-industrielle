@@ -21,10 +21,10 @@ data/processed/y_test.csv
 
 Sorties
 -------
-reports/figures/reliability_diagram_{model}.png
+reports/10/reliability_diagram_{model}.png
     Diagramme de fiabilité + Brier score. Un modèle parfaitement calibré
     suit la diagonale.
-reports/figures/cost_threshold_{model}.png
+reports/10/cost_threshold_{model}.png
     Courbe coût total (FN + FP) en fonction du seuil de décision.
 models/optimal_threshold.json
     Seuil optimal et info associée (coûts, FN/FP comparés). Consommé
@@ -69,6 +69,7 @@ from src.calibration import (  # noqa: E402
 from src.config import (  # noqa: E402
     DATA_PROCESSED_DIR,
     MODELS_DIR,
+    S10_DIR,
     ensure_directories,
 )
 
@@ -86,13 +87,14 @@ def main() -> None:
     y_proba = pipeline.predict_proba(X_test)[:, 1]
 
     print("[CALIB] Reliability diagram + Brier score...")
-    rel_path, brier = reliability_diagram(y_test.values, y_proba, final_name)
+    rel_path, brier = reliability_diagram(y_test.values, y_proba, final_name, output_dir=S10_DIR)
     print(f"  Brier score = {brier:.4f} (plus c'est bas, mieux c'est calibre)")
     print(f"  Sauvegarde · {rel_path}")
 
     print("[CALIB] Optimisation du seuil metier (FN=1000 EUR, FP=100 EUR)...")
     cost_path, optimal_t, info = cost_recall_curve(
-        y_test.values, y_proba, final_name, cost_fn=1000.0, cost_fp=100.0
+        y_test.values, y_proba, final_name, cost_fn=1000.0, cost_fp=100.0,
+        output_dir=S10_DIR,
     )
     print(f"  Seuil optimal · {optimal_t:.3f}")
     print(f"  Cout total au seuil optimal · {info['optimal_cost_eur']:.0f} EUR")

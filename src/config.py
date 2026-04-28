@@ -44,12 +44,41 @@ DATA_PROCESSED_DIR: Path = PROJECT_ROOT / "data" / "processed"
 # Artefacts modèles sérialisés (joblib) · un fichier par modèle entraîné.
 MODELS_DIR: Path = PROJECT_ROOT / "models"
 
-# Sortie graphique · figures EDA, matrices de confusion, ROC, schémas
-# pédagogiques utilisés par FPDF2 dans le rapport final.
-REPORTS_FIGURES_DIR: Path = PROJECT_ROOT / "reports" / "figures"
-
 # Rapport PDF généré + dossier reports/ pour les annexes.
 REPORTS_DIR: Path = PROJECT_ROOT / "reports"
+
+# Convention de sortie · chaque script `scripts/NN_*.py` écrit ses
+# artefacts (figures, CSV, JSON) dans `reports/NN/` à plat. Cela garantit
+# une traçabilité directe entre un fichier de sortie et le script qui l'a
+# produit · `reports/02/eda_target_distribution.png` ⇔ `scripts/02_eda.py`.
+def script_output_dir(script_number: int) -> Path:
+    """Retourne le dossier de sortie d'un script numéroté.
+
+    Crée le dossier si nécessaire (idempotent). `script_number=2` retourne
+    `reports/02/`. Les figures, CSV, JSON et autres artefacts du script
+    vivent à plat dans ce dossier (pas de sous-niveau `figures/`).
+    """
+    out = REPORTS_DIR / f"{script_number:02d}"
+    out.mkdir(parents=True, exist_ok=True)
+    return out
+
+
+# Constantes par script · pré-calculées pour import direct depuis les
+# scripts. `from src.config import S02_DIR` puis `S02_DIR / "fig.png"`.
+S02_DIR: Path = REPORTS_DIR / "02"  # EDA descriptive
+S03_DIR: Path = REPORTS_DIR / "03"  # Train binaire (3 modèles + baseline)
+S04_DIR: Path = REPORTS_DIR / "04"  # Interprétabilité (SHAP, permutation)
+S05_DIR: Path = REPORTS_DIR / "05"  # Schémas pédagogiques
+S06_DIR: Path = REPORTS_DIR / "06"  # Rapport PDF final
+S07_DIR: Path = REPORTS_DIR / "07"  # Train multiclass
+S08_DIR: Path = REPORTS_DIR / "08"  # Train régression RUL
+S09_DIR: Path = REPORTS_DIR / "09"  # Tuning Optuna
+S10_DIR: Path = REPORTS_DIR / "10"  # Calibration + cost-sensitive threshold
+S11_DIR: Path = REPORTS_DIR / "11"  # Slides PowerPoint
+
+# Alias rétro-compatible · pointe sur S02_DIR pour les figures EDA, mais
+# tout nouveau code doit utiliser SNN_DIR ou script_output_dir(N).
+REPORTS_FIGURES_DIR: Path = REPORTS_DIR / "figures"
 
 # Logo EFREI utilisé en page de garde du rapport et dans le dashboard.
 ASSETS_DIR: Path = PROJECT_ROOT / "assets"
@@ -159,14 +188,18 @@ def ensure_directories() -> None:
     - data/raw         · CSV Kaggle brut ou synthétique.
     - data/processed   · exports train/test splits.
     - models/          · artefacts joblib des modèles entraînés.
-    - reports/figures/ · PNG des graphiques (EDA, métriques, SHAP, etc.).
-    - reports/         · rapport PDF, CSV métriques, JSON résultats.
+    - reports/         · racine, rapport PDF agrégé.
+    - reports/NN/      · sorties par script (NN = numéro du script).
     """
-    for directory in (
+    base_dirs = (
         DATA_RAW_DIR,
         DATA_PROCESSED_DIR,
         MODELS_DIR,
-        REPORTS_FIGURES_DIR,
         REPORTS_DIR,
-    ):
+    )
+    script_dirs = (
+        S02_DIR, S03_DIR, S04_DIR, S05_DIR, S06_DIR,
+        S07_DIR, S08_DIR, S09_DIR, S10_DIR, S11_DIR,
+    )
+    for directory in base_dirs + script_dirs:
         directory.mkdir(parents=True, exist_ok=True)

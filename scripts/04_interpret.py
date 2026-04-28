@@ -18,7 +18,7 @@ data/processed/X_test.csv
 data/processed/y_test.csv
     Labels du test set (sauvegardées par le script 03).
 
-Sorties (dans reports/figures/)
+Sorties (dans reports/04/)
 ---------------------------------
 feature_importance_native_{model}.png
     Importance des features par réduction d'impureté (si RF/XGB).
@@ -59,6 +59,7 @@ from src.config import (  # noqa: E402
     ALL_FEATURES,
     DATA_PROCESSED_DIR,
     MODELS_DIR,
+    S04_DIR,
     ensure_directories,
 )
 from src.interpretability import (  # noqa: E402
@@ -94,7 +95,9 @@ def main() -> None:
     # 1. Feature importance native (si applicable).
     # ------------------------------------------------------------------
     print("[INTERPRET] 1/3 · Feature importance native...")
-    native_path = plot_native_feature_importance(pipeline, feature_names_processed, final_name)
+    native_path = plot_native_feature_importance(
+        pipeline, feature_names_processed, final_name, output_dir=S04_DIR
+    )
     if native_path:
         print(f"  -> {native_path}")
     else:
@@ -110,6 +113,7 @@ def main() -> None:
         y_test,
         feature_names_raw=ALL_FEATURES,
         model_name=final_name,
+        output_dir=S04_DIR,
     )
     print(f"  -> {perm_path}")
 
@@ -123,6 +127,7 @@ def main() -> None:
         feature_names_processed=feature_names_processed,
         model_name=final_name,
         max_samples=400,
+        output_dir=S04_DIR,
     )
     if shap_summary:
         print(f"  -> {shap_summary}")

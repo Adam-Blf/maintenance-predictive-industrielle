@@ -69,7 +69,7 @@ from src.config import (  # noqa: E402
     MODELS_DIR,
     NUMERIC_FEATURES,
     RANDOM_STATE,
-    REPORTS_DIR,
+    S03_DIR,
     TARGET_BINARY,
     TEST_SIZE,
     ensure_directories,
@@ -377,7 +377,7 @@ def train_one_model(name: str, pipeline: Pipeline, X_train, y_train, X_test, y_t
     model_path = MODELS_DIR / f"{name}.joblib"
     joblib.dump(pipeline, model_path, compress=3)
     print(f"  Saved · {model_path}")
-    plot_confusion_matrix(y_test.values, y_pred, name)
+    plot_confusion_matrix(y_test.values, y_pred, name, output_dir=S03_DIR)
 
     return metrics, y_pred, y_proba, pipeline
 
@@ -555,17 +555,17 @@ def main() -> None:
     # ÉTAPE 6 · Comparaison globale + selection du modele final
     # ==================================================================
     _banner("ÉTAPE 6 · Comparaison globale + selection du modele final")
-    plot_roc_curves(roc_payload)
-    plot_pr_curves(roc_payload)
-    plot_metrics_barplot(metrics_df)
-    plot_training_time_barplot(metrics_df)
+    plot_roc_curves(roc_payload, output_dir=S03_DIR)
+    plot_pr_curves(roc_payload, output_dir=S03_DIR)
+    plot_metrics_barplot(metrics_df, output_dir=S03_DIR)
+    plot_training_time_barplot(metrics_df, output_dir=S03_DIR)
 
     # Persistance · CSV pour Excel/Pandas + JSON pour Streamlit/API.
-    metrics_df.to_csv(REPORTS_DIR / "metrics_summary.csv", index=False)
+    metrics_df.to_csv(S03_DIR / "metrics_summary.csv", index=False)
     metrics_df.to_json(
-        REPORTS_DIR / "metrics_summary.json", orient="records", indent=2
+        S03_DIR / "metrics_summary.json", orient="records", indent=2
     )
-    with open(REPORTS_DIR / "cv_results.json", "w", encoding="utf-8") as f:
+    with open(S03_DIR / "cv_results.json", "w", encoding="utf-8") as f:
         json.dump(cv_results, f, indent=2)
 
     # Selection finale · F1 test - 0.5 × ecart-type CV.

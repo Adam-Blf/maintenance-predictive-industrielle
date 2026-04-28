@@ -19,9 +19,9 @@ models/regression_final.joblib
     Copie du meilleur modèle (critère : R² le plus élevé sur test set).
 models/regression_final_name.txt
     Nom textuel du meilleur modèle.
-reports/metrics_regression.csv / .json
+reports/08/metrics_regression.csv / .json
     Tableau comparatif MAE (h), RMSE (h), R², temps d'entraînement.
-reports/figures/regression_pred_vs_true.png
+reports/08/regression_pred_vs_true.png
     Scatter plot prédictions vs valeurs réelles du meilleur modèle.
 
 Pré-requis
@@ -61,8 +61,7 @@ from src.config import (  # noqa: E402
     COLOR_EFREI_DARK,
     MODELS_DIR,
     RANDOM_STATE,
-    REPORTS_DIR,
-    REPORTS_FIGURES_DIR,
+    S08_DIR,
     TARGET_REGRESSION,
     TEST_SIZE,
     ensure_directories,
@@ -128,8 +127,8 @@ def main() -> None:
     print(f"\n[FINAL] Régression · meilleur modèle = {best_name}")
     print(df_results.to_string(index=False))
 
-    df_results.to_csv(REPORTS_DIR / "metrics_regression.csv", index=False)
-    df_results.to_json(REPORTS_DIR / "metrics_regression.json", orient="records", indent=2)
+    df_results.to_csv(S08_DIR / "metrics_regression.csv", index=False)
+    df_results.to_json(S08_DIR / "metrics_regression.json", orient="records", indent=2)
 
     # Scatter prédiction vs vérité pour le best model.
     fig, ax = plt.subplots(figsize=(8, 7))
@@ -158,7 +157,7 @@ def main() -> None:
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
-    fig.savefig(REPORTS_FIGURES_DIR / "regression_pred_vs_true.png", dpi=150, bbox_inches="tight")
+    fig.savefig(S08_DIR / "regression_pred_vs_true.png", dpi=150, bbox_inches="tight")
     plt.close(fig)
 
     # Persistance · meilleur modèle régression.

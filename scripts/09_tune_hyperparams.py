@@ -16,7 +16,7 @@ data/raw/predictive_maintenance_v3.csv
 
 Sorties
 -------
-reports/tuning_results.json
+reports/09/tuning_results.json
     Dictionnaire {model_name: {best_params, best_value}} pour les 3
     modèles tunés (RF, XGB, MLP). Consultable sans ré-exécuter le script.
 
@@ -56,7 +56,7 @@ from src.config import (  # noqa: E402
     ALL_FEATURES,
     DATA_PROCESSED_DIR,
     RANDOM_STATE,
-    REPORTS_DIR,
+    S09_DIR,
     TARGET_BINARY,
     ensure_directories,
 )
@@ -84,7 +84,7 @@ def main() -> None:
     print("[TUNING] Lancement Optuna · ~3-5 minutes total...")
     results = tune_all(X_sub, y_sub, n_trials_each=20)
 
-    output = REPORTS_DIR / "tuning_results.json"
+    output = S09_DIR / "tuning_results.json"
     output.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
     print(f"\n[TUNING] Resultats sauvegardes dans {output}")
 

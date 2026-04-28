@@ -22,11 +22,11 @@ models/multiclass_final_name.txt
 models/multiclass_classes.json
     Liste ordonnée des classes (nécessaire pour décoder les prédictions
     XGBoost qui retourne des entiers).
-reports/metrics_multiclass.csv / .json
+reports/07/metrics_multiclass.csv / .json
     Tableau comparatif des 4 modèles (accuracy, macro-F1, weighted-F1).
-reports/multiclass_confusion_matrix.png
+reports/07/multiclass_confusion_matrix.png
     Matrice de confusion normalisée du meilleur modèle.
-reports/multiclass_classification_report.json
+reports/07/multiclass_classification_report.json
     Precision/Recall/F1 par classe pour le meilleur modèle.
 
 Pré-requis
@@ -74,8 +74,7 @@ from src.config import (  # noqa: E402
     DATA_PROCESSED_DIR,
     MODELS_DIR,
     RANDOM_STATE,
-    REPORTS_DIR,
-    REPORTS_FIGURES_DIR,
+    S07_DIR,
     TARGET_MULTICLASS,
     TEST_SIZE,
     ensure_directories,
@@ -170,8 +169,8 @@ def main() -> None:
     print(f"\n[FINAL] Multi-classe · meilleur modèle = {best_name}")
     print(df_results.to_string(index=False))
 
-    df_results.to_csv(REPORTS_DIR / "metrics_multiclass.csv", index=False)
-    df_results.to_json(REPORTS_DIR / "metrics_multiclass.json", orient="records", indent=2)
+    df_results.to_csv(S07_DIR / "metrics_multiclass.csv", index=False)
+    df_results.to_json(S07_DIR / "metrics_multiclass.json", orient="records", indent=2)
 
     # Matrice de confusion du meilleur modèle.
     y_true_best, y_pred_best = cm_data[best_name]
@@ -198,7 +197,7 @@ def main() -> None:
     )
     plt.tight_layout()
     fig.savefig(
-        REPORTS_FIGURES_DIR / "multiclass_confusion_matrix.png", dpi=150, bbox_inches="tight"
+        S07_DIR / "multiclass_confusion_matrix.png", dpi=150, bbox_inches="tight"
     )
     plt.close(fig)
 
@@ -210,7 +209,7 @@ def main() -> None:
         output_dict=True,
         zero_division=0,
     )
-    with open(REPORTS_DIR / "multiclass_classification_report.json", "w", encoding="utf-8") as f:
+    with open(S07_DIR / "multiclass_classification_report.json", "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
 
     # Persistance · meilleur modèle multi-classe + classes.

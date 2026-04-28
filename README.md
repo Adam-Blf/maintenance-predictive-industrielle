@@ -187,11 +187,11 @@ IoT Sensors (vibration, T°, RPM, pression, ...)
 | Étape | Fichier de sortie | Taille approx. | Contenu |
 | ----- | ------------------ | -------------- | ------- |
 | 01    | `data/raw/predictive_maintenance_v3.csv` | 2.8 MB | 24 042 rows × 15 cols |
-| 02    | `reports/figures/*.png` (7 figures) | 15 MB | Distributions, corrélations |
-| 03    | `models/final_model.joblib` | 8 MB | Pipeline compressé (seed=42) |
-| 04    | `reports/figures/shap_*.png` (5 figures) | 12 MB | Force, Waterfall, Summary plots |
-| 05    | `reports/figures/diagram_*.png` (4 schémas) | 8 MB | Diagrams pédagogiques |
-| 06    | `reports/rapport_projet_data_science.pdf` | 22 MB | 20 pages + figures embarquées |
+| 02    | `reports/02/*.png` (8 figures + 2 CSV) | 15 MB | Distributions, corrélations, NaN |
+| 03    | `models/final_model.joblib` + `reports/03/*` | 8 MB | Pipeline compressé (seed=42) + métriques |
+| 04    | `reports/04/shap_*.png` (5 figures) | 12 MB | Force, Waterfall, Summary plots |
+| 05    | `reports/05/diagram_*.png` (4 schémas) | 8 MB | Diagrams pédagogiques |
+| 06    | `reports/06/rapport_projet_data_science.pdf` | 22 MB | 20 pages + figures embarquées |
 
 ### Prérequis machine
 
@@ -269,7 +269,7 @@ python scripts/05_generate_diagrams.py
 python scripts/06_generate_report.py
 ```
 
-Sortie principale · `reports/rapport_projet_data_science.pdf`.
+Sortie principale · `reports/06/rapport_projet_data_science.pdf`.
 
 ### Tâches bonus (optionnelles, exécutables après 03)
 
@@ -682,22 +682,18 @@ maintenance-predictive-industrielle/
 │   ├── xgboost.joblib
 │   └── mlp.joblib
 ├── reports/
-│   ├── figures/                          # PNG générés (EDA, ROC, PR, schémas, SHAP)
-│   │   ├── 01_eda_distributions.png
-│   │   ├── 02_eda_correlations.png
-│   │   ├── 03_confusion_matrix.png
-│   │   ├── 04_roc_curves.png
-│   │   ├── 05_pr_curves.png
-│   │   ├── 06_metrics_barplot.png
-│   │   ├── 07_training_time.png
-│   │   ├── shap_force_plot.png
-│   │   ├── shap_waterfall_plot.png
-│   │   ├── shap_summary_plot.png
-│   │   ├── diagram_architecture.png
-│   │   └── diagram_bias_variance.png
-│   ├── codecarbon/                       # Émissions CO₂ par modèle
-│   ├── rapport_projet_data_science.pdf   # Rapport final (20+ pages)
-│   └── presentation.pptx                 # Slides (11 slides EFREI, bonus)
+│   ├── 02/                               # Sorties scripts/02_eda.py (EDA · 8 PNG + 2 CSV)
+│   ├── 03/                               # Sorties scripts/03_train_models.py (métriques + CM + ROC/PR)
+│   ├── 04/                               # Sorties scripts/04_interpret.py (SHAP + permutation)
+│   ├── 05/                               # Sorties scripts/05_generate_diagrams.py (4 schémas)
+│   ├── 06/                               # Sorties scripts/06_generate_report.py (rapport PDF)
+│   │   └── rapport_projet_data_science.pdf
+│   ├── 07/                               # Sorties scripts/07_train_multiclass.py (bonus)
+│   ├── 08/                               # Sorties scripts/08_train_regression.py (RUL, bonus)
+│   ├── 09/                               # Sorties scripts/09_tune_hyperparams.py (Optuna, bonus)
+│   ├── 10/                               # Sorties scripts/10_calibrate.py (calibration, bonus)
+│   ├── 11/                               # Sorties scripts/11_generate_slides.py (PPTX bonus)
+│   └── codecarbon/                       # Émissions CO₂ par modèle (transverse)
 ├── scripts/
 │   ├── 02_eda.py                         # Analyse exploratoire (8 graphiques + analyse NaN)
 │   ├── 03_train_models.py                # Entraînement 4 modèles + CV + évaluation
@@ -740,7 +736,7 @@ maintenance-predictive-industrielle/
 ├── data/raw/*.csv                        # Dataset brut (fourni externally)
 ├── data/processed/                       # Splits train/test
 ├── models/*.joblib                       # Modèles sérialisés
-├── reports/figures/*.png                 # Figures générées
+├── reports/NN/*.png                      # Figures générées (NN = numéro du script qui produit)
 ├── reports/codecarbon/                   # Logs CodeCarbon
 ├── __pycache__/                          # Bytecode compilé
 ├── .pytest_cache/                        # Cache pytest
@@ -1096,7 +1092,7 @@ grep "F1.*XGBoost" .../*.log
 | ---- | --------- | -------------- | ---------------------- |
 | **C3.1** | Préparer et transformer les données | ColumnTransformer (Imputer + Scaler + OHE) · `preprocessing.py` · anti-leakage pipeline sklearn | `src/preprocessing.py` lignes 40-120 · schéma dans section "Architecture" du rapport (p.4) |
 | **C3.2** | Concevoir et mettre en oeuvre un tableau de bord interactif et inclusif | Dashboard Streamlit · 5 onglets · CSS EFREI · KPI + EDA + comparaison + simulateur + SHAP · 6 fonctions exigées | `dashboard/app.py` lignes 1-600 · captures dans README section "Lancer le dashboard" |
-| **C3.3** | Réaliser une analyse exploratoire des données | EDA script · 7+ graphiques (distributions, correlations, imbalance) · stats descriptives | `scripts/02_eda.py` · `reports/figures/01_*.png` · section "Pipeline" du rapport (p.5-6) |
+| **C3.3** | Réaliser une analyse exploratoire des données | EDA script · 7+ graphiques (distributions, correlations, imbalance) · stats descriptives | `scripts/02_eda.py` · `reports/02/eda_*.png` · section "Pipeline" du rapport (p.5-6) |
 | **C4.1** | Intégrer une stratégie d'IA dans la chaîne de valeur métier | Modèle prédictif 24h · cas métier maintenance industrielle · coût FN vs FP · thresholdoldOptimization · ROI documented | Rapport section 1 "Contexte métier" (p.2-3) · ADR-0001 |
 | **C4.2** | Concevoir et mettre en oeuvre des modèles prédictifs ML/DL | 4 modèles (LogReg, RF, XGBoost, MLP 64-32-16) · CV stratifiée 5-fold · sélection via F1−0.5σ · hyperparamètres justifiés | `src/models.py` lignes 28-170 · tableau comparaison "Modèles comparés" · section "Modèles comparés" du README |
 | **C4.3** | Évaluer la performance des modèles et leur écoresponsabilité | 6 métriques (Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC) · CodeCarbon mesure CO₂ (mg) · Brier score calibration | `src/evaluation.py` lignes 76-150 · `src/co2_tracking.py` · section "Écoresponsabilité" du README · `reports/codecarbon/*.json` |
@@ -1132,7 +1128,7 @@ python scripts/07_train_multiclass.py
 
 **Métrique** · F1 macro (moyenne non-pondérée) plutôt que F1 binaire.
 
-**Output** · `reports/figures/multiclass_confusion_matrix.png`, `models/multiclass_final.joblib`.
+**Output** · `reports/07/multiclass_confusion_matrix.png`, `models/multiclass_final.joblib`.
 
 ### 2. Régression · durée de vie restante (RUL)
 
@@ -1148,7 +1144,7 @@ python scripts/08_train_regression.py
 
 **Métriques** · MAE (erreur absolue moyenne), RMSE, R² (coefficient détermination).
 
-**Output** · `reports/figures/regression_scatter.png`, `models/regression_final.joblib`.
+**Output** · `reports/08/regression_pred_vs_true.png`, `models/regression_final.joblib`.
 
 ### 3. Hyperparameter tuning · Optuna
 
@@ -1162,7 +1158,7 @@ python scripts/09_tune_hyperparams.py
 
 **Trials** · 100 essais, pruning adaptatif (arrête trial non-prometteuse tôt).
 
-**Output** · `reports/optuna_trials.db`, `reports/optimization_history.png`.
+**Output** · `reports/09/tuning_results.json`.
 
 ### 4. Calibration probabiliste
 
@@ -1178,7 +1174,7 @@ python scripts/10_calibrate.py
 - Brier score · MSE(y_true, y_proba)
 - Optimal threshold · seuil Youden ou custom cost-sensitive
 
-**Output** · `reports/figures/reliability_diagram.png`, seuil optimal recommandé.
+**Output** · `reports/10/reliability_diagram_*.png` + `reports/10/cost_threshold_*.png`, seuil optimal recommandé dans `models/optimal_threshold.json`.
 
 ### 5. Présentation PPTX
 
@@ -1200,7 +1196,7 @@ python scripts/11_generate_slides.py
 8. Conclusion
 9-11. Annexes (architecture, references)
 
-**Output** · `reports/presentation.pptx`.
+**Output** · `reports/11/presentation.pptx`.
 
 ---
 
@@ -1298,7 +1294,7 @@ python scripts/02_eda.py  # saute 01 si CSV existe
 python scripts/03_train_models.py
 
 # 2. Vérifier métriques
-cat reports/results.csv | grep F1
+cat reports/03/metrics_summary.csv | grep f1
 
 # 3. Lancer API
 uvicorn api.main:app --reload --host 0.0.0.0 --port 8000

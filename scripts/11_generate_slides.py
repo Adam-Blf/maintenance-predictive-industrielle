@@ -2,8 +2,9 @@
 """Génération du support de présentation PPTX (livrable explicite).
 
 Le sujet liste comme livrable obligatoire un *"Support de Présentation
-du projet"*. Ce script produit `reports/presentation.pptx` avec 24 slides
-couvrant l'ensemble du projet de Maintenance Prédictive Industrielle.
+du projet"*. Ce script produit `reports/11/presentation.pptx` avec
+24 slides couvrant l'ensemble du projet de Maintenance Prédictive
+Industrielle.
 
 Charte EFREI · bleu institutionnel #0D47A1, fonts sobres.
 """
@@ -25,8 +26,14 @@ from src.config import (  # noqa: E402
     EFREI_LOGO,
     EFREI_LOGO_WHITE,
     MODELS_DIR,
-    REPORTS_DIR,
-    REPORTS_FIGURES_DIR,
+    S02_DIR,
+    S03_DIR,
+    S04_DIR,
+    S05_DIR,
+    S07_DIR,
+    S08_DIR,
+    S10_DIR,
+    S11_DIR,
     ensure_directories,
 )
 
@@ -375,13 +382,13 @@ def build_eda_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "6. EDA · Insights clés")
 
     # 4 images en grille 2x2
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "eda_target_distribution.png",
+    _add_image_safe(slide, S02_DIR / "eda_target_distribution.png",
                     0.2, 1.0, 6.4, max_height=2.9, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "eda_correlation_heatmap.png",
+    _add_image_safe(slide, S02_DIR / "eda_correlation_heatmap.png",
                     6.7, 1.0, 6.4, max_height=2.9, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "eda_sensor_distributions.png",
+    _add_image_safe(slide, S02_DIR / "eda_sensor_distributions.png",
                     0.2, 4.0, 6.4, max_height=3.0, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "eda_scatter_vib_temp.png",
+    _add_image_safe(slide, S02_DIR / "eda_scatter_vib_temp.png",
                     6.7, 4.0, 6.4, max_height=3.0, recenter=False)
 
     _add_notes(slide,
@@ -399,7 +406,7 @@ def build_architecture_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "7. Architecture du système")
     img_top = 1.1
     img_h = _add_image_safe(
-        slide, REPORTS_FIGURES_DIR / "diagram_architecture.png",
+        slide, S05_DIR / "diagram_architecture.png",
         0.5, img_top, 12.3, max_height=5.2)
     _add_textbox(slide,
         "Architecture médaillon Bronze / Silver / Gold · pipeline reproductible · API + Dashboard.",
@@ -421,7 +428,7 @@ def build_pipeline_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "8. Pipeline ML · Anti data-leakage")
     img_top = 1.1
     img_h = _add_image_safe(
-        slide, REPORTS_FIGURES_DIR / "diagram_ml_pipeline.png",
+        slide, S05_DIR / "diagram_ml_pipeline.png",
         0.5, img_top, 12.3, max_height=4.2)
 
     anti_leak = [
@@ -524,7 +531,7 @@ def build_results_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "11. Résultats · Comparaison des 4 modèles")
     img_top = 1.05
     img_h = _add_image_safe(
-        slide, REPORTS_FIGURES_DIR / "metrics_comparison_barplot.png",
+        slide, S03_DIR / "metrics_comparison_barplot.png",
         0.5, img_top, 12.3, max_height=5.0)
 
     final_name = _get_final_model_name()
@@ -545,9 +552,9 @@ def build_curves_slide(prs: Presentation) -> None:
     """Slide 12 · Courbes ROC + PR."""
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     _add_title_bar(slide, "12. Courbes ROC et Precision-Recall")
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "roc_curves_comparison.png",
+    _add_image_safe(slide, S03_DIR / "roc_curves_comparison.png",
                     0.3, 1.1, 6.4, max_height=5.5, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "pr_curves_comparison.png",
+    _add_image_safe(slide, S03_DIR / "pr_curves_comparison.png",
                     6.7, 1.1, 6.4, max_height=5.5, recenter=False)
 
     _add_notes(slide,
@@ -565,13 +572,13 @@ def build_confusion_matrices_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "13. Matrices de confusion · 4 modèles")
 
     # Grille 2x2
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "confusion_matrix_logistic_regression.png",
+    _add_image_safe(slide, S03_DIR / "confusion_matrix_logistic_regression.png",
                     0.2, 1.0, 6.4, max_height=2.9, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "confusion_matrix_random_forest.png",
+    _add_image_safe(slide, S03_DIR / "confusion_matrix_random_forest.png",
                     6.7, 1.0, 6.4, max_height=2.9, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "confusion_matrix_xgboost.png",
+    _add_image_safe(slide, S03_DIR / "confusion_matrix_xgboost.png",
                     0.2, 4.0, 6.4, max_height=3.0, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "confusion_matrix_mlp.png",
+    _add_image_safe(slide, S03_DIR / "confusion_matrix_mlp.png",
                     6.7, 4.0, 6.4, max_height=3.0, recenter=False)
 
     _add_notes(slide,
@@ -592,9 +599,9 @@ def build_threshold_slide(prs: Presentation) -> None:
         "Asymétrie des coûts : FN (panne manquée) ~ 100x plus coûteux qu'un FP (fausse alarme).",
         0.6, 1.05, 12.0, 0.55, size=17, bold=True, color=COLOR_NAVY)
 
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "cost_threshold_random_forest.png",
+    _add_image_safe(slide, S10_DIR / "cost_threshold_random_forest.png",
                     0.2, 1.7, 6.3, max_height=4.8, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "cost_threshold_xgboost.png",
+    _add_image_safe(slide, S10_DIR / "cost_threshold_xgboost.png",
                     6.7, 1.7, 6.3, max_height=4.8, recenter=False)
 
     _add_notes(slide,
@@ -615,9 +622,9 @@ def build_calibration_slide(prs: Presentation) -> None:
         "Un modèle calibré : si il prédit 80 % de probabilité, cela doit arriver 80 % du temps.",
         0.6, 1.05, 12.0, 0.55, size=17, color=COLOR_DARK)
 
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "reliability_diagram_random_forest.png",
+    _add_image_safe(slide, S10_DIR / "reliability_diagram_random_forest.png",
                     0.2, 1.7, 6.3, max_height=4.8, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "reliability_diagram_xgboost.png",
+    _add_image_safe(slide, S10_DIR / "reliability_diagram_xgboost.png",
                     6.7, 1.7, 6.3, max_height=4.8, recenter=False)
 
     _add_notes(slide,
@@ -637,9 +644,9 @@ def build_feature_importance_slide(prs: Presentation) -> None:
 
     final_name = _get_final_model_name()
 
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / f"feature_importance_native_{final_name}.png",
+    _add_image_safe(slide, S04_DIR / f"feature_importance_native_{final_name}.png",
                     0.2, 1.0, 6.3, max_height=5.5, recenter=False)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / f"permutation_importance_{final_name}.png",
+    _add_image_safe(slide, S04_DIR / f"permutation_importance_{final_name}.png",
                     6.7, 1.0, 6.3, max_height=5.5, recenter=False)
 
     _add_notes(slide,
@@ -659,9 +666,9 @@ def build_interpret_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "17. Interprétabilité · SHAP global et local")
     final_name = _get_final_model_name()
 
-    h1 = _add_image_safe(slide, REPORTS_FIGURES_DIR / f"shap_summary_{final_name}.png",
+    h1 = _add_image_safe(slide, S04_DIR / f"shap_summary_{final_name}.png",
                          0.3, 1.1, 7.0, max_height=5.4, recenter=False)
-    h2 = _add_image_safe(slide, REPORTS_FIGURES_DIR / f"shap_bar_{final_name}.png",
+    h2 = _add_image_safe(slide, S04_DIR / f"shap_bar_{final_name}.png",
                          7.5, 1.4, 5.5, max_height=4.8, recenter=False)
     bottom = 1.1 + max(h1, h2) + 0.2
     _add_textbox(slide,
@@ -685,12 +692,12 @@ def build_bonus_slide(prs: Presentation) -> None:
 
     _add_textbox(slide, "Multi-classe · failure_type (5 classes) :",
                  0.5, 1.0, 6.5, 0.45, size=16, bold=True, color=COLOR_NAVY)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "multiclass_confusion_matrix.png",
+    _add_image_safe(slide, S07_DIR / "multiclass_confusion_matrix.png",
                     0.3, 1.5, 6.3, max_height=5.2, recenter=False)
 
     _add_textbox(slide, "Régression · rul_hours (Remaining Useful Life) :",
                  6.8, 1.0, 6.5, 0.45, size=16, bold=True, color=COLOR_NAVY)
-    _add_image_safe(slide, REPORTS_FIGURES_DIR / "regression_pred_vs_true.png",
+    _add_image_safe(slide, S08_DIR / "regression_pred_vs_true.png",
                     6.7, 1.5, 6.3, max_height=5.2, recenter=False)
 
     _add_notes(slide,
@@ -779,7 +786,7 @@ def build_eco_slide(prs: Presentation) -> None:
     _add_title_bar(slide, "21. Écoresponsabilité · RNCP C4.3")
     img_top = 1.05
     img_h = _add_image_safe(
-        slide, REPORTS_FIGURES_DIR / "compute_cost_comparison.png",
+        slide, S03_DIR / "compute_cost_comparison.png",
         0.5, img_top, 12.3, max_height=4.5)
 
     eco_notes = [
@@ -950,7 +957,7 @@ def main() -> None:
     build_rncp_slide(prs)             # Slide 23
     build_thanks_slide(prs)           # Slide 24
 
-    output = REPORTS_DIR / "presentation.pptx"
+    output = S11_DIR / "presentation.pptx"
     prs.save(str(output))
     size_kb = output.stat().st_size / 1024
     print(f"[SLIDES] Generated · {output} ({size_kb:.1f} Ko, 24 slides)")

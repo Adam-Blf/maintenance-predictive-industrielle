@@ -6,7 +6,7 @@ Rappel méthodologique · l'EDA décrit les données telles qu'elles sont
 n'effectue AUCUNE transformation et AUCUN split train/test · ces
 étapes appartiennent à la préparation des données (script 03).
 
-Produit l'ensemble des graphiques d'EDA dans `reports/figures/` ·
+Produit l'ensemble des graphiques d'EDA dans `reports/02/` ·
   - Distribution de la cible binaire failure_within_24h (déséquilibre).
   - Distribution des 5 types de panne (multi-classe bonus).
   - Histogrammes + KDE des 10 capteurs numériques.
@@ -43,7 +43,7 @@ from src.config import (  # noqa: E402
     COLOR_EFREI_DARK,
     COLOR_OK_GREEN,
     NUMERIC_FEATURES,
-    REPORTS_FIGURES_DIR,
+    S02_DIR,
     TARGET_BINARY,
     ensure_directories,
 )
@@ -80,7 +80,7 @@ def plot_target_distribution(df: pd.DataFrame) -> Path:
     ax.set_title("Distribution de la cible · panne dans les 24h")
     ax.set_ylabel("Nombre d'observations")
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_target_distribution.png"
+    output = S02_DIR / "eda_target_distribution.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -110,7 +110,7 @@ def plot_failure_type_distribution(df: pd.DataFrame) -> Path:
     ax.set_title("Répartition des types de panne (machines en panne)")
     ax.set_ylabel("Nombre")
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_failure_type_distribution.png"
+    output = S02_DIR / "eda_failure_type_distribution.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -135,7 +135,7 @@ def plot_sensor_distributions(df: pd.DataFrame) -> Path:
         color=COLOR_EFREI_DARK,
     )
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_sensor_distributions.png"
+    output = S02_DIR / "eda_sensor_distributions.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -170,7 +170,7 @@ def plot_sensor_boxplots_by_class(df: pd.DataFrame) -> Path:
         color=COLOR_EFREI_DARK,
     )
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_boxplots_by_class.png"
+    output = S02_DIR / "eda_boxplots_by_class.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -205,7 +205,7 @@ def plot_correlation_heatmap(df: pd.DataFrame) -> Path:
         color=COLOR_EFREI_DARK,
     )
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_correlation_heatmap.png"
+    output = S02_DIR / "eda_correlation_heatmap.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -243,7 +243,7 @@ def plot_scatter_vib_temp(df: pd.DataFrame) -> Path:
     ax.legend(framealpha=0.95)
     ax.grid(True, alpha=0.3)
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_scatter_vib_temp.png"
+    output = S02_DIR / "eda_scatter_vib_temp.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -289,7 +289,7 @@ def plot_operating_mode(df: pd.DataFrame) -> Path:
         color=COLOR_EFREI_DARK,
     )
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_operating_mode.png"
+    output = S02_DIR / "eda_operating_mode.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -364,7 +364,7 @@ def plot_missing_values(df: pd.DataFrame) -> Path:
         ax.set_xlim(0, max(missing_df["pct"].max() * 1.25, 1))
 
     plt.tight_layout()
-    output = REPORTS_FIGURES_DIR / "eda_missing_values.png"
+    output = S02_DIR / "eda_missing_values.png"
     fig.savefig(output, dpi=150, bbox_inches="tight")
     plt.close(fig)
     return output
@@ -401,12 +401,12 @@ def main() -> None:
         print(f"  - {name:<14} · {path}")
 
     # Sauvegarde des stats descriptives en CSV pour intégration au rapport.
-    stats_path = REPORTS_FIGURES_DIR.parent / "eda_descriptive_stats.csv"
+    stats_path = S02_DIR / "eda_descriptive_stats.csv"
     df[NUMERIC_FEATURES].describe().to_csv(stats_path)
     print(f"[EDA] Stats descriptives · {stats_path}")
 
     # Sauvegarde du % NaN par colonne (consommé par le rapport PDF).
-    nan_path = REPORTS_FIGURES_DIR.parent / "eda_missing_values.csv"
+    nan_path = S02_DIR / "eda_missing_values.csv"
     nan_summary = pd.DataFrame(
         {
             "column": df.columns,
