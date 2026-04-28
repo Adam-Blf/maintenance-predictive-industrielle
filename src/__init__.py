@@ -7,9 +7,9 @@ ML/DL, évaluation, interprétabilité et génération des schémas du rapport.
 
 Structure des modules
 ---------------------
+- bootstrap      · auto-install des dépendances pip au lancement.
 - config         · constantes globales (chemins, hyperparamètres, noms de colonnes).
-- data_loader    · chargement du CSV Kaggle v3.0 + générateur synthétique de secours.
-- feature_engineering · variables dérivées capteurs (ratios, interactions, écarts).
+- data_loader    · chargement du CSV Kaggle v3.0 (lecture seule, pas de génération).
 - preprocessing  · pipeline sklearn ColumnTransformer (imputation, scaling, OHE).
 - models         · 4 pipelines de classification binaire (LogReg, RF, XGB, MLP).
 - models_multiclass   · 4 pipelines classification multi-classe (failure_type).
@@ -18,7 +18,6 @@ Structure des modules
 - calibration    · calibration probabiliste Platt/Isotonic + seuil métier optimal.
 - tuning         · recherche bayésienne Optuna (TPE) sur RF, XGB, MLP.
 - interpretability    · feature importance native, permutation importance, SHAP.
-- co2_tracking   · mesure empreinte carbone via CodeCarbon (critère C4.3 RNCP).
 - diagrams       · schémas pédagogiques matplotlib pur (pipeline, biais-variance, etc.).
 - report         · génération du rapport PDF complet via FPDF2.
 

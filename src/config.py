@@ -35,7 +35,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent
 
-# Données brutes (CSV Kaggle ou version synthétique reproduisant le schéma).
+# Données brutes · CSV Kaggle officiel (CC0 public domain).
 DATA_RAW_DIR: Path = PROJECT_ROOT / "data" / "raw"
 
 # Données prétraitées · exports intermédiaires (train/test/scaler features).
@@ -181,7 +181,7 @@ def ensure_directories() -> None:
 
     Dossiers créés
     --------------
-    - data/raw         · CSV Kaggle brut ou synthétique.
+    - data/raw         · CSV Kaggle officiel.
     - data/processed   · exports train/test splits.
     - models/          · artefacts joblib des modèles entraînés.
     - reports/         · racine, rapport PDF agrégé.

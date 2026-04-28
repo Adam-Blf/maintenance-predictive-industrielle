@@ -43,8 +43,7 @@ def build_ridge() -> Pipeline:
 
     Modèle de référence · si ce modèle simple obtient déjà un R² élevé,
     cela signifie que la relation entre les features et le RUL est
-    essentiellement linéaire (ce qui est cohérent avec la formule de
-    génération synthétique).
+    essentiellement linéaire.
 
     Hyperparamètres justifiés
     --------------------------
