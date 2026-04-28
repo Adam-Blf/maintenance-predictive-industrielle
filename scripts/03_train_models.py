@@ -180,7 +180,7 @@ def build_preprocessor() -> ColumnTransformer:
     categorical_pipeline = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
+            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
         ]
     )
     return ColumnTransformer(
@@ -188,7 +188,9 @@ def build_preprocessor() -> ColumnTransformer:
             ("num", numeric_pipeline, NUMERIC_FEATURES),
             ("cat", categorical_pipeline, CATEGORICAL_FEATURES),
         ],
-        remainder="drop",
+        remainder="drop",  # garantit qu'aucune colonne fuyante (timestamp,
+                            # machine_id, cibles) ne passe en feature.
+        verbose_feature_names_out=False,  # noms propres sans prefixe num__/cat__
     )
 
 
