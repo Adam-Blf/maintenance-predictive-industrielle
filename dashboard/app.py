@@ -36,14 +36,36 @@ import streamlit as st
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+
+def _ensure_streamlit_runtime() -> None:
+    """Sort proprement si le module est lancé en bare mode (`python app.py`).
+
+    Streamlit nécessite son propre runtime (`streamlit run`) pour fournir
+    le ScriptRunContext. Sans cela, chaque appel à `st.*` génère un
+    warning "missing ScriptRunContext" et l'UI ne s'affiche pas.
+    """
+    from streamlit.runtime import exists as _runtime_exists
+
+    if _runtime_exists():
+        return
+    print(
+        "\n[dashboard] Lance ce dashboard avec Streamlit, pas avec python ·\n"
+        f"  streamlit run {Path(__file__).relative_to(PROJECT_ROOT)}\n",
+        file=sys.stderr,
+    )
+    sys.exit(0)
+
+
+_ensure_streamlit_runtime()
+
 from src.config import (  # noqa: E402
     ALL_FEATURES,
     EFREI_LOGO,
     MODELS_DIR,
     NUMERIC_FEATURES,
     OPERATING_MODES,
-    REPORTS_DIR,
-    REPORTS_FIGURES_DIR,
+    S03_DIR,
+    S04_DIR,
     TARGET_BINARY,
 )
 from src.data_loader import load_dataset  # noqa: E402
@@ -522,7 +544,7 @@ def load_model_cached():
     name_file = MODELS_DIR / "final_model_name.txt"
     name = name_file.read_text(encoding="utf-8").strip() if name_file.exists() else "?"
 
-    metrics_path = REPORTS_DIR / "metrics_summary.json"
+    metrics_path = S03_DIR / "metrics_summary.json"
     metrics = json.loads(metrics_path.read_text(encoding="utf-8")) if metrics_path.exists() else []
     return model, name, metrics
 
@@ -594,7 +616,7 @@ def tab_overview(df: pd.DataFrame, metrics: list[dict], best_name: str) -> None:
             margin=dict(t=10, b=10),
             legend_title_text="Classe",
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with cols[1]:
         feat_b = st.selectbox(
@@ -617,7 +639,7 @@ def tab_overview(df: pd.DataFrame, metrics: list[dict], best_name: str) -> None:
             margin=dict(t=10, b=10),
             legend_title_text="Classe",
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 
 # ---------------------------------------------------------------------------
@@ -641,7 +663,7 @@ def tab_eda(df: pd.DataFrame) -> None:
             aspect="auto",
         )
         fig.update_layout(height=520, margin=dict(t=10, b=10))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with cols[1]:
         st.markdown("#### Scatter plot bidimensionnel")
@@ -666,7 +688,7 @@ def tab_eda(df: pd.DataFrame) -> None:
         )
         fig.update_traces(marker=dict(size=6))
         fig.update_layout(height=520, margin=dict(t=10, b=10))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 
 # ---------------------------------------------------------------------------
@@ -696,7 +718,7 @@ def tab_models(metrics: list[dict]) -> None:
     # Tableau interactif Streamlit · tri/filtre natifs.
     st.dataframe(
         display_df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -724,7 +746,7 @@ def tab_models(metrics: list[dict]) -> None:
         legend_title_text="Modèle",
         margin=dict(t=10, b=10),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 # ---------------------------------------------------------------------------
@@ -828,7 +850,7 @@ def tab_simulator(model, df: pd.DataFrame, best_name: str) -> None:
                 )
             )
             fig_gauge.update_layout(height=280, margin=dict(t=10, b=10))
-            st.plotly_chart(fig_gauge, use_container_width=True)
+            st.plotly_chart(fig_gauge, width="stretch")
 
             # Recommandation textuelle simple.
             if pred == 1:
@@ -855,7 +877,7 @@ def tab_interpretability(best_name: str) -> None:
         "_« Pourquoi le modèle indique un risque de panne élevé ? »_"
     )
 
-    # Liste des graphiques attendus dans reports/figures/.
+    # Liste des graphiques attendus dans reports/04/ (script 04_interpret.py).
     candidates = [
         (
             f"feature_importance_native_{best_name}.png",
@@ -870,10 +892,10 @@ def tab_interpretability(best_name: str) -> None:
     ]
 
     for filename, title in candidates:
-        path = REPORTS_FIGURES_DIR / filename
+        path = S04_DIR / filename
         if path.exists():
             st.markdown(f"#### {title}")
-            st.image(str(path), use_container_width=True)
+            st.image(str(path), width="stretch")
         else:
             st.info(f"`{filename}` non trouvé. Lancer `python scripts/04_interpret.py`.")
 
@@ -885,7 +907,7 @@ def render_sidebar() -> None:
     """Sidebar avec logo + métadonnées projet."""
     with st.sidebar:
         if EFREI_LOGO.exists():
-            st.image(str(EFREI_LOGO), use_container_width=True)
+            st.image(str(EFREI_LOGO), width="stretch")
         st.markdown("## À propos")
         st.markdown("""
             **Projet Data Science · M1 Data Engineering & IA**

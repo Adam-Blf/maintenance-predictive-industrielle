@@ -41,10 +41,10 @@ from sklearn.inspection import permutation_importance
 from sklearn.pipeline import Pipeline
 
 from .config import (
+    REPORTS_DIR,
     COLOR_ALERT_RED,
     COLOR_EFREI_BLUE,
     COLOR_EFREI_DARK,
-    REPORTS_FIGURES_DIR,
 )
 
 
@@ -52,7 +52,7 @@ def plot_native_feature_importance(
     model: Pipeline,
     feature_names: list[str],
     model_name: str,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
     top_n: int = 15,
 ) -> Path | None:
     """Importance native des modèles à base d'arbres (Random Forest, XGBoost).
@@ -110,7 +110,7 @@ def plot_permutation_importance(
     y_test,
     feature_names_raw: list[str],
     model_name: str,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
     n_repeats: int = 10,
     random_state: int = 42,
 ) -> Path:
@@ -179,7 +179,7 @@ def compute_shap_values(
     X_sample,
     feature_names_processed: list[str],
     model_name: str,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
     max_samples: int = 500,
 ):
     """Calcule et trace les valeurs SHAP du modèle final.

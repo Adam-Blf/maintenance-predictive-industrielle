@@ -47,11 +47,11 @@ from sklearn.calibration import calibration_curve
 from sklearn.metrics import brier_score_loss
 
 from .config import (
+    REPORTS_DIR,
     COLOR_ALERT_RED,
     COLOR_EFREI_BLUE,
     COLOR_EFREI_DARK,
     COLOR_OK_GREEN,
-    REPORTS_FIGURES_DIR,
 )
 
 
@@ -59,7 +59,7 @@ def reliability_diagram(
     y_true: np.ndarray,
     y_proba: np.ndarray,
     model_name: str,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> tuple[Path, float]:
     """Trace le reliability diagram + retourne le Brier score.
 
@@ -132,7 +132,7 @@ def cost_recall_curve(
     model_name: str,
     cost_fn: float = 1000.0,
     cost_fp: float = 100.0,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> tuple[Path, float, dict]:
     """Trace le coût total en fonction du seuil + retourne le seuil optimal.
 

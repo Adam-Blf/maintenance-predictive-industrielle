@@ -37,7 +37,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src import __version__  # noqa: E402
-from src.config import ALL_FEATURES, MODELS_DIR, OPERATING_MODES, REPORTS_DIR  # noqa: E402
+from src.config import ALL_FEATURES, MODELS_DIR, OPERATING_MODES, S03_DIR  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Initialisation de l'application + métadonnées exposées dans Swagger.
@@ -152,7 +152,7 @@ class ModelInfoResponse(BaseModel):
 # ---------------------------------------------------------------------------
 MODEL_PATH = MODELS_DIR / "final_model.joblib"
 NAME_PATH = MODELS_DIR / "final_model_name.txt"
-METRICS_PATH = REPORTS_DIR / "metrics_summary.json"
+METRICS_PATH = S03_DIR / "metrics_summary.json"
 
 _model = None
 _model_name = "unknown"

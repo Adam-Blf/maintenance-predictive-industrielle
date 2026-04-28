@@ -76,10 +76,6 @@ S09_DIR: Path = REPORTS_DIR / "09"  # Tuning Optuna
 S10_DIR: Path = REPORTS_DIR / "10"  # Calibration + cost-sensitive threshold
 S11_DIR: Path = REPORTS_DIR / "11"  # Slides PowerPoint
 
-# Alias rétro-compatible · pointe sur S02_DIR pour les figures EDA, mais
-# tout nouveau code doit utiliser SNN_DIR ou script_output_dir(N).
-REPORTS_FIGURES_DIR: Path = REPORTS_DIR / "figures"
-
 # Logo EFREI utilisé en page de garde du rapport et dans le dashboard.
 ASSETS_DIR: Path = PROJECT_ROOT / "assets"
 EFREI_LOGO: Path = ASSETS_DIR / "logo_efrei.png"

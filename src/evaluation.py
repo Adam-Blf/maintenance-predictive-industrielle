@@ -48,11 +48,11 @@ from sklearn.metrics import (
 )
 
 from .config import (
+    REPORTS_DIR,
     COLOR_ALERT_RED,
     COLOR_EFREI_BLUE,
     COLOR_EFREI_DARK,
     COLOR_OK_GREEN,
-    REPORTS_FIGURES_DIR,
 )
 
 
@@ -130,7 +130,7 @@ def plot_confusion_matrix(
     y_true: np.ndarray,
     y_pred: np.ndarray,
     model_name: str,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Génère la matrice de confusion en PNG haute résolution.
 
@@ -170,7 +170,7 @@ def plot_confusion_matrix(
 
 def plot_roc_curves(
     results: dict[str, dict],
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Trace les courbes ROC superposées pour comparaison visuelle.
 
@@ -223,7 +223,7 @@ def plot_roc_curves(
 
 def plot_pr_curves(
     results: dict[str, dict],
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Trace les courbes Precision-Recall (plus pertinentes que ROC en
     contexte déséquilibré).
@@ -262,7 +262,7 @@ def plot_pr_curves(
 
 def plot_metrics_barplot(
     metrics_df: pd.DataFrame,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Histogramme groupé · une barre par modèle, cluster par métrique.
 
@@ -308,7 +308,7 @@ def plot_metrics_barplot(
 
 def plot_training_time_barplot(
     metrics_df: pd.DataFrame,
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Compare temps d'entraînement et latence d'inférence (écoresponsabilité).
 

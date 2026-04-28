@@ -23,12 +23,12 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 from .config import (
+    REPORTS_DIR,
     COLOR_ALERT_RED,
     COLOR_EFREI_BLUE,
     COLOR_EFREI_DARK,
     COLOR_OK_GREEN,
     COLOR_WARNING,
-    REPORTS_FIGURES_DIR,
 )
 
 
@@ -104,7 +104,7 @@ def _draw_arrow(
 
 
 def render_architecture_diagram(
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Schéma · architecture globale du système intelligent.
 
@@ -196,7 +196,7 @@ def render_architecture_diagram(
 
 
 def render_ml_pipeline_diagram(
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Schéma · pipeline ML séquentiel (de l'EDA au modèle final).
 
@@ -258,7 +258,7 @@ def render_ml_pipeline_diagram(
 
 
 def render_bias_variance_diagram(
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Schéma · compromis biais/variance (placement des 4 modèles).
 
@@ -340,7 +340,7 @@ def render_bias_variance_diagram(
 
 
 def render_decision_workflow_diagram(
-    output_dir: Path = REPORTS_FIGURES_DIR,
+    output_dir: Path = REPORTS_DIR,
 ) -> Path:
     """Schéma · workflow décisionnel côté responsable maintenance.
 
@@ -400,7 +400,7 @@ def render_decision_workflow_diagram(
     return output_path
 
 
-def render_all_diagrams(output_dir: Path = REPORTS_FIGURES_DIR) -> dict[str, Path]:
+def render_all_diagrams(output_dir: Path = REPORTS_DIR) -> dict[str, Path]:
     """Génère tous les schémas en une seule passe.
 
     Returns
