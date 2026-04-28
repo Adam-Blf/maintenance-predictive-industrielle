@@ -1,45 +1,45 @@
 # -*- coding: utf-8 -*-
-"""Script · entraînement de la classification multi-classe (failure_type).
+"""Script 07 · Classification multi-classe du TYPE de panne (BONUS).
 
-Rôle dans le pipeline
-----------------------
-Script n°7, indépendant du script 03 (binaire). Peut être exécuté
-après le script 01 uniquement. Tâche bonus du sujet.
+À QUOI ÇA SERT ?
+----------------
+Le script 03 répond à "la machine va-t-elle tomber en panne ?" (oui/non).
+Ce script va plus loin · "SI elle tombe, QUEL TYPE de panne ?" ·
+  - bearing · roulement usé (mécanique)
+  - motor_overheat · surchauffe moteur (thermique)
+  - hydraulic · fuite/perte pression (hydraulique)
+  - electrical · défaut électrique
+  - none · pas de panne (filtrée pour ce script)
 
-Entrées
--------
-data/raw/predictive_maintenance_v3.csv
-    Dataset complet (24 042 lignes). Filtrage sur les pannes dans le script.
+C'est une **tâche bonus** du sujet · le sujet exige UNE seule tâche, on
+en fait 3 (binaire + multi-classe + régression RUL) pour valoriser la grille.
 
-Sorties
--------
-models/multiclass_{model}.joblib (x4)
-    Pipelines entraînés pour chacun des 4 modèles.
-models/multiclass_final.joblib
-    Copie du meilleur modèle (critère : macro-F1 sur test).
-models/multiclass_final_name.txt
-    Nom textuel du meilleur modèle.
-models/multiclass_classes.json
-    Liste ordonnée des classes (nécessaire pour décoder les prédictions
-    XGBoost qui retourne des entiers).
-reports/07/metrics_multiclass.csv / .json
-    Tableau comparatif des 4 modèles (accuracy, macro-F1, weighted-F1).
-reports/07/multiclass_confusion_matrix.png
-    Matrice de confusion normalisée du meilleur modèle.
-reports/07/multiclass_classification_report.json
-    Precision/Recall/F1 par classe pour le meilleur modèle.
+DIFFÉRENCE AVEC LA CLASSIFICATION BINAIRE
+-----------------------------------------
+- **Cible** · `failure_type` (string) au lieu de `failure_within_24h` (0/1)
+- **Métriques** · macro-F1 (moyenne par classe) au lieu de F1 binaire
+  Pourquoi macro-F1 ? Parce que les classes sont déséquilibrées (peu de
+  pannes électriques) · macro-F1 donne le même poids à chaque classe,
+  contrairement à weighted-F1 qui pondère par fréquence.
+- **Filtre** · on ne garde que les machines en panne (sinon "none" écrase
+  les autres classes à 95%). Et on filtre les classes < 30 obs pour
+  éviter les erreurs de stratification.
+- **Encodage** · `LabelEncoder` transforme {bearing, hydraulic, ...} en
+  entiers {0, 1, 2, 3} car XGBoost ne sait pas lire du texte.
 
-Pré-requis
-----------
-Script 01 exécuté (dataset disponible dans data/raw/).
+CE QUI EST ENREGISTRÉ
+---------------------
+  - models/multiclass_{4 modèles}.joblib · 4 pipelines entraînés
+  - models/multiclass_final.joblib · le meilleur (macro-F1)
+  - models/multiclass_classes.json · ordre des classes pour décoder
+    les prédictions XGBoost (qui retourne des entiers, pas des strings)
+  - reports/07/metrics_multiclass.{csv,json} · tableau comparatif
+  - reports/07/multiclass_confusion_matrix.png · matrice 5×5 normalisée
+  - reports/07/multiclass_classification_report.json · precision/recall/F1
+    par classe (utile pour identifier les classes "difficiles")
 
-Lien cahier des charges
------------------------
-Classification multi-classe demandée explicitement comme tâche bonus
-dans le cahier des charges (section "Modélisation avancée"). Valorise
-la grille de notation sur les 5 types de pannes.
-
-Usage ·
+USAGE
+-----
     python scripts/07_train_multiclass.py
 """
 

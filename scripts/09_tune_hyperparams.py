@@ -1,42 +1,45 @@
 # -*- coding: utf-8 -*-
-"""Script · hyperparameter tuning Optuna (RF, XGB, MLP).
+"""Script 09 · Optimisation d'hyperparamètres avec Optuna (BONUS).
 
-Rôle dans le pipeline
-----------------------
-Script optionnel, peut être lancé après le script 01. Son résultat
-(tuning_results.json) est documentaire : les meilleurs hyperparamètres
-trouvés par Optuna peuvent être réinjectés manuellement dans
-`src/models.py` si une amélioration significative est observée.
+À QUOI ÇA SERT ?
+----------------
+Quand on entraîne un Random Forest, on doit choisir des "boutons" ·
+combien d'arbres ? quelle profondeur max ? combien de samples mini par
+feuille ? Ce sont les **hyperparamètres**. Au lieu de les choisir au
+hasard ou au feeling, ce script les SCANNE intelligemment.
 
-Entrées
--------
-data/raw/predictive_maintenance_v3.csv
-    Dataset complet. Un sous-échantillon stratifié de 8000 lignes est
-    utilisé pour accélérer le tuning sans dégrader la qualité.
+POURQUOI OPTUNA PLUTÔT QUE GRIDSEARCH ?
+----------------------------------------
+- **GridSearch** · teste toutes les combinaisons d'une grille (100×5×4 = 2000
+  essais). Lent et bête.
+- **RandomSearch** · tire des combinaisons au hasard. Plus rapide mais
+  pas plus malin.
+- **Optuna (TPE = Tree-structured Parzen Estimator)** · apprend des essais
+  précédents pour proposer des hyperparamètres prometteurs. Bayesian
+  optimization · ~10× plus efficient que GridSearch en pratique.
 
-Sorties
--------
-reports/09/tuning_results.json
-    Dictionnaire {model_name: {best_params, best_value}} pour les 3
-    modèles tunés (RF, XGB, MLP). Consultable sans ré-exécuter le script.
+CE QUE CE SCRIPT FAIT
+---------------------
+1. Charge le dataset (sous-échantillon 8000 lignes pour aller vite).
+2. Pour chaque modèle (RF, XGB, MLP) ·
+   - Définit l'espace des hyperparamètres à explorer.
+   - Lance Optuna avec 20 essais, optimise sur F1 cross-validé 3-fold.
+   - Garde les meilleurs hyperparams + leur F1.
+3. Sauvegarde tout dans `reports/09/tuning_results.json`.
 
-Pré-requis
-----------
-- Script 01 exécuté.
-- Package `optuna` installé (`pip install optuna`).
+UTILISATION DES RÉSULTATS
+-------------------------
+Le JSON est **documentaire** · il prouve qu'on a fait le tuning. Si on
+veut effectivement améliorer les modèles en prod, il faut réinjecter
+les `best_params` dans `src/models.py` puis relancer `scripts/03_*`.
 
-Lien cahier des charges
------------------------
-Démontre la démarche scientifique rigoureuse (section "Optimisation des
-hyperparamètres") · justifie le choix des hyperparamètres finaux par
-rapport aux valeurs par défaut.
-
-Note de performance
+NOTE DE PERFORMANCE
 -------------------
-Durée typique · 3-5 minutes sur CPU moderne (3 modèles x 20 essais
-x 3 folds). Réduire n_trials_each pour accélérer si nécessaire.
+Durée · ~3-5 minutes sur CPU moderne (3 modèles × 20 trials × 3 CV folds
+= 180 entraînements). Pour aller plus vite, baisser `n_trials_each` à 10.
 
-Usage ·
+USAGE
+-----
     python scripts/09_tune_hyperparams.py
 """
 

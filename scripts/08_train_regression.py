@@ -1,40 +1,44 @@
 # -*- coding: utf-8 -*-
-"""Script · entraînement de la régression sur rul_hours (Remaining Useful Life).
+"""Script 08 · Régression sur le RUL (Remaining Useful Life) · BONUS.
 
-Rôle dans le pipeline
-----------------------
-Script n°8, indépendant du script 03 (binaire). Peut être exécuté
-après le script 01 uniquement. Tâche bonus du sujet.
+À QUOI ÇA SERT ?
+----------------
+Encore plus précis qu'une simple alerte oui/non · ce script prédit COMBIEN
+D'HEURES il reste avant la prochaine panne. Cible continue `rul_hours` ∈
+[0.5h, 99h]. C'est de la **régression**, pas de la classification.
 
-Entrées
--------
-data/raw/predictive_maintenance_v3.csv
-    Dataset complet (24 042 lignes, colonne rul_hours continue [0.5, 99]).
+DIFFÉRENCE AVEC LA CLASSIFICATION
+---------------------------------
+- **Cible** · valeur continue (12.5h, 47.3h, 0.8h, ...) au lieu d'une
+  classe (0 ou 1).
+- **Modèles** · Ridge (au lieu de LogReg) · les autres restent (RF, XGB, MLP).
+- **Métriques** ·
+    - **MAE (Mean Absolute Error)** · en heures · LA métrique métier ·
+      "en moyenne, on se trompe de X heures sur la durée de vie restante".
+    - **RMSE** · pénalise plus les grosses erreurs que MAE (utile si une
+      erreur de 50h est bien pire qu'une erreur de 5h).
+    - **R²** · pourcentage de variance expliquée. R²=0.65 = "le modèle
+      capture 65% de la variabilité réelle du RUL".
+- **Pas de stratify** · on ne stratifie pas en régression (`stratify=` ne
+  marche que sur des classes discrètes).
 
-Sorties
--------
-models/regression_{model}.joblib (x4)
-    Pipelines Ridge, RF, XGBoost, MLP entraînés.
-models/regression_final.joblib
-    Copie du meilleur modèle (critère : R² le plus élevé sur test set).
-models/regression_final_name.txt
-    Nom textuel du meilleur modèle.
-reports/08/metrics_regression.csv / .json
-    Tableau comparatif MAE (h), RMSE (h), R², temps d'entraînement.
-reports/08/regression_pred_vs_true.png
-    Scatter plot prédictions vs valeurs réelles du meilleur modèle.
+INTÉRÊT MÉTIER
+--------------
+Le responsable maintenance peut planifier les interventions ·
+  - "Cette pompe a 40h restantes · on la programme jeudi prochain."
+  - "Ce robot a 4h restantes · stop urgent."
+Plus actionnable qu'un simple flag binaire panne/sain.
 
-Pré-requis
-----------
-Script 01 exécuté (dataset disponible dans data/raw/).
+CE QUI EST ENREGISTRÉ
+---------------------
+  - models/regression_{4 modèles}.joblib · 4 pipelines régression
+  - models/regression_final.joblib · le meilleur R² (typiquement RF)
+  - reports/08/metrics_regression.{csv,json} · MAE/RMSE/R² par modèle
+  - reports/08/regression_pred_vs_true.png · scatter `prédit vs réel`,
+    une ligne diagonale = prédiction parfaite
 
-Lien cahier des charges
------------------------
-Régression RUL demandée comme tâche bonus dans le cahier des charges.
-Le MAE en heures est la métrique la plus interprétable métier
-("en moyenne, on se trompe de X heures sur la durée de vie restante").
-
-Usage ·
+USAGE
+-----
     python scripts/08_train_regression.py
 """
 

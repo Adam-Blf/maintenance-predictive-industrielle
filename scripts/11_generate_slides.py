@@ -1,12 +1,42 @@
 # -*- coding: utf-8 -*-
-"""Génération du support de présentation PPTX (livrable explicite).
+"""Script 11 · Génération du support de présentation PPTX.
 
-Le sujet liste comme livrable obligatoire un *"Support de Présentation
-du projet"*. Ce script produit `reports/11/presentation.pptx` avec
-24 slides couvrant l'ensemble du projet de Maintenance Prédictive
-Industrielle.
+À QUOI ÇA SERT ?
+----------------
+Le sujet liste comme livrable OBLIGATOIRE un *"Support de Présentation
+du projet"*. Plutôt que de bâtir 24 slides à la main dans PowerPoint,
+ce script les génère **automatiquement** à partir des artefacts produits
+par les scripts précédents (figures EDA, matrices de confusion, SHAP, etc.).
 
-Charte EFREI · bleu institutionnel #0D47A1, fonts sobres.
+AVANTAGES VS POWERPOINT MANUEL
+------------------------------
+- **Reproductible** · si on relance la pipeline avec un nouveau seed,
+  les slides sont régénérées avec les nouveaux résultats. Zéro risque
+  d'oubli de mise à jour d'un graphe.
+- **Versionnable** · le script Python est dans Git, contrairement à un
+  .pptx binaire qu'on ne peut pas diff.
+- **Cohérent** · charte EFREI appliquée uniformément (mêmes couleurs,
+  même typo, même structure de titre).
+
+CONTENU DES 24 SLIDES
+---------------------
+  1. Couverture · logo EFREI, titre, auteurs
+  2. Sommaire
+  3-6. Contexte métier · problème, dataset, EDA insights
+  7-9. Architecture · pipeline, schéma système
+  10-15. Modélisation · 4 modèles, ROC/PR, matrices de confusion
+  16-19. Bonus · multi-classe, régression, calibration, ROI
+  20-22. Interprétabilité · SHAP, feature importance
+  23-24. Conclusion + perspectives
+
+DÉPENDANCE
+----------
+Ce script LIT les figures produites par 02-10 · doit donc tourner EN
+DERNIER (après que tous les autres scripts ont produit leurs sorties).
+
+USAGE
+-----
+    python scripts/11_generate_slides.py
 """
 
 from __future__ import annotations

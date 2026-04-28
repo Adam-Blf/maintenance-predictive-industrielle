@@ -54,6 +54,9 @@ _PIP_TO_IMPORT_NAME: dict[str, str] = {
     "PyYAML": "yaml",
     "fpdf2": "fpdf",
     "python-pptx": "pptx",
+    "python-dotenv": "dotenv",
+    "pytest-cov": "pytest_cov",
+    "uvicorn": "uvicorn",
 }
 
 
@@ -86,6 +89,12 @@ def _parse_requirements() -> list[str]:
             if sep in line:
                 line = line.split(sep)[0]
                 break
+        # Retirer les extras style "uvicorn[standard]" → "uvicorn"
+        # (les extras sont gérés par pip mais ne sont pas un nom d'import).
+        if "[" in line:
+            line = line.split("[")[0]
+        # Retirer les tirets/underscores qui rendent l'import différent du nom pip ·
+        # ex. "pytest-cov" → import "pytest_cov", "python-dotenv" → import "dotenv".
         requirements.append(line.strip())
     return requirements
 
