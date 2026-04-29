@@ -47,29 +47,28 @@ ensure_dependencies(verbose=False)
 
 
 def _ensure_streamlit_runtime() -> None:
-    """Avertit (sans bloquer) si le module est lance hors `streamlit run`.
+    """Sort proprement avec un hint si le module est lance via `python` direct.
 
     Quand le script est lance correctement via `streamlit run dashboard/app.py`
-    ou via l'orchestrateur `python app.py`, le runtime existe et on retourne.
-    Sinon (cas `python dashboard/app.py` direct), on imprime un hint mais
-    on n'interrompt PAS · streamlit gere lui-meme l'erreur d'execution.
+    ou via l'orchestrateur `python app.py` (qui appelle streamlit run en
+    sous-processus), le runtime Streamlit existe et on retourne sans bruit.
+    Sinon (cas `python dashboard/app.py` direct), on imprime un hint clair
+    et on sort en code 0 pour eviter le flood de warnings ScriptRunContext.
     """
     try:
         from streamlit.runtime import exists as _runtime_exists
         if _runtime_exists():
             return
     except Exception:
-        return  # api streamlit indisponible, on continue
-    # Detection · sys.argv[0] contient "streamlit" si on est dans `streamlit run`.
-    argv0 = (sys.argv[0] or "").lower()
-    if "streamlit" in argv0:
-        return
+        return  # api streamlit indisponible · on tente quand meme
     print(
-        "[dashboard] Hint · pour une UI complete, lancer via :\n"
+        "\n[dashboard] Lance ce dashboard avec Streamlit, pas avec python ·\n"
         "  streamlit run dashboard/app.py\n"
-        "ou utiliser l'orchestrateur · python app.py\n",
+        "ou plus simplement, l'orchestrateur unifie ·\n"
+        "  python app.py\n",
         file=sys.stderr,
     )
+    sys.exit(0)
 
 
 _ensure_streamlit_runtime()

@@ -819,14 +819,15 @@ def slide_4_methodology(prs: Presentation) -> None:
         [
             ["vibration_rms", "float", "mm/s", "Feature (top discriminant)"],
             ["temperature_motor", "float", "degC", "Feature (2e discriminant)"],
+            ["hours_since_maintenance", "float", "h", "Feature (proxy d'usure)"],
             ["failure_within_24h", "int 0/1", "-", "Cible binaire principale"],
             ["failure_type", "catégorie", "5 classes", "Cible multiclasse"],
             ["rul_hours", "float", "h", "Cible régression (durée vie restante)"],
         ],
         left=0.67,
-        top=4.1,
+        top=4.15,
         width=12.0,
-        height=2.4,
+        height=2.65,
     )
 
     _set_notes(
