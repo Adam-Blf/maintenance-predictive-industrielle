@@ -85,7 +85,7 @@ Développer un **système de maintenance prédictive** qui exploite les données
 
 Ce projet livre une **plateforme intelligente complète** couvrant le cycle de vie data science ·
 
-1. **Ingestion et préparation** · dataset 24 042 enregistrements · 15 variables · classes déséquilibrées (25% pannes).
+1. **Ingestion et préparation** · dataset 24 042 enregistrements · 15 variables · classes déséquilibrées (~14.8% pannes).
 2. **Analyse exploratoire** · 7+ visualisations interactives, distributions capteurs, corrélations.
 3. **Modélisation multi-algorithmes** · 4 modèles (Logistic Regression, Random Forest, XGBoost, MLP).
 4. **Évaluation comparative** · 6 métriques standardisées (Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC).
@@ -863,7 +863,7 @@ Output · final_model.joblib (~8 MB), final_model_name.txt.
 
 ### Pourquoi ces 6 métriques ?
 
-En classification binaire avec classes déséquilibrées (25% pannes), on compare ·
+En classification binaire avec classes déséquilibrées (~14.8% pannes), on compare ·
 
 | Métrique | Formule | Quand l'utiliser | Pièges |
 | -------- | ------- | --------------- | ------ |

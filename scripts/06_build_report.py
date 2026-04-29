@@ -655,7 +655,7 @@ def section_5_methodologie(pdf: EFREIPDF) -> None:
 
     h2(pdf, f"{n}.4", "Risques rencontrés et solutions")
     for item in [
-        "Déséquilibre des classes (75% sains / 25% pannes) : "
+        "Déséquilibre des classes (~85.2% sains / ~14.8% pannes) : "
         "class_weight='balanced' pour LogReg/RF, scale_pos_weight pour XGBoost. "
         "Pas de SMOTE : moins efficace pour gradient boosting.",
         "NaN volontaires (2-4% sur 5 capteurs) : SimpleImputer median, "
@@ -714,7 +714,7 @@ def section_6_referentiel_donnees(pdf: EFREIPDF) -> None:
         [
             ["Nombre de lignes", "24 042"],
             ["Nombre de colonnes", "15"],
-            ["Déséquilibre cible binaire", "~25% pannes / 75% sains"],
+            ["Déséquilibre cible binaire", "~14.8% pannes / ~85.2% sains"],
             ["NaN vibration_rms", "1 000 (4.16%)"],
             ["NaN pressure_level", "924 (3.84%)"],
             ["NaN temperature_motor", "834 (3.47%)"],
@@ -762,7 +762,7 @@ def section_7_eda(pdf: EFREIPDF) -> None:
         max_width_mm=100,
     )
     p(pdf, (
-        "Le déséquilibre de classe (~25% pannes) justifie le recours au F1-score et "
+        "Le déséquilibre de classe (~14.8% pannes) justifie le recours au F1-score et "
         "à la PR-AUC plutôt qu'à l'accuracy seule. Les 4 types de panne ont des "
         "supports différents, ce qui rend la macro-F1 un indicateur pertinent pour "
         "la tâche multiclasse."

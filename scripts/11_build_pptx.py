@@ -789,7 +789,7 @@ def slide_4_methodology(prs: Presentation) -> None:
         [
             "24 042 lignes x 15 colonnes",
             "7 capteurs numériques + 2 catégorielles + 4 cibles",
-            "Déséquilibre : ~25% pannes (justifie F1 + PR-AUC)",
+            "Déséquilibre : ~14.8% pannes (justifie F1 + PR-AUC)",
             "NaN 2-4% sur 5 capteurs (imputation médiane)",
             "source : tatheerabbas/industrial-machine-predictive-maintenance",
         ],
@@ -834,7 +834,7 @@ def slide_4_methodology(prs: Presentation) -> None:
         "Nous avons travaillé en binôme avec une méthodologie Agile. "
         "Le dataset Kaggle CC0 contient 24 042 observations et 15 colonnes. "
         "Les deux capteurs les plus discriminants sont la vibration et la température moteur. "
-        "Le déséquilibre des classes (~25% pannes) justifie notre choix de métriques F1 et PR-AUC.",
+        "Le déséquilibre des classes (~14.8% pannes) justifie notre choix de métriques F1 et PR-AUC.",
     )
 
 
