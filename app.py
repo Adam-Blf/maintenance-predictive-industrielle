@@ -34,7 +34,12 @@ sys.path.insert(0, str(ROOT))
 
 from src.bootstrap import ensure_dependencies  # noqa: E402
 
-ensure_dependencies(verbose=False)
+# verbose=True · l'utilisateur voit les packages manquants et la progression
+# de pip install au lancement. Idempotent · aucun appel reseau si tout est
+# deja installe (le test est `importlib.util.find_spec` par package).
+print("[0/3] Verification des dependances (requirements.txt)...")
+ensure_dependencies(verbose=True)
+print("      Dependances OK.\n")
 
 # ---------------------------------------------------------------------------
 # Configuration des services

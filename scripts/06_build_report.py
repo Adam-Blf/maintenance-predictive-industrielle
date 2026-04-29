@@ -392,7 +392,7 @@ def section_1_cover(pdf: EFREIPDF) -> None:
     pdf.ln(4)
 
     for line in [
-        "Adam BELOUCIF · n° 20220055",
+        "Adam BELOUCIF",
         "Emilien MORICE",
         "Tutrice / Formatrice : Sarah MALAEB",
     ]:

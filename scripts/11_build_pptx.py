@@ -484,7 +484,7 @@ def slide_1_title(prs: Presentation) -> None:
     # Binôme
     add_text_box(
         slide,
-        "Adam BELOUCIF (20220055)  ·  Emilien MORICE",
+        "Adam BELOUCIF  ·  Emilien MORICE",
         left=0.5,
         top=4.03,
         width=12.3,
@@ -1572,7 +1572,7 @@ def slide_12_conclusion(prs: Presentation) -> None:
     # IDs étudiants - top=6.78" + height=0.38" = 7.16" < 7.5" OK
     add_text_box(
         slide,
-        "Adam BELOUCIF 20220055  ·  Emilien MORICE  ·  M1 DE&IA EFREI 2025-2026",
+        "Adam BELOUCIF  ·  Emilien MORICE  ·  M1 DE&IA EFREI 2025-2026",
         left=0.5,
         top=6.78,
         width=12.3,
