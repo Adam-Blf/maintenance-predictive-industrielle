@@ -134,13 +134,16 @@ github_pat_*
 # --- Sortie Black/isort/Prettier ---
 .black-cache/
 
-# --- PyInstaller (build.py · regenerable via `python build.py`) ---
-# LANCER.exe et le raccourci .lnk sont livres dans le repo (la prof
-# comprend les caveats · chemins absolus dans le .lnk, dependences Python
-# requises pour les subprocess uvicorn/streamlit). Les artefacts
-# intermediaires (.spec, dist/, build/) sont ignores · regenerables.
-LANCER.spec
+# --- Launchers all-in-one Adam · full local, jamais commit ---
+# Le .lnk, le .exe, le build PyInstaller et le helper de creation de
+# raccourci restent sur la machine d'Adam · les autres clonent le repo
+# et lancent `python app.py` directement.
+*.lnk
+*.exe
 *.spec
+LANCER.spec
+build.py
+scripts/make_desktop_shortcut.py
 MaintenancePredictive/
 # build/ et dist/ sont deja ignores plus haut dans la section caches Python
 
