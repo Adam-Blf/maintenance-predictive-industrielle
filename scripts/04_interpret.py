@@ -40,6 +40,27 @@ Répond aux exigences d'explicabilité C3.1 (feature importance basique),
 C3.2 (permutation, recommandé), C3.3 (SHAP, avancé). Les 3 niveaux
 sont produits systématiquement pour couvrir tous les critères.
 
+Lecture conseillée des sorties
+------------------------------
+Pour défendre le modèle au métier, lire les figures dans cet ordre ·
+
+1. ``feature_importance_native_*.png`` · vue rapide "qui pèse le plus"
+   sur la base de l'impureté Gini (RF) ou du gain (XGBoost). Premier
+   coup d'œil mais biaisé vers les variables à forte cardinalité.
+2. ``permutation_importance_*.png`` · agnostique au modèle, mesure la
+   perte de F1 quand on shuffle une feature. Plus fiable que la native
+   pour comparer entre familles de modèles.
+3. ``shap_summary_*.png`` · SHAP TreeExplainer, contribution signée
+   par observation. Permet de répondre à *« pourquoi cette machine
+   est jugée à risque ? »* (force plot par instance, à la demande).
+4. ``shap_bar_*.png`` · agrégation moyenne des |SHAP|, équivalent à
+   une importance globale mais plus stable que (1) ou (2).
+
+La règle pratique apprise sur ce dataset · ``vibration_rms`` et
+``temperature_motor`` concentrent ~70% du gain de décision sur les
+3 mesures (native, permutation, SHAP), confirmant l'EDA et donnant
+une règle métier simple défendable au responsable maintenance.
+
 Usage ·
     python scripts/04_interpret.py
 """
