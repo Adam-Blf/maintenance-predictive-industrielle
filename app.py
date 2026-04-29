@@ -48,6 +48,10 @@ DASHBOARD_URL = f"http://localhost:{DASHBOARD_PORT}"
 SWAGGER_URL = f"{API_BASE_URL}/docs"
 REDOC_URL = f"{API_BASE_URL}/redoc"
 
+# Livrables ouverts automatiquement pour la soutenance
+PPTX_PATH = ROOT / "reports" / "11" / "presentation.pptx"
+PDF_PATH = ROOT / "reports" / "06" / "rapport_projet_data_science.pdf"
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -152,6 +156,21 @@ def main() -> int:
     time.sleep(0.6)
     # ReDoc · vue documentaire alternative, plus lisible pour le jury
     webbrowser.open(REDOC_URL)
+    time.sleep(0.6)
+
+    # Ouverture des livrables pour la soutenance (PowerPoint + PDF)
+    if PPTX_PATH.exists():
+        try:
+            os.startfile(str(PPTX_PATH))
+            print(f"      Slides    · {PPTX_PATH.name} ouvert dans PowerPoint")
+        except Exception as exc:
+            print(f"      [warn] impossible d'ouvrir le pptx · {exc}")
+    if PDF_PATH.exists():
+        try:
+            os.startfile(str(PDF_PATH))
+            print(f"      Rapport   · {PDF_PATH.name} ouvert dans le viewer PDF")
+        except Exception as exc:
+            print(f"      [warn] impossible d'ouvrir le pdf · {exc}")
 
     print()
     _print_banner(
