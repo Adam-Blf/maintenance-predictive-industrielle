@@ -220,15 +220,21 @@ Séquence d'exécution ·
 
 Pendant la démo, le diagnostic dans Streamlit appelle **réellement** l'API en `POST /predict` via httpx · un badge *"Source · API REST"* apparaît sous le résultat. Si l'API est arrêtée, le dashboard bascule en local (joblib) avec un badge *"Source · modèle local"*.
 
-### Raccourci bureau Windows
+### Raccourci bureau Windows · all-in-one en double-clic
 
-Pour lancer toute la démo sans terminal · génère un raccourci `.lnk` sur le bureau ·
+Le raccourci `Maintenance Predictive - Demo.lnk` est livré **à la racine du repo**. **Double-clic → tout démarre** · API FastAPI + dashboard Streamlit + Swagger UI + ReDoc + PPTX + PDF.
 
-```bash
-python scripts/_make_desktop_shortcut.py
-```
+> ⚠️ Le fichier `.lnk` contient des chemins absolus (vers `python.exe` et le repo). Sur la machine d'Adam (où il a été généré) il fonctionne tel quel. Sur une autre machine, **regénère-le** ·
+>
+> ```bash
+> python scripts/make_desktop_shortcut.py
+> ```
+>
+> Cela écrit un nouveau `.lnk` sur ton Bureau avec les chemins corrects.
 
-Le script crée `Maintenance Predictive - Demo.lnk` sur le bureau, avec l'icône EFREI. Double-clic → tout démarre. (Le script `_make_*.py` est local, ignoré par le `.gitignore`.)
+Compatibilité ·
+- **Windows** · `.lnk` natif via `pywin32` (auto-installé par `requirements.txt`)
+- **Mac / Linux** · lancer directement `python app.py` depuis un terminal (le `.lnk` est Windows-spécifique, le script print un message clair sur Mac/Linux)
 
 ---
 
