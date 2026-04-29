@@ -961,8 +961,12 @@ def tab_eda(df: pd.DataFrame) -> None:
 # Onglet 3 · Comparaison des modèles.
 # ---------------------------------------------------------------------------
 def tab_models(metrics: list[dict]) -> None:
-    """Tableau + barplot comparatif des 4 modèles."""
-    st.markdown("### Comparaison des 4 modèles entraînés")
+    """Tableau + barplot comparatif des 4 modèles, classés par F1 décroissant."""
+    st.markdown("### Comparaison des 4 modèles entraînés · classés par F1-score")
+    st.caption(
+        "Classement par F1-score décroissant · le modèle final retenu apparaît en tête. "
+        "F1 est privilégié sur l'accuracy car la cible est déséquilibrée (~25% pannes)."
+    )
 
     if not metrics:
         st.warning("Aucune métrique trouvée. Lancer `python scripts/03_train_models.py`.")
@@ -970,8 +974,13 @@ def tab_models(metrics: list[dict]) -> None:
 
     df_metrics = pd.DataFrame(metrics)
 
+    # Classement décroissant par F1 · le meilleur modèle en première ligne.
+    sort_key = "f1" if "f1" in df_metrics.columns else "roc_auc"
+    df_ranked = df_metrics.sort_values(sort_key, ascending=False).reset_index(drop=True)
+    df_ranked.insert(0, "Rang", [f"#{i + 1}" for i in range(len(df_ranked))])
+
     # Mise en forme · arrondi à 4 décimales pour les scores.
-    display_df = df_metrics.copy()
+    display_df = df_ranked.copy()
     score_cols = ["accuracy", "precision", "recall", "f1", "roc_auc", "pr_auc"]
     for c in score_cols:
         if c in display_df.columns:
@@ -981,18 +990,28 @@ def tab_models(metrics: list[dict]) -> None:
     if "predict_time_ms" in display_df.columns:
         display_df["predict_time_ms"] = display_df["predict_time_ms"].round(4)
 
-    # Tableau interactif Streamlit · tri/filtre natifs.
+    # Mise en évidence du meilleur modèle (ligne 0 = #1).
+    def _highlight_best(row):
+        if row.name == 0:
+            return ["background-color: #DCFCE7; font-weight: 600"] * len(row)
+        return [""] * len(row)
+
+    styled = display_df.style.apply(_highlight_best, axis=1)
+
+    # Tableau interactif Streamlit · tri/filtre natifs, ligne 1 mise en valeur.
     st.dataframe(
-        display_df,
+        styled,
         width="stretch",
         hide_index=True,
     )
 
     # Barplot horizontal pour faciliter la comparaison visuelle.
     st.markdown("#### Comparaison visuelle (6 métriques)")
-    melt = df_metrics.melt(
+    # Préserve l'ordre du classement dans la légende et les groupes.
+    ordered_models = df_ranked["model_name"].tolist()
+    melt = df_ranked.melt(
         id_vars="model_name",
-        value_vars=score_cols,
+        value_vars=[c for c in score_cols if c in df_ranked.columns],
         var_name="metric",
         value_name="score",
     )
@@ -1002,14 +1021,15 @@ def tab_models(metrics: list[dict]) -> None:
         y="score",
         color="model_name",
         barmode="group",
-        color_discrete_sequence=["#1E88E5", "#0D47A1", "#E53935", "#43A047"],
+        category_orders={"model_name": ordered_models},
+        color_discrete_sequence=["#10B981", "#1E88E5", "#0D47A1", "#E53935"],
         text=melt["score"].round(3),
     )
     fig.update_traces(textposition="outside")
     fig.update_layout(
         height=480,
         yaxis_range=[0, 1.05],
-        legend_title_text="Modèle",
+        legend_title_text="Modèle (classé)",
         margin=dict(t=10, b=10),
     )
     st.plotly_chart(fig, width="stretch")
