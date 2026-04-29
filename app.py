@@ -29,7 +29,14 @@ import urllib.request
 import webbrowser
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+# Detection du mode frozen PyInstaller · quand le programme tourne depuis
+# `LANCER.exe`, sys.frozen=True et le code est extrait dans un temp _MEIxxxx.
+# Dans ce cas, ROOT doit pointer sur le dossier qui CONTIENT le .exe (= repo
+# clone ou le user a place LANCER.exe), pas sur le temp d'extraction.
+if getattr(sys, "frozen", False):
+    ROOT = Path(sys.executable).resolve().parent
+else:
+    ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 from src.bootstrap import ensure_dependencies  # noqa: E402

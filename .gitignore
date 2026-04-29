@@ -135,8 +135,12 @@ github_pat_*
 .black-cache/
 
 # --- PyInstaller (build.py · regenerable via `python build.py`) ---
+# Le LANCER.exe livrable est tracke (root du repo, ~11 Mo).
+# Les artefacts intermediaires sont ignores · regenerables.
 *.spec
+LANCER.spec
 MaintenancePredictive/
+# build/ et dist/ sont deja ignores plus haut dans la section caches Python
 
 # --- CodeCarbon (cachedir + traces emissions) ---
 cachedir/
