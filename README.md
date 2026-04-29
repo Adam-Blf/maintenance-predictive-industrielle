@@ -95,7 +95,7 @@ Ce projet livre une **plateforme intelligente complète** couvrant le cycle de v
 8. **Rapport analytique** · PDF généré 20+ pages avec figures, schémas, matrice de confusion, courbes ROC/PR.
 9. **Bonus** · classification multi-classe (type de panne), régression (RUL), tuning hyperparamètres, calibration, mesure CO₂.
 
-Dataset officiel · `industrial_machine_predictive_maintenance` · Kaggle v3.0 (CC0 public domain) · tatheerabbas/industrial-machine-predictive-maintenance.
+Dataset officiel · Kaggle v3.0 CC0 · [tatheerabbas/industrial-machine-predictive-maintenance](https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance/data) (24 042 lignes × 15 colonnes).
 
 ---
 
@@ -197,6 +197,25 @@ IoT Sensors (vibration, T°, RPM, pression, ...)
 - **Disque** · ≥ 500 MB libre (donnée + modèles + rapports).
 - **CPU** · multi-core recommandé (RandomForest/XGBoost parallélisés via `n_jobs=-1`).
 - **Temps exécution complet** · ~45-60 min sur CPU grand public (i5-10400, 8GB RAM).
+
+---
+
+## Quickstart · `python app.py`
+
+Pour la **soutenance** ou pour démontrer la solution complète, un orchestrateur unique lance tout d'un coup ·
+
+```bash
+python app.py
+```
+
+Sequence d'exécution ·
+
+1. Démarre l'API FastAPI sur `http://127.0.0.1:8000` (uvicorn)
+2. Attend que `/health` réponde 200 (max 30 s)
+3. Démarre le dashboard Streamlit sur `http://localhost:8501`, branché sur l'API via `API_BASE_URL`
+4. Ouvre 3 onglets navigateur · **Swagger UI** (`/docs`), **dashboard métier**, **ReDoc** (`/redoc`)
+
+`Ctrl+C` arrête proprement les 2 sous-processus. Idéal pour la démonstration jury · le diagnostic dans Streamlit appelle alors **réellement** l'API en POST `/predict` (badge "Source · API REST" affiché).
 
 ---
 
@@ -1055,7 +1074,7 @@ python scripts/03_train_models.py
 
 ### Dataset · CSV Kaggle officiel uniquement
 
-- **Source unique** · Kaggle CC0 · `tatheerabbas/industrial-machine-predictive-maintenance`
+- **Source unique** · Kaggle CC0 · [tatheerabbas/industrial-machine-predictive-maintenance](https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance/data)
 - **Téléchargement** · `kaggle datasets download tatheerabbas/industrial-machine-predictive-maintenance` puis extraire `predictive_maintenance_v3.csv` dans `data/raw/`
 - **Validation auto** · `src.data_loader.load_dataset()` valide le schéma 15 colonnes à chaque chargement, lève `FileNotFoundError` avec instructions Kaggle si absent
 - **Politique stricte** · aucun fallback synthétique nulle part. Si le CSV est absent, les tests skip proprement et les scripts plantent avec un message clair. Pas de génération de données.

@@ -25,6 +25,7 @@ Lancement · `streamlit run dashboard/app.py`
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -1093,8 +1094,33 @@ def tab_diagnostic(model, df: pd.DataFrame, best_name: str) -> None:
         st.markdown("#### Décision recommandée")
 
         if do_predict:
-            X_input = pd.DataFrame([{f: inputs[f] for f in ALL_FEATURES}])
-            proba = float(model.predict_proba(X_input)[0, 1])
+            # 1. Tente d'appeler l'API REST si elle est disponible (cas
+            #    `python app.py` orchestrateur). Cela permet a la
+            #    soutenance de demontrer le couplage dashboard <-> API.
+            api_url = os.environ.get("API_BASE_URL", "").rstrip("/")
+            proba: float | None = None
+            source: str = "local"
+            if api_url:
+                try:
+                    import httpx
+                    payload = {f: inputs[f] for f in ALL_FEATURES}
+                    r = httpx.post(f"{api_url}/predict", json=payload, timeout=3.0)
+                    if r.status_code == 200:
+                        body = r.json()
+                        proba = float(body["probability"])
+                        source = "api"
+                except Exception:
+                    proba = None  # bascule en local
+            # 2. Fallback · prediction locale via le modele charge.
+            if proba is None:
+                X_input = pd.DataFrame([{f: inputs[f] for f in ALL_FEATURES}])
+                proba = float(model.predict_proba(X_input)[0, 1])
+
+            # Badge source pour la soutenance.
+            if source == "api":
+                st.caption(f"Source · API REST `{api_url}/predict`")
+            else:
+                st.caption("Source · modele local (joblib)")
 
             # Classification métier · 3 niveaux de risque.
             if proba >= RISK_THRESHOLD_HIGH:
