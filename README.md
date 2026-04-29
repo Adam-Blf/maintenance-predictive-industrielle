@@ -208,14 +208,27 @@ Pour la **soutenance** ou pour démontrer la solution complète, un orchestrateu
 python app.py
 ```
 
-Sequence d'exécution ·
+Séquence d'exécution ·
 
-1. Démarre l'API FastAPI sur `http://127.0.0.1:8000` (uvicorn)
+1. Démarre l'API FastAPI sur `http://127.0.0.1:8000` (uvicorn, niveau log `warning`)
 2. Attend que `/health` réponde 200 (max 30 s)
-3. Démarre le dashboard Streamlit sur `http://localhost:8501`, branché sur l'API via `API_BASE_URL`
+3. Démarre le dashboard Streamlit sur `http://localhost:8501`, branché sur l'API via la variable d'environnement `API_BASE_URL`
 4. Ouvre 3 onglets navigateur · **Swagger UI** (`/docs`), **dashboard métier**, **ReDoc** (`/redoc`)
+5. Ouvre `reports/11/presentation.pptx` dans PowerPoint et `reports/06/rapport_projet_data_science.pdf` dans le viewer PDF par défaut
 
-`Ctrl+C` arrête proprement les 2 sous-processus. Idéal pour la démonstration jury · le diagnostic dans Streamlit appelle alors **réellement** l'API en POST `/predict` (badge "Source · API REST" affiché).
+`Ctrl+C` dans le terminal arrête proprement l'API et le dashboard ; PowerPoint et le PDF restent ouverts pour la suite de la soutenance.
+
+Pendant la démo, le diagnostic dans Streamlit appelle **réellement** l'API en `POST /predict` via httpx · un badge *"Source · API REST"* apparaît sous le résultat. Si l'API est arrêtée, le dashboard bascule en local (joblib) avec un badge *"Source · modèle local"*.
+
+### Raccourci bureau Windows
+
+Pour lancer toute la démo sans terminal · génère un raccourci `.lnk` sur le bureau ·
+
+```bash
+python scripts/_make_desktop_shortcut.py
+```
+
+Le script crée `Maintenance Predictive - Demo.lnk` sur le bureau, avec l'icône EFREI. Double-clic → tout démarre. (Le script `_make_*.py` est local, ignoré par le `.gitignore`.)
 
 ---
 
