@@ -1,6 +1,18 @@
 # =============================================================================
 # .gitignore · Projet Maintenance Predictive Industrielle
+# Strategie · push UNIQUEMENT ce qui est livre a la prof Sarah MALAEB
+# (rapport PDF, slides PPTX, code source, doc RNCP, README).
+# Tout le reste est regenerable via les scripts numerotes.
 # =============================================================================
+
+# --- Notes de travail Claude Code (FACTS.md, memoire personnelle Adam) ---
+.claude/
+
+# --- Scripts de developpement (pas livres) ---
+scripts/_build_*.py
+scripts/_scan_*.py
+scripts/_*.json
+scripts/*.local.py
 
 # --- Donnees brutes et intermediaires (lourdes, regenerables) ---
 data/raw/*.csv
@@ -15,12 +27,26 @@ models/*.pkl
 models/*.h5
 !models/.gitkeep
 
+# --- Rapports intermediaires (figures regenerables, embed dans le PDF final) ---
+reports/02/
+reports/03/
+reports/04/
+reports/05/
+reports/07/
+reports/08/
+reports/09/
+reports/10/
+
 # --- PDFs · on conserve le sujet officiel, le referentiel RNCP et le
-#     rapport final livrable. On bloque tous les autres PDF accidentels.
+#     rapport final livrable. Tous les autres PDF (build artefacts, drafts) ignores.
 *.pdf
 !reports/06/rapport_projet_data_science.pdf
 !docs/Projet M1 DE Sujet 1 - Maintenance Prédictive Industrielle.pdf
 !docs/Référentiel RNCP40875 .PDF
+
+# --- PowerPoints · on conserve uniquement la presentation finale ---
+*.pptx
+!reports/11/presentation.pptx
 
 # --- Fichiers de lock Office (Word/Excel/PowerPoint en cours d'edition) ---
 ~$*
