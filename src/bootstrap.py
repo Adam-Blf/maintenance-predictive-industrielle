@@ -57,6 +57,9 @@ _PIP_TO_IMPORT_NAME: dict[str, str] = {
     "python-dotenv": "dotenv",
     "pytest-cov": "pytest_cov",
     "uvicorn": "uvicorn",
+    # pywin32 est un meta-package · ses modules s'importent via win32com,
+    # win32api, win32con, etc. On utilise win32com comme sentinelle.
+    "pywin32": "win32com",
 }
 
 
@@ -83,6 +86,12 @@ def _parse_requirements() -> list[str]:
         # Skip commentaires et lignes vides.
         if not line or line.startswith("#"):
             continue
+        # Strip les markers PEP 508 (environment markers) AVANT le split
+        # operator · ex. `pywin32>=306; sys_platform == "win32"` doit donner
+        # `pywin32`, pas `pywin32>=306; sys_platform` (le == du marker
+        # confond le parser).
+        if ";" in line:
+            line = line.split(";", 1)[0].strip()
         # Extraction du nom · "pandas>=2.0.0" → "pandas".
         # On split sur les opérateurs de version usuels.
         for sep in ("==", ">=", "<=", "~=", ">", "<"):

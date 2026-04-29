@@ -41,6 +41,66 @@ print("[0/3] Verification des dependances (requirements.txt)...")
 ensure_dependencies(verbose=True)
 print("      Dependances OK.\n")
 
+
+# ---------------------------------------------------------------------------
+# Auto-installation du raccourci bureau (Windows uniquement, idempotent)
+# ---------------------------------------------------------------------------
+def _autoinstall_desktop_shortcut() -> None:
+    """Cree le raccourci `Maintenance Predictive - Demo.lnk` sur le bureau
+    si on est sous Windows et qu'il n'existe pas deja. Resilient · ignore
+    silencieusement toute erreur (pywin32 manquant, drive readonly, etc.)
+    pour ne jamais bloquer le lancement du serveur.
+
+    Idempotent · si le raccourci existe deja avec la bonne cible, ne fait
+    rien. Si il existe avec une cible obsolete (autre python.exe), il est
+    re-ecrit. C'est cela qui rend la solution **portable** entre machines ·
+    cloner le repo + lancer `python app.py` une fois suffit a obtenir un
+    raccourci bureau valide sur N'IMPORTE QUELLE machine Windows.
+    """
+    if sys.platform != "win32":
+        return  # Mac/Linux · pas de .lnk, lancer `python app.py` directement
+    try:
+        from win32com.client import Dispatch  # type: ignore
+
+        desktop_root = os.environ.get("USERPROFILE") or os.path.expanduser("~")
+        desktop = Path(desktop_root) / "Desktop"
+        desktop.mkdir(parents=True, exist_ok=True)
+        shortcut_path = desktop / "Maintenance Predictive - Demo.lnk"
+
+        target_python = sys.executable
+        target_arg = f'"{Path(__file__).resolve()}"'
+        icon = Path(__file__).resolve().parent / "assets" / "logo_efrei.ico"
+
+        # Si le raccourci existe deja et pointe sur ce python.exe, on
+        # considere qu'il est a jour (evite une re-ecriture inutile a chaque
+        # lancement).
+        if shortcut_path.exists():
+            try:
+                shell_check = Dispatch("WScript.Shell")
+                existing = shell_check.CreateShortCut(str(shortcut_path))
+                if existing.TargetPath == target_python and existing.Arguments == target_arg:
+                    return  # raccourci deja a jour, no-op
+            except Exception:
+                pass  # on tentera la re-ecriture quand meme
+
+        shell = Dispatch("WScript.Shell")
+        sc = shell.CreateShortCut(str(shortcut_path))
+        sc.TargetPath = target_python
+        sc.Arguments = target_arg
+        sc.WorkingDirectory = str(Path(__file__).resolve().parent)
+        sc.Description = "Lance API FastAPI + dashboard Streamlit + Swagger + PPTX + PDF"
+        sc.WindowStyle = 1  # 1 = fenetre normale (terminal visible)
+        if icon.exists():
+            sc.IconLocation = f"{icon},0"
+        sc.save()
+        print(f"[setup] Raccourci bureau cree/mis a jour · {shortcut_path}")
+    except Exception as exc:
+        # Pas de pywin32 ou autre · on log et on continue, ce n'est pas bloquant
+        print(f"[setup] Raccourci bureau non cree (non bloquant) · {exc}")
+
+
+_autoinstall_desktop_shortcut()
+
 # ---------------------------------------------------------------------------
 # Configuration des services
 # ---------------------------------------------------------------------------

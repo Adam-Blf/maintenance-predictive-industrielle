@@ -55,3 +55,7 @@ pytest-cov>=4.1
 # --- Utilitaires ---
 python-dotenv>=1.0
 reportlab>=4.0
+
+# --- Windows uniquement · creation auto du raccourci bureau (.lnk) par app.py ---
+# Conditionnel platform · pas installe sur Mac/Linux ou il est inutile.
+pywin32>=306; sys_platform == "win32"
