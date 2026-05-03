@@ -1,0 +1,64 @@
+name: Sync repo topics
+
+# Quand on modifie .github/topics.yml et qu'on push, le workflow remplace
+# l'ensemble des topics du repo via l'API GitHub. Idempotent · ne fait rien
+# si la liste est déjà à jour.
+#
+# Convention reproductible sur tous les repos d'Adam · documenté dans
+# docs/TOPICS_RULE.md.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - ".github/topics.yml"
+  workflow_dispatch:
+
+permissions:
+  # Le GITHUB_TOKEN par défaut a déjà ce scope sur le repo courant.
+  metadata: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read topics
+        id: topics
+        run: |
+          set -euo pipefail
+          if [ ! -f .github/topics.yml ]; then
+            echo "no .github/topics.yml · skip"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Extract the YAML list under "topics:" using only awk (no extra deps)
+          NAMES=$(awk '
+            /^topics:/ { in_list=1; next }
+            in_list && /^[[:space:]]*-/ {
+              gsub(/^[[:space:]]*-[[:space:]]*/, "", $0);
+              gsub(/[[:space:]]*#.*$/, "", $0);
+              if ($0 != "") print $0
+            }
+            in_list && /^[^[:space:]-]/ { in_list=0 }
+          ' .github/topics.yml | jq -R . | jq -s .)
+          echo "names=$NAMES" >> "$GITHUB_OUTPUT"
+          echo "Found topics: $NAMES"
+
+      - name: Sync topics via GitHub API
+        if: steps.topics.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          NAMES: ${{ steps.topics.outputs.names }}
+        run: |
+          set -euo pipefail
+          BODY=$(jq -n --argjson names "$NAMES" '{names: $names}')
+          echo "PUT /repos/$REPO/topics ← $BODY"
+          echo "$BODY" | gh api \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            "repos/$REPO/topics" \
+            --input -
