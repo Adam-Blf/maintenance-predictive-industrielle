@@ -1,0 +1,21 @@
+# GitHub topics du repo · source de vérité.
+#
+# Modifier ce fichier puis push → le workflow .github/workflows/sync-topics.yml
+# remplace les topics du repo via l'API GitHub.
+#
+# Règles ·
+#   - lowercase, [a-z0-9-]+, max 50 chars par topic
+#   - max 20 topics par repo (limite GitHub)
+
+topics:
+  - data-science
+  - efrei
+  - fastapi
+  - machine-learning
+  - predictive-maintenance
+  - python
+  - rncp
+  - scikit-learn
+  - shap
+  - streamlit
+  - xgboost
