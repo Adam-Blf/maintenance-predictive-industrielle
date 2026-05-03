@@ -1,5 +1,7 @@
 # Système Intelligent Multi-Modèles · Maintenance Prédictive Industrielle
 
+[![EFREI Paris](https://img.shields.io/badge/EFREI-Paris-005CA9?style=flat-square&labelColor=000000)](https://www.efrei.fr/)
+
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](.)
 [![Python](https://img.shields.io/badge/python-3.12-blue)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4-orange)](https://scikit-learn.org/)
