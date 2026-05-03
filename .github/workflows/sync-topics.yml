@@ -4,8 +4,21 @@ name: Sync repo topics
 # l'ensemble des topics du repo via l'API GitHub. Idempotent · ne fait rien
 # si la liste est déjà à jour.
 #
-# Convention reproductible sur tous les repos d'Adam · documenté dans
-# docs/TOPICS_RULE.md.
+# IMPORTANT · ce workflow nécessite un Personal Access Token avec scope
+# `public_repo` (ou `repo` pour les privés) stocké en secret repo
+# `TOPICS_PAT`. Le GITHUB_TOKEN natif ne peut pas modifier les topics
+# (limite GitHub Actions, pas un bug du workflow).
+#
+# Setup une seule fois ·
+#   1. github.com → Settings → Developer settings → PAT classique
+#      → générer avec scope `public_repo` (et `repo` si repos privés)
+#   2. dans CHAQUE repo cible · Settings → Secrets → Actions
+#      → New repository secret · nom `TOPICS_PAT`, valeur = le PAT
+#   3. ou en bulk via gh ·
+#      gh secret set TOPICS_PAT --repos Adam-Blf/repo1,Adam-Blf/repo2
+#
+# Si le secret n'est pas défini, le workflow se termine en SUCCESS avec un
+# message "skip" plutôt que de polluer l'onglet Actions de runs rouges.
 
 on:
   push:
@@ -14,11 +27,6 @@ on:
       - ".github/topics.yml"
   workflow_dispatch:
 
-permissions:
-  # API GitHub `PUT /repos/{owner}/{repo}/topics` exige administration:write.
-  administration: write
-  contents: read
-
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -26,16 +34,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Read topics
+      - name: Check secret presence
+        id: secret
+        env:
+          TOPICS_PAT: ${{ secrets.TOPICS_PAT }}
+        run: |
+          if [ -z "${TOPICS_PAT:-}" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::secrets.TOPICS_PAT not set · skip · see workflow comments"
+          else
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read topics from .github/topics.yml
+        if: steps.secret.outputs.missing == 'false'
         id: topics
         run: |
           set -euo pipefail
           if [ ! -f .github/topics.yml ]; then
-            echo "no .github/topics.yml · skip"
+            echo "::warning::no .github/topics.yml · nothing to do"
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # Extract the YAML list under "topics:" using only awk (no extra deps)
           NAMES=$(awk '
             /^topics:/ { in_list=1; next }
             in_list && /^[[:space:]]*-/ {
@@ -44,14 +64,14 @@ jobs:
               if ($0 != "") print $0
             }
             in_list && /^[^[:space:]-]/ { in_list=0 }
-          ' .github/topics.yml | jq -R . | jq -s .)
+          ' .github/topics.yml | jq -R . | jq -s -c .)
           echo "names=$NAMES" >> "$GITHUB_OUTPUT"
           echo "Found topics: $NAMES"
 
-      - name: Sync topics via GitHub API
-        if: steps.topics.outputs.skip != 'true'
+      - name: PUT topics via GitHub API
+        if: steps.secret.outputs.missing == 'false' && steps.topics.outputs.skip != 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.TOPICS_PAT }}
           REPO: ${{ github.repository }}
           NAMES: ${{ steps.topics.outputs.names }}
         run: |
