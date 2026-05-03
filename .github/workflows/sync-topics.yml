@@ -15,8 +15,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  # Le GITHUB_TOKEN par défaut a déjà ce scope sur le repo courant.
-  metadata: write
+  # API GitHub `PUT /repos/{owner}/{repo}/topics` exige administration:write.
+  administration: write
+  contents: read
 
 jobs:
   sync:
