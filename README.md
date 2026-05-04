@@ -1,5 +1,10 @@
 # Système Intelligent Multi-Modèles · Maintenance Prédictive Industrielle
 
+<!-- adam-badges:start -->
+[![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/maintenance-predictive-industrielle?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![visites](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle/) [![last commit](https://img.shields.io/github/last-commit/Adam-Blf/maintenance-predictive-industrielle?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![top language](https://img.shields.io/github/languages/top/Adam-Blf/maintenance-predictive-industrielle?style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle) [![license](https://img.shields.io/github/license/Adam-Blf/maintenance-predictive-industrielle?style=flat-square&color=D4A437)](LICENSE)
+<!-- adam-badges:end -->
+
+
 [![EFREI Paris](https://img.shields.io/badge/EFREI-Paris-005CA9?style=flat-square&labelColor=000000)](https://www.efrei.fr/)
 
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](.)
