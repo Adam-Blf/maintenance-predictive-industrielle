@@ -133,58 +133,25 @@ Dataset officiel · Kaggle v3.0 CC0 · [tatheerabbas/industrial-machine-predicti
 
 ### Schéma général
 
-```
-IoT Sensors (vibration, T°, RPM, pression, ...)
-        ↓
-    CSV Bronze (raw)  [data/raw/predictive_maintenance_v3.csv]
-        ↓
-    02_eda.py  (8 graphiques + stats descriptives + analyse NaN)
-        ↓
-  DATA PREPARATION (SILVER LAYER)
-  ├─ Validation schema (Pandera)
-  ├─ Imputation NaN (SimpleImputer, strategy="median" numériques)
-  ├─ Standardisation numériques (StandardScaler sur train)
-  ├─ One-Hot Encoding catégories (OHE, drop="first")
-  ├─ Feature Engineering bonus (ratios, interactions, deviations)
-  └─ Sortie · X_train, X_test, y_train, y_test + scaler/encoder séralisés
-        ↓
-  03_train_models.py  (4 modèles, CV 5-fold, évaluation)
-  ├─ Logistic Regression (baseline, coef_ → interprétabilité)
-  ├─ Random Forest (200 arbres, feature_importances_, temps O(n*m²))
-  ├─ XGBoost (300 boosters, lr=0.05, scale_pos_weight auto)
-  └─ MLP (64→32→16, early stopping, adam optimizer)
-        ↓
-  GOLD LAYER (Modèles + Évaluation)
-  ├─ Matrice confusion (True Positive / False Positive / TN / FN)
-  ├─ Courbes ROC (TPR vs FPR)
-  ├─ Courbes PR (Precision vs Recall)
-  ├─ Barplot métriques (F1, Recall, Precision par modèle)
-  ├─ Selection score · F1 - 0.5×σ(F1_CV)  [compromis perf/stabilité]
-  └─ Final model · sauvegarde joblib + nom canonique
-        ↓
-  04_interpret.py  (SHAP + Permutation Importance + Feature Importance)
-  ├─ Force plots (top 10 features)
-  ├─ Waterfall plots (top 3 samples)
-  ├─ Summary plots (moyenne |SHAP|)
-  └─ Dépendance partielle (interaction avec vibration_rms)
-        ↓
-  05_generate_diagrams.py  (4 schémas pédagogiques)
-  ├─ Architecture pipeline (PNG)
-  ├─ Biais-variance tradeoff (PNG)
-  ├─ Imbalance ratio stratégie (PNG)
-  └─ Modèle sélectionné performance (PNG)
-        ↓
-  [BONUS] Multi-tâches
-  ├─ 07_train_multiclass.py  (failure_type, 5 classes, F1 macro)
-  ├─ 08_train_regression.py  (rul_hours, MAE/RMSE/R²)
-  ├─ 09_tune_hyperparams.py  (Optuna, 100 trials, TPE sampler)
-  └─ 10_calibrate.py  (Reliability diagram, Brier score, seuil métier)
-        ↓
-  Rapport PDF + Présentation PPTX · livrables auteur (Word/LaTeX → PDF, PowerPoint)
-        ↓
-  SERVING
-  ├─ dashboard/app.py  (Streamlit, http://localhost:8501)
-  └─ api/main.py  (FastAPI, http://localhost:8000)
+```mermaid
+flowchart TB
+    SENSORS["Capteurs IoT<br/>vibration · temperature · RPM · pression"]
+    RAW["CSV Bronze<br/>data/raw/predictive_maintenance_v3.csv"]
+    EDA["02_eda.py<br/>8 graphiques · stats · analyse NaN"]
+    PREP["Preparation Silver<br/>preprocessing.py · Pandera · imputation · scaling · OHE"]
+    TRAIN["03_train_models.py<br/>LogReg · Random Forest · XGBoost · MLP · CV 5-fold"]
+    GOLD["Evaluation Gold<br/>evaluation.py · matrice confusion · ROC · PR · selection F1"]
+    INTERP["04_interpret.py<br/>SHAP · permutation importance · dependance partielle"]
+    BONUS["Bonus multi-taches<br/>multiclass · regression RUL · Optuna · calibration"]
+    REPORT["Livrables<br/>rapport PDF · presentation PPTX · diagrammes"]
+    DASH["dashboard/app.py<br/>Streamlit · localhost:8501"]
+    API["api/main.py<br/>FastAPI · localhost:8000"]
+
+    SENSORS --> RAW --> EDA --> PREP --> TRAIN --> GOLD --> INTERP
+    GOLD --> BONUS
+    INTERP --> REPORT
+    GOLD --> DASH
+    GOLD --> API
 ```
 
 ### Tailles des artefacts
