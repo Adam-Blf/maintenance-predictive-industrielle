@@ -1460,3 +1460,14 @@ Si vous réutilisez ce projet ·
 **Auteurs** · Adam BELOUCIF · Emilien MORICE (n° 20241824)
 
 **Status** · Production ready (v2.0 + 7 bonus scripts) · Reproductibilité certifiée seed=42
+
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=Adam-Blf%2Fmaintenance-predictive-industrielle&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=Adam-Blf/maintenance-predictive-industrielle&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=Adam-Blf/maintenance-predictive-industrielle&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Adam-Blf/maintenance-predictive-industrielle&type=date&legend=top-left" />
+ </picture>
+</a>
