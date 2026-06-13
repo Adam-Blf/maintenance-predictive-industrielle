@@ -1,14 +1,17 @@
-# Theme Streamlit force en mode "light" pour eviter les bascules en dark
-# qui cassent les contrastes du CSS custom (texte blanc sur fond blanc).
-# Charte EFREI · bleu institutionnel sur fond ivoire.
+# Theme Streamlit · charte officielle EFREI
+# primaryColor     = rose signature #FF43B8 (CTAs, sliders, radio)
+# backgroundColor  = blanc pur #FFFFFF
+# secondaryBg      = gris clair #F4F4F4 (sidebar, code blocks)
+# textColor        = anthracite #212121
+# font             = sans serif (Plus Jakarta Sans injecté via CSS custom)
 
 [theme]
-base = "light"
-primaryColor = "#1E88E5"
+base            = "light"
+primaryColor    = "#FF43B8"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F4F7FB"
-textColor = "#1F2937"
-font = "sans serif"
+secondaryBackgroundColor = "#F4F4F4"
+textColor       = "#212121"
+font            = "sans serif"
 
 [browser]
 gatherUsageStats = false

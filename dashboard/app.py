@@ -76,6 +76,7 @@ _ensure_streamlit_runtime()
 from src.config import (  # noqa: E402
     ALL_FEATURES,
     EFREI_LOGO,
+    EFREI_LOGO_CMJN,
     MODELS_DIR,
     NUMERIC_FEATURES,
     OPERATING_MODES,
@@ -112,9 +113,13 @@ CUSTOM_CSS = """
        Inspiration · Apple HIG, Linear, Vercel (sobriété + densité d'information).
     ====================================================================== */
     :root {
-        --ef-primary: #1E88E5;
-        --ef-primary-deep: #0D47A1;
-        --ef-primary-soft: #E3F2FD;
+        /* ── Charte EFREI officielle ──────────────────────────────────────── */
+        --ef-primary: #163767;        /* bleu primaire EFREI */
+        --ef-primary-deep: #051832;   /* navy profond */
+        --ef-primary-soft: #E8EEF7;   /* teinte bleue douce */
+        --ef-accent-pink: #FF43B8;    /* rose signature EFREI */
+        --ef-secondary-blue: #0C78B4; /* bleu vif secondaire */
+
         --ef-success: #10B981;
         --ef-success-soft: #D1FAE5;
         --ef-warning: #F59E0B;
@@ -122,24 +127,24 @@ CUSTOM_CSS = """
         --ef-danger: #EF4444;
         --ef-danger-soft: #FEE2E2;
 
-        --ef-bg: #F8FAFC;
+        --ef-bg: #F4F4F4;
         --ef-surface: #FFFFFF;
-        --ef-surface-2: #F1F5F9;
-        --ef-border: #E2E8F0;
-        --ef-border-strong: #CBD5E1;
-        --ef-text: #0F172A;
-        --ef-text-soft: #475569;
-        --ef-text-muted: #94A3B8;
+        --ef-surface-2: #EEEEEE;
+        --ef-border: #E0E0E0;
+        --ef-border-strong: #BDBDBD;
+        --ef-text: #212121;
+        --ef-text-soft: #5A6B82;
+        --ef-text-muted: #9E9E9E;
 
         --ef-radius-sm: 10px;
         --ef-radius-md: 14px;
         --ef-radius-lg: 20px;
         --ef-radius-xl: 28px;
 
-        --ef-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
-        --ef-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
-        --ef-shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.10), 0 4px 8px rgba(15, 23, 42, 0.04);
-        --ef-shadow-blue: 0 8px 24px rgba(30, 136, 229, 0.18);
+        --ef-shadow-sm: 0 1px 2px rgba(33, 33, 33, 0.05);
+        --ef-shadow-md: 0 4px 12px rgba(33, 33, 33, 0.08), 0 1px 3px rgba(33, 33, 33, 0.04);
+        --ef-shadow-lg: 0 12px 28px rgba(33, 33, 33, 0.12), 0 4px 8px rgba(33, 33, 33, 0.05);
+        --ef-shadow-blue: 0 8px 24px rgba(22, 55, 103, 0.20);
 
         --ef-easing: cubic-bezier(0.32, 0.72, 0, 1);
         --ef-font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

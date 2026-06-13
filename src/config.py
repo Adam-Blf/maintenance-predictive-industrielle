@@ -79,6 +79,8 @@ S11_DIR: Path = REPORTS_DIR / "11"  # Présentation PPTX (livrable jury)
 # Logo EFREI utilisé en page de garde du rapport et dans le dashboard.
 ASSETS_DIR: Path = PROJECT_ROOT / "assets"
 EFREI_LOGO: Path = ASSETS_DIR / "logo_efrei.png"
+# Logo officiel EFREI · charte graphique CMJN (usage prioritaire dashboard).
+EFREI_LOGO_CMJN: Path = ASSETS_DIR / "Logo-Efrei-CMJN.png"
 # Variante blanche du logo EFREI · pour les slides à fond sombre (navy).
 EFREI_LOGO_WHITE: Path = ASSETS_DIR / "logo_efrei_white.png"
 # Variante noire monochrome du logo EFREI · pour impression noir et blanc.
@@ -164,11 +166,13 @@ ALL_FEATURES: list[str] = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 # Charte graphique du projet · cohérente avec l'identité EFREI (bleu) et
 # avec la sémantique "alerte" pour la maintenance prédictive (rouge).
 # ---------------------------------------------------------------------------
-COLOR_EFREI_BLUE: str = "#1E88E5"  # Bleu institutionnel EFREI
-COLOR_EFREI_DARK: str = "#0D47A1"  # Bleu nuit pour titres
-COLOR_ALERT_RED: str = "#E53935"  # Rouge alerte panne
-COLOR_OK_GREEN: str = "#43A047"  # Vert OK / machine saine
-COLOR_WARNING: str = "#FB8C00"  # Orange avertissement
+COLOR_EFREI_BLUE: str = "#163767"   # Bleu primaire EFREI (charte officielle)
+COLOR_EFREI_DARK: str = "#051832"   # Navy profond EFREI
+COLOR_EFREI_PINK: str = "#FF43B8"   # Rose signature EFREI
+COLOR_EFREI_BRIGHT: str = "#0C78B4" # Bleu vif secondaire EFREI
+COLOR_ALERT_RED: str = "#E53935"    # Rouge alerte panne
+COLOR_OK_GREEN: str = "#43A047"     # Vert OK / machine saine
+COLOR_WARNING: str = "#FB8C00"      # Orange avertissement
 
 
 def ensure_directories() -> None:
