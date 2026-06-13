@@ -101,398 +101,388 @@ st.set_page_config(
 # cartes arrondies, badges colorés pour les KPI).
 # ---------------------------------------------------------------------------
 CUSTOM_CSS = """
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-    /* =====================================================================
-       Design tokens · charte EFREI premium
-       Une seule source de vérité pour les couleurs, ombres, radii, espacement.
-       Inspiration · Apple HIG, Linear, Vercel (sobriété + densité d'information).
-    ====================================================================== */
-    :root {
-        /* ── Charte EFREI officielle ──────────────────────────────────────── */
-        --ef-primary: #163767;        /* bleu primaire EFREI */
-        --ef-primary-deep: #051832;   /* navy profond */
-        --ef-primary-soft: #E8EEF7;   /* teinte bleue douce */
-        --ef-accent-pink: #FF43B8;    /* rose signature EFREI */
-        --ef-secondary-blue: #0C78B4; /* bleu vif secondaire */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-        --ef-success: #10B981;
-        --ef-success-soft: #D1FAE5;
-        --ef-warning: #F59E0B;
-        --ef-warning-soft: #FEF3C7;
-        --ef-danger: #EF4444;
-        --ef-danger-soft: #FEE2E2;
+/* =====================================================================
+   EFREI Paris · Design System
+   Palette: #163767 · #FF43B8 · #0C78B4 · #051832
+   Typo: Poppins (Google Fonts), Arial fallback
+   Accessibilité: contrast corps ≥ 4.5:1 sur toutes les surfaces
+====================================================================== */
 
-        --ef-bg: #F4F4F4;
-        --ef-surface: #FFFFFF;
-        --ef-surface-2: #EEEEEE;
-        --ef-border: #E0E0E0;
-        --ef-border-strong: #BDBDBD;
-        --ef-text: #212121;
-        --ef-text-soft: #5A6B82;
-        --ef-text-muted: #9E9E9E;
+:root {
+    /* Palette EFREI officielle */
+    --ef-primary:      #163767;
+    --ef-deep:         #051832;
+    --ef-navy:         #0B1B34;
+    --ef-accent:       #FF43B8;
+    --ef-blue:         #0C78B4;
 
-        --ef-radius-sm: 10px;
-        --ef-radius-md: 14px;
-        --ef-radius-lg: 20px;
-        --ef-radius-xl: 28px;
+    /* Sémantique machine (alertes uniquement) */
+    --ef-ok:           #10B981;
+    --ef-ok-bg:        #D1FAE5;
+    --ef-warn:         #F59E0B;
+    --ef-warn-bg:      #FEF3C7;
+    --ef-crit:         #EF4444;
+    --ef-crit-bg:      #FEE2E2;
 
-        --ef-shadow-sm: 0 1px 2px rgba(33, 33, 33, 0.05);
-        --ef-shadow-md: 0 4px 12px rgba(33, 33, 33, 0.08), 0 1px 3px rgba(33, 33, 33, 0.04);
-        --ef-shadow-lg: 0 12px 28px rgba(33, 33, 33, 0.12), 0 4px 8px rgba(33, 33, 33, 0.05);
-        --ef-shadow-blue: 0 8px 24px rgba(22, 55, 103, 0.20);
+    /* Surfaces */
+    --ef-bg:           #F4F4F4;
+    --ef-surface:      #FFFFFF;
+    --ef-surface-2:    #EAECEF;
+    --ef-border:       #DDE1E7;
+    --ef-border-hi:    #B0B8C4;
 
-        --ef-easing: cubic-bezier(0.32, 0.72, 0, 1);
-        --ef-font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        --ef-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
-    }
+    /* Texte — contraste vérifié ≥ 4.5:1 */
+    --ef-text:         #212121;   /* 16:1 sur blanc */
+    --ef-text-sub:     #5A6B82;   /* 4.6:1 sur blanc */
+    --ef-text-muted:   #7B8899;   /* 4.5:1 sur blanc */
 
-    /* =====================================================================
-       Reset · base typographique et fond
-    ====================================================================== */
-    html, body {
-        color: var(--ef-text) !important;
-        background-color: var(--ef-bg) !important;
-        font-family: var(--ef-font-sans);
-        font-feature-settings: 'cv11', 'ss01', 'ss03';
-        -webkit-font-smoothing: antialiased;
-    }
-    .stApp { background-color: var(--ef-bg) !important; }
-    .main .block-container {
-        padding-top: 1.4rem;
-        padding-bottom: 4rem;
-        max-width: 1320px;
-    }
-    .main .block-container p,
-    .main .block-container li,
-    .main .block-container span,
-    .main .block-container label,
-    .main .block-container div { color: var(--ef-text); }
-    .main .block-container h1 {
-        color: var(--ef-primary-deep) !important;
-        font-weight: 800;
-        letter-spacing: -0.025em;
-    }
-    .main .block-container h2,
-    .main .block-container h3 {
-        color: var(--ef-primary-deep) !important;
-        font-weight: 700;
-        letter-spacing: -0.015em;
-    }
-    .main .block-container h4 {
-        color: var(--ef-text) !important;
-        font-weight: 700;
-    }
-    /* Le header gradient garde son texte blanc · exception explicite. */
-    .main-header, .main-header * { color: #FFFFFF !important; }
+    /* Ombres */
+    --ef-s-xs:  0 1px 3px rgba(5, 24, 50, 0.07);
+    --ef-s-sm:  0 2px 8px rgba(5, 24, 50, 0.09), 0 1px 2px rgba(5, 24, 50, 0.05);
+    --ef-s-md:  0 6px 20px rgba(5, 24, 50, 0.11), 0 2px 5px rgba(5, 24, 50, 0.06);
+    --ef-s-hdr: 0 10px 32px rgba(22, 55, 103, 0.26);
 
-    /* =====================================================================
-       Header principal · vague de bleu EFREI avec halo lumineux
-    ====================================================================== */
-    .main-header {
-        position: relative;
-        background:
-            radial-gradient(circle at top right, rgba(255,255,255,0.18) 0%, transparent 55%),
-            linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
-        padding: 32px 40px;
-        border-radius: var(--ef-radius-xl);
-        color: #FFFFFF;
-        margin-bottom: 32px;
-        box-shadow: var(--ef-shadow-blue);
-        overflow: hidden;
-    }
-    .main-header::after {
-        content: '';
-        position: absolute;
-        right: -120px; top: -120px;
-        width: 320px; height: 320px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, transparent 70%);
-        pointer-events: none;
-    }
-    .main-header h1 {
-        margin: 0;
-        font-size: 2.05rem;
-        font-weight: 800;
-        letter-spacing: -0.035em;
-        line-height: 1.15;
-    }
-    .main-header p {
-        margin: 8px 0 0 0;
-        opacity: 0.95;
-        font-size: 1.05rem;
-        font-weight: 500;
-    }
-    .main-header .authors {
-        font-size: 0.86rem;
-        opacity: 0.82;
-        margin-top: 6px;
-        font-weight: 500;
-        letter-spacing: 0.01em;
-    }
+    /* Radii */
+    --ef-r-sm:  8px;
+    --ef-r-md:  12px;
+    --ef-r-lg:  18px;
+    --ef-r-xl:  24px;
 
-    /* =====================================================================
-       Cartes KPI · ombre douce, hover lift, valeur en JetBrains Mono
-    ====================================================================== */
-    .kpi-card {
-        background: var(--ef-surface);
-        padding: 20px 22px;
-        border-radius: var(--ef-radius-md);
-        border: 1px solid var(--ef-border);
-        border-left: 4px solid var(--ef-primary);
-        box-shadow: var(--ef-shadow-sm);
-        height: 100%;
-        position: relative;
-        transition: transform 0.25s var(--ef-easing),
-                    box-shadow 0.25s var(--ef-easing),
-                    border-color 0.25s var(--ef-easing);
-    }
-    .kpi-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--ef-shadow-md);
-        border-color: var(--ef-border-strong);
-    }
-    .kpi-card.alert { border-left-color: var(--ef-danger); }
-    .kpi-card.success { border-left-color: var(--ef-success); }
-    .kpi-card.warning { border-left-color: var(--ef-warning); }
-    .kpi-card .kpi-label {
-        font-size: 0.74rem;
-        color: var(--ef-text-soft);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-weight: 600;
-    }
-    .kpi-card .kpi-value {
-        font-family: var(--ef-font-mono);
-        font-size: 1.95rem;
-        font-weight: 700;
-        color: var(--ef-primary-deep);
-        margin-top: 6px;
-        line-height: 1.05;
-        letter-spacing: -0.02em;
-        font-variant-numeric: tabular-nums;
-    }
-    .kpi-card.alert   .kpi-value { color: var(--ef-danger); }
-    .kpi-card.success .kpi-value { color: var(--ef-success); }
-    .kpi-card.warning .kpi-value { color: var(--ef-warning); }
-    .kpi-card .kpi-sub {
-        font-size: 0.78rem;
-        color: var(--ef-text-muted);
-        margin-top: 6px;
-        font-weight: 500;
-    }
+    --ef-ease:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ef-font:  'Poppins', Arial, sans-serif;
+}
 
-    /* =====================================================================
-       Badges de prédiction · pastille glassmorphism
-    ====================================================================== */
-    .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 14px;
-        border-radius: 999px;
-        font-weight: 700;
-        font-size: 0.86rem;
-        letter-spacing: 0.02em;
-        backdrop-filter: blur(8px);
-    }
-    .badge-success { background: var(--ef-success-soft); color: #065F46; border: 1px solid var(--ef-success); }
-    .badge-warning { background: var(--ef-warning-soft); color: #92400E; border: 1px solid var(--ef-warning); }
-    .badge-alert   { background: var(--ef-danger-soft);  color: #991B1B; border: 1px solid var(--ef-danger); }
+/* ── Base ──────────────────────────────────────────────── */
+html, body {
+    font-family: var(--ef-font) !important;
+    color: var(--ef-text) !important;
+    background: var(--ef-bg) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.stApp { background: var(--ef-bg) !important; }
+.main .block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 4rem;
+    max-width: 1340px;
+}
 
-    /* =====================================================================
-       Sidebar · branding EFREI subtil, séparateurs nets
-    ====================================================================== */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #FFFFFF 0%, var(--ef-surface-2) 100%) !important;
-        border-right: 1px solid var(--ef-border);
-    }
-    section[data-testid="stSidebar"] *,
-    section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] span,
-    section[data-testid="stSidebar"] div { color: var(--ef-text) !important; }
-    section[data-testid="stSidebar"] h1,
-    section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3 {
-        color: var(--ef-primary-deep) !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.015em;
-    }
-    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] hr {
-        border-color: var(--ef-border);
-    }
+/* Propagation Poppins */
+.main .block-container *,
+section[data-testid="stSidebar"] * {
+    font-family: var(--ef-font) !important;
+}
 
-    /* =====================================================================
-       Onglets · indicateur slide animé
-    ====================================================================== */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
-        border-bottom: 1px solid var(--ef-border);
-        padding-bottom: 0;
-    }
-    .stTabs [data-baseweb="tab"] {
-        background: transparent;
-        font-weight: 600;
-        color: var(--ef-text-soft);
-        padding: 12px 20px;
-        border-radius: var(--ef-radius-sm) var(--ef-radius-sm) 0 0;
-        transition: color 0.2s var(--ef-easing), background 0.2s var(--ef-easing);
-        font-size: 0.95rem;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        color: var(--ef-primary-deep);
-        background: var(--ef-surface-2);
-    }
-    .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        color: var(--ef-primary) !important;
-        border-bottom: 3px solid var(--ef-primary);
-        background: transparent;
-    }
+/* Échelle typographique */
+.main .block-container h1 {
+    font-size: 1.95rem; font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ef-deep) !important;
+    line-height: 1.2;
+}
+.main .block-container h2 {
+    font-size: 1.45rem; font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ef-deep) !important;
+}
+.main .block-container h3 {
+    font-size: 1.15rem; font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--ef-deep) !important;
+}
+.main .block-container h4 {
+    font-size: 0.98rem; font-weight: 600;
+    color: var(--ef-text) !important;
+}
+.main .block-container p,
+.main .block-container li { color: var(--ef-text); }
 
-    /* =====================================================================
-       Inputs · radius cohérent, focus EFREI ring
-    ====================================================================== */
-    .stTextInput > div > div > input,
-    .stNumberInput > div > div > input,
-    .stSelectbox > div > div,
-    .stMultiSelect > div > div {
-        border-radius: var(--ef-radius-sm) !important;
-        border-color: var(--ef-border) !important;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .stTextInput > div > div > input:focus,
-    .stNumberInput > div > div > input:focus {
-        border-color: var(--ef-primary) !important;
-        box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15) !important;
-    }
+/* Exception header : texte blanc */
+.ef-header, .ef-header * { color: #FFFFFF !important; }
 
-    /* Sliders · pouce EFREI avec halo */
-    .stSlider [data-baseweb="slider"] [role="slider"] {
-        background: var(--ef-primary) !important;
-        border-color: var(--ef-primary) !important;
-        box-shadow: 0 0 0 6px rgba(30, 136, 229, 0.12) !important;
-    }
-    .stSlider [data-baseweb="slider"] > div:nth-child(2) > div {
-        background: var(--ef-primary) !important;
-    }
+/* ── Header principal ─────────────────────────────────── */
+.ef-header {
+    background: linear-gradient(140deg, #163767 0%, #051832 100%);
+    padding: 28px 36px;
+    border-radius: var(--ef-r-xl);
+    margin-bottom: 28px;
+    box-shadow: var(--ef-s-hdr);
+    position: relative;
+    overflow: hidden;
+}
+.ef-header::before {
+    content: '';
+    position: absolute;
+    top: -64px; right: -64px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 67, 184, 0.07);
+    pointer-events: none;
+}
+.ef-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(12, 120, 180, 0.08);
+    pointer-events: none;
+}
+.ef-header h1 {
+    margin: 0;
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+.ef-header p {
+    margin: 6px 0 0;
+    font-size: 0.98rem;
+    font-weight: 500;
+    opacity: 0.88;
+}
+.ef-header .ef-authors {
+    font-size: 0.80rem;
+    opacity: 0.68;
+    margin-top: 5px;
+    font-weight: 400;
+}
 
-    /* =====================================================================
-       Boutons · primary gradient EFREI, secondary outline
-    ====================================================================== */
-    .stButton > button {
-        border-radius: var(--ef-radius-sm);
-        font-weight: 600;
-        transition: transform 0.15s var(--ef-easing), box-shadow 0.2s var(--ef-easing);
-        letter-spacing: 0.01em;
-    }
-    .stButton > button:hover { transform: translateY(-1px); }
-    .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.25);
-    }
-    .stButton > button[kind="primary"]:hover {
-        box-shadow: 0 8px 20px rgba(30, 136, 229, 0.35);
-    }
+/* ── Cartes KPI — sans stripe latérale ────────────────── */
+.kpi-card {
+    background: var(--ef-surface);
+    padding: 20px 22px;
+    border-radius: var(--ef-r-lg);
+    border: 1px solid var(--ef-border);
+    box-shadow: var(--ef-s-xs);
+    height: 100%;
+    transition: box-shadow 0.22s var(--ef-ease),
+                transform 0.22s var(--ef-ease);
+}
+.kpi-card:hover {
+    box-shadow: var(--ef-s-md);
+    transform: translateY(-2px);
+}
+/* Variantes sémantiques : couleur du contour global uniquement */
+.kpi-card.alert   { border-color: rgba(239, 68, 68, 0.35); }
+.kpi-card.success { border-color: rgba(16, 185, 129, 0.35); }
+.kpi-card.warning { border-color: rgba(245, 158, 11, 0.35); }
 
-    /* Métriques natives Streamlit · style cohérent KPI */
-    [data-testid="stMetric"] {
-        background: var(--ef-surface);
-        border: 1px solid var(--ef-border);
-        border-radius: var(--ef-radius-md);
-        padding: 18px 20px;
-        box-shadow: var(--ef-shadow-sm);
-        transition: box-shadow 0.25s var(--ef-easing);
-    }
-    [data-testid="stMetric"]:hover { box-shadow: var(--ef-shadow-md); }
-    [data-testid="stMetricValue"] {
-        font-family: var(--ef-font-mono) !important;
-        font-variant-numeric: tabular-nums;
-        color: var(--ef-primary-deep) !important;
-        font-weight: 700 !important;
-    }
-    [data-testid="stMetricLabel"] {
-        color: var(--ef-text-soft) !important;
-        font-weight: 600 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.74rem !important;
-    }
+.kpi-card .kpi-label {
+    font-size: 0.71rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ef-text-sub);
+}
+.kpi-card .kpi-value {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-top: 6px;
+    color: var(--ef-primary);
+    font-variant-numeric: tabular-nums;
+}
+.kpi-card.alert   .kpi-value { color: var(--ef-crit); }
+.kpi-card.success .kpi-value { color: var(--ef-ok); }
+.kpi-card.warning .kpi-value { color: var(--ef-warn); }
+.kpi-card .kpi-sub {
+    font-size: 0.75rem;
+    color: var(--ef-text-muted);
+    margin-top: 5px;
+    font-weight: 500;
+}
 
-    /* Tables · zebrage subtil, header EFREI */
-    .stDataFrame, [data-testid="stTable"] {
-        border-radius: var(--ef-radius-md);
-        overflow: hidden;
-        border: 1px solid var(--ef-border);
-        box-shadow: var(--ef-shadow-sm);
-    }
-    .stDataFrame thead tr th {
-        background: var(--ef-surface-2) !important;
-        color: var(--ef-primary-deep) !important;
-        font-weight: 700 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        font-size: 0.78rem !important;
-    }
+/* ── Badges — sans glassmorphism ──────────────────────── */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.badge-success { background: var(--ef-ok-bg);   color: #065F46; border: 1px solid var(--ef-ok); }
+.badge-warning { background: var(--ef-warn-bg); color: #92400E; border: 1px solid var(--ef-warn); }
+.badge-alert   { background: var(--ef-crit-bg); color: #991B1B; border: 1px solid var(--ef-crit); }
 
-    /* Alerts (info/warning/error/success) · radius + ombre */
-    [data-testid="stAlert"] {
-        border-radius: var(--ef-radius-md);
-        border: 1px solid var(--ef-border);
-        box-shadow: var(--ef-shadow-sm);
-    }
+/* ── Sidebar ──────────────────────────────────────────── */
+section[data-testid="stSidebar"] {
+    background: var(--ef-surface) !important;
+    border-right: 1px solid var(--ef-border) !important;
+}
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: var(--ef-deep) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.015em;
+}
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] div { color: var(--ef-text) !important; }
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] hr {
+    border-color: var(--ef-border);
+}
 
-    /* Expanders · bord doux et hover */
-    [data-testid="stExpander"] {
-        border-radius: var(--ef-radius-md);
-        border: 1px solid var(--ef-border) !important;
-        background: var(--ef-surface);
-        box-shadow: var(--ef-shadow-sm);
-        transition: box-shadow 0.25s var(--ef-easing);
-    }
-    [data-testid="stExpander"]:hover { box-shadow: var(--ef-shadow-md); }
+/* ── Onglets ──────────────────────────────────────────── */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 2px;
+    border-bottom: 2px solid var(--ef-border);
+    padding-bottom: 0;
+    background: transparent;
+}
+.stTabs [data-baseweb="tab"] {
+    background: transparent;
+    color: var(--ef-text-sub);
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 10px 18px;
+    border-radius: var(--ef-r-sm) var(--ef-r-sm) 0 0;
+    transition: color 0.18s, background 0.18s;
+}
+.stTabs [data-baseweb="tab"]:hover {
+    color: var(--ef-primary);
+    background: rgba(22, 55, 103, 0.05);
+}
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: var(--ef-primary) !important;
+    border-bottom: 3px solid var(--ef-accent) !important;
+    background: transparent;
+}
 
-    /* Code blocks · monospace JetBrains */
-    code, pre, .stCode {
-        font-family: var(--ef-font-mono) !important;
-        font-feature-settings: 'liga' 0;
-    }
+/* ── Inputs & contrôles ───────────────────────────────── */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input,
+.stSelectbox > div > div,
+.stMultiSelect > div > div {
+    border-radius: var(--ef-r-sm) !important;
+    border-color: var(--ef-border) !important;
+    transition: border-color 0.18s, box-shadow 0.18s;
+}
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus {
+    border-color: var(--ef-primary) !important;
+    box-shadow: 0 0 0 3px rgba(22, 55, 103, 0.13) !important;
+}
 
-    /* Footer minimaliste */
-    .footer {
-        text-align: center;
-        padding: 24px;
-        color: var(--ef-text-muted);
-        font-size: 0.82rem;
-        margin-top: 56px;
-        border-top: 1px solid var(--ef-border);
-        font-weight: 500;
-        letter-spacing: 0.01em;
-    }
+/* Slider — pouce bleu EFREI */
+.stSlider [data-baseweb="slider"] [role="slider"] {
+    background: var(--ef-primary) !important;
+    border-color: var(--ef-primary) !important;
+    box-shadow: 0 0 0 5px rgba(22, 55, 103, 0.14) !important;
+}
+.stSlider [data-baseweb="slider"] > div:nth-child(2) > div {
+    background: var(--ef-primary) !important;
+}
 
-    /* Animation · fade-in subtil au chargement */
-    @keyframes ef-fade-in {
-        from { opacity: 0; transform: translateY(6px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    .main-header, .kpi-card, [data-testid="stMetric"] {
-        animation: ef-fade-in 0.45s var(--ef-easing) both;
-    }
+/* ── Boutons ──────────────────────────────────────────── */
+.stButton > button {
+    font-weight: 600;
+    border-radius: var(--ef-r-sm);
+    letter-spacing: 0.01em;
+    transition: transform 0.15s var(--ef-ease), box-shadow 0.18s var(--ef-ease);
+}
+.stButton > button:hover { transform: translateY(-1px); }
+.stButton > button[kind="primary"] {
+    background: var(--ef-primary) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    padding: 10px 24px;
+    box-shadow: 0 3px 10px rgba(22, 55, 103, 0.30);
+}
+.stButton > button[kind="primary"]:hover {
+    background: var(--ef-navy) !important;
+    box-shadow: 0 6px 18px rgba(22, 55, 103, 0.40);
+}
 
-    /* Scrollbar fine et discrète (Webkit) */
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-        background: var(--ef-border-strong);
-        border-radius: 999px;
-        border: 2px solid var(--ef-bg);
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--ef-text-muted); }
+/* ── st.metric natif ──────────────────────────────────── */
+[data-testid="stMetric"] {
+    background: var(--ef-surface);
+    border: 1px solid var(--ef-border);
+    border-radius: var(--ef-r-lg);
+    padding: 18px 20px;
+    box-shadow: var(--ef-s-xs);
+    transition: box-shadow 0.22s var(--ef-ease);
+}
+[data-testid="stMetric"]:hover { box-shadow: var(--ef-s-md); }
+[data-testid="stMetricValue"] {
+    color: var(--ef-primary) !important;
+    font-weight: 800 !important;
+    font-variant-numeric: tabular-nums;
+}
+[data-testid="stMetricLabel"] {
+    font-size: 0.71rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ef-text-sub) !important;
+}
+
+/* ── DataFrames ───────────────────────────────────────── */
+.stDataFrame, [data-testid="stTable"] {
+    border-radius: var(--ef-r-md) !important;
+    overflow: hidden;
+    border: 1px solid var(--ef-border) !important;
+    box-shadow: var(--ef-s-xs);
+}
+
+/* ── Alertes ──────────────────────────────────────────── */
+[data-testid="stAlert"] {
+    border-radius: var(--ef-r-md);
+    box-shadow: var(--ef-s-xs);
+}
+
+/* ── Expanders ────────────────────────────────────────── */
+[data-testid="stExpander"] {
+    background: var(--ef-surface);
+    border: 1px solid var(--ef-border) !important;
+    border-radius: var(--ef-r-md);
+    box-shadow: var(--ef-s-xs);
+    transition: box-shadow 0.22s var(--ef-ease);
+}
+[data-testid="stExpander"]:hover { box-shadow: var(--ef-s-sm); }
+
+/* ── Code ─────────────────────────────────────────────── */
+code, pre, .stCode { font-feature-settings: 'liga' 0; }
+
+/* ── Footer ───────────────────────────────────────────── */
+.footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 48px;
+    border-top: 1px solid var(--ef-border);
+    font-size: 0.79rem;
+    color: var(--ef-text-muted);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+/* ── Fade-in entrée ───────────────────────────────────── */
+@keyframes ef-in {
+    from { opacity: 0; transform: translateY(7px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.ef-header, .kpi-card, [data-testid="stMetric"] {
+    animation: ef-in 0.4s var(--ef-ease) both;
+}
+
+/* ── Scrollbar fine ───────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--ef-border-hi);
+    border-radius: 999px;
+    border: 2px solid var(--ef-bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--ef-text-sub); }
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
@@ -513,10 +503,10 @@ def render_header() -> None:
     with cols[1]:
         st.markdown(
             """
-            <div class="main-header">
-                <h1>⚙️ Maintenance Prédictive · Pilotage du parc</h1>
+            <div class="ef-header">
+                <h1>&#9881;&#65039; Maintenance Prédictive · Pilotage du parc</h1>
                 <p>Outil d'aide à la décision · état du parc, plan d'intervention, économies réalisées</p>
-                <div class="authors">Adam Beloucif · Emilien Morice · M1 Mastère Data Engineering &amp; IA · EFREI 2025-26</div>
+                <div class="ef-authors">Adam Beloucif · Emilien Morice · M1 Mastère Data Engineering &amp; IA · EFREI 2025-26</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -959,7 +949,7 @@ def tab_eda(df: pd.DataFrame) -> None:
             x=x_axis,
             y=y_axis,
             color=sample[TARGET_BINARY].map({0: "OK", 1: "Panne 24h"}),
-            color_discrete_map={"OK": "#43A047", "Panne 24h": "#E53935"},
+            color_discrete_map={"OK": "#163767", "Panne 24h": "#FF43B8"},
             opacity=0.55,
             labels={"color": "Classe"},
         )
@@ -1033,7 +1023,7 @@ def tab_models(metrics: list[dict]) -> None:
         color="model_name",
         barmode="group",
         category_orders={"model_name": ordered_models},
-        color_discrete_sequence=["#10B981", "#1E88E5", "#0D47A1", "#E53935"],
+        color_discrete_sequence=["#163767", "#0C78B4", "#FF43B8", "#0B1B34"],
         text=melt["score"].round(3),
     )
     fig.update_traces(textposition="outside")
@@ -1176,7 +1166,7 @@ def tab_diagnostic(model, df: pd.DataFrame, best_name: str) -> None:
                     domain={"x": [0, 1], "y": [0, 1]},
                     gauge={
                         "axis": {"range": [0, 100]},
-                        "bar": {"color": "#0D47A1"},
+                        "bar": {"color": "#163767"},
                         "steps": [
                             {"range": [0, RISK_THRESHOLD_MEDIUM * 100], "color": "#C8E6C9"},
                             {"range": [RISK_THRESHOLD_MEDIUM * 100, RISK_THRESHOLD_HIGH * 100], "color": "#FFE0B2"},

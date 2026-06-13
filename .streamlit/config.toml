@@ -1,9 +1,9 @@
-# Theme Streamlit · charte officielle EFREI
-# primaryColor     = rose signature #FF43B8 (CTAs, sliders, radio)
+# Streamlit theme · charte EFREI Paris
+# primaryColor     = rose signature EFREI #FF43B8 (CTAs, sliders, radio, onglets actifs)
 # backgroundColor  = blanc pur #FFFFFF
 # secondaryBg      = gris clair #F4F4F4 (sidebar, code blocks)
-# textColor        = anthracite #212121
-# font             = sans serif (Plus Jakarta Sans injecté via CSS custom)
+# textColor        = anthracite #212121 (contraste 16:1 sur blanc)
+# font             = sans serif (Poppins chargé via @import CSS dans app.py)
 
 [theme]
 base            = "light"
