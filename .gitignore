@@ -154,3 +154,7 @@ reports/codecarbon/
 
 # --- Joblib disk cache ---
 joblib_cache/
+
+# MLflow tracking store (artefact local)
+mlruns/
+mlflow.db
