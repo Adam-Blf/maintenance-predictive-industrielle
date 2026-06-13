@@ -1471,3 +1471,21 @@ Si vous réutilisez ce projet ·
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=Adam-Blf/maintenance-predictive-industrielle&type=date&legend=top-left" />
  </picture>
 </a>
+
+## Bonus avancés · industrialisation, incertitude & robustesse
+
+Scripts complémentaires (lecture seule sur les données, artefacts dans `reports/`) ·
+
+| Script | Apport | Sortie |
+|---|---|---|
+| `scripts/12_drift_psi.py` | Détection de dérive (PSI train → test), seuils 0.10 / 0.25 | `reports/12/` |
+| `scripts/13_conformal.py` | Prédiction conforme (split-conformal LAC) · ensembles avec garantie de couverture 80/90/95 % | `reports/13/` |
+| `scripts/14_mlflow_log.py` | Traçabilité MLflow des 4 modèles (params, métriques, modèle promu) | `mlruns/` (`mlflow ui`) |
+| `scripts/15_noise_robustness.py` | Robustesse au bruit capteur et aux pannes de sonde | `reports/15/` |
+
+`src/conformal.py` · conformaliseur binaire réutilisable (garantie distribution-free).
+
+### Roadmap (limites assumées)
+- **Modèle temporel (LSTM/GRU)** · non implémenté ici · le dataset est un instantané tabulaire sans séquence horodatée par machine. Nécessite des séries capteurs (fenêtres glissantes) avant d'entraîner un modèle séquentiel.
+- **Dataset alternatif** · validation croisée sur NASA C-MAPSS ou UCI AI4I 2020 pour confirmer la robustesse cross-source.
+- **Monitoring continu** · brancher le PSI (script 12) en tâche planifiée + alerte au-delà du seuil.
