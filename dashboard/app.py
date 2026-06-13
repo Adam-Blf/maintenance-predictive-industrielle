@@ -30,7 +30,6 @@ import sys
 from pathlib import Path
 
 import joblib
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -85,7 +84,6 @@ from src.config import (  # noqa: E402
     TARGET_BINARY,
 )
 from src.data_loader import load_dataset  # noqa: E402
-from src.preprocessing import get_feature_names  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Configuration de la page · titre, icône, layout wide pour exploiter
@@ -508,7 +506,9 @@ def render_header() -> None:
     """Affiche le bandeau principal avec logo + titre + sous-titre."""
     cols = st.columns([1, 5])
     with cols[0]:
-        if EFREI_LOGO.exists():
+        if EFREI_LOGO_CMJN.exists():
+            st.image(str(EFREI_LOGO_CMJN), width=160)
+        elif EFREI_LOGO.exists():
             st.image(str(EFREI_LOGO), width=160)
     with cols[1]:
         st.markdown(
@@ -826,7 +826,6 @@ def tab_business_impact(
     recall = float(best_metric.get("recall", 0.0))
     precision = float(best_metric.get("precision", 0.0))
 
-    n_at_risk = int((fleet["risk_level"] != "Sain").sum())
     expected_failures = float(fleet["proba_panne_24h"].sum())
 
     # Sans IA · toutes les pannes survenues coûtent l'arrêt non planifié.
@@ -1242,7 +1241,9 @@ def tab_interpretability(best_name: str) -> None:
 def render_sidebar() -> None:
     """Sidebar avec logo + métadonnées projet."""
     with st.sidebar:
-        if EFREI_LOGO.exists():
+        if EFREI_LOGO_CMJN.exists():
+            st.image(str(EFREI_LOGO_CMJN), width="stretch")
+        elif EFREI_LOGO.exists():
             st.image(str(EFREI_LOGO), width="stretch")
         st.markdown("## À propos")
         st.markdown("""
