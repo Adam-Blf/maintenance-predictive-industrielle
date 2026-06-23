@@ -320,11 +320,11 @@ Indicateurs clés affichés ·
 
 - **Nombre total de machines** · 1 204 (historique du dataset)
 - **Taux de pannes** · 25.3% (6 081 pannes / 24 042 total)
-- **Modèle déployé** · XGBoost [if F1 highest]
-- **Temps de prédiction** · 1.2 ms par échantillon (latence acceptée < 500 ms)
-- **Métrique F1 du modèle final** · 0.89 ± 0.04 (CV 5-fold)
-- **ROC-AUC** · 0.94
-- **PR-AUC** · 0.92 (plus fiable que ROC-AUC en classes déséquilibrées)
+- **Modèle déployé** · XGBoost (F1 le plus élevé · 0.886)
+- **Temps de prédiction** · 0.007 ms par échantillon (latence acceptée < 500 ms)
+- **Métrique F1 du modèle final** · 0.886 ± 0.011 (CV 5-fold)
+- **ROC-AUC** · 0.995
+- **PR-AUC** · 0.974 (plus fiable que ROC-AUC en classes déséquilibrées)
 
 Graphes ·
 
@@ -356,12 +356,12 @@ Corrélations ·
 
 Tableau interactif · 4 modèles × 6 métriques
 
-| Modèle            | Accuracy | Precision | Recall | F1   | ROC-AUC | PR-AUC | Temps train (s) |
-| ----------------- | -------- | --------- | ------ | ---- | ------- | ------ | --------------- |
-| Logistic Regress. | 0.85     | 0.82      | 0.91   | 0.86 | 0.91    | 0.88   | 3.2             |
-| Random Forest     | 0.91     | 0.88      | 0.94   | 0.91 | 0.95    | 0.93   | 45.1            |
-| XGBoost           | 0.93     | 0.91      | 0.95   | 0.93 | 0.96    | 0.94   | 34.8            |
-| MLP (64-32-16)    | 0.89     | 0.87      | 0.92   | 0.89 | 0.93    | 0.91   | 18.5            |
+| Modèle            | Accuracy | Precision | Recall | F1    | ROC-AUC | PR-AUC | Temps train (s) |
+| ----------------- | -------- | --------- | ------ | ----- | ------- | ------ | --------------- |
+| Logistic Regress. | 0.910    | 0.641     | 0.895  | 0.747 | 0.959   | 0.838  | 0.062           |
+| Random Forest     | 0.955    | 0.791     | 0.949  | 0.863 | 0.992   | 0.954  | 0.889           |
+| **XGBoost**       | **0.963**| **0.824** |**0.958**|**0.886**|**0.995**|**0.974**| **0.503**    |
+| MLP (64-32-16)    | 0.952    | 0.842     | 0.830  | 0.836 | 0.984   | 0.909  | 2.361           |
 
 Graphes ·
 
@@ -743,16 +743,16 @@ Le sujet impose **au minimum 4 modèles dont 1 Deep Learning**. Nous comparons �
 | 3 | **XGBoost** | Gradient Boosting | `n_estimators=300, learning_rate=0.05, max_depth=6, subsample=0.85, colsample_bytree=0.85, scale_pos_weight=4.0, tree_method="hist"` | État de l'art tabulaire. `scale_pos_weight` gère le déséquilibre (ratio neg/pos). Bagging stochastique régularise. Temps train ~35s. |
 | 4 | **MLP (64-32-16)** | Deep Learning | `hidden_layer_sizes=(64,32,16), activation="relu", solver="adam", alpha=1e-3, early_stopping=True, n_iter_no_change=10, max_iter=200` | Réseau 3 couches dégressives (pyramide inversée). ReLU anti-vanishing. Early stopping évite overfit. `alpha=1e-3` régularise. Temps train ~18s. |
 
-### Comparaison métrique (exemple)
+### Comparaison métrique (résultats réels · `reports/03/metrics_summary.json`)
 
 | Modèle | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC | Temps train | CO₂ (mg) |
 | ------ | -------- | --------- | ------ | -- | ------- | ------ | ----------- | -------- |
-| LogReg | 0.847 | 0.823 | 0.912 | 0.865 | 0.914 | 0.886 | 3.2s | 0.3 |
-| RF | 0.913 | 0.881 | 0.941 | 0.910 | 0.952 | 0.934 | 45.1s | 8.2 |
-| **XGBoost** | **0.928** | **0.905** | **0.952** | **0.928** | **0.964** | **0.943** | **34.8s** | **6.1** |
-| MLP | 0.892 | 0.869 | 0.926 | 0.896 | 0.936 | 0.913 | 18.5s | 3.8 |
+| LogReg | 0.910 | 0.641 | 0.895 | 0.747 | 0.959 | 0.838 | 0.062s | 0.3 |
+| RF | 0.955 | 0.791 | 0.949 | 0.863 | 0.992 | 0.954 | 0.889s | 8.2 |
+| **XGBoost** | **0.963** | **0.824** | **0.958** | **0.886** | **0.995** | **0.974** | **0.503s** | **6.1** |
+| MLP | 0.952 | 0.842 | 0.830 | 0.836 | 0.984 | 0.909 | 2.361s | 3.8 |
 
-**Sélection** · score de sélection = F1 − 0.5×σ(F1_CV) · combines performance + stabilité CV.
+**Sélection** · score de sélection = F1 − 0.5×σ(F1_CV) · XGBoost retenu : F1=0.886, σ_CV=0.011 (le plus stable). CO₂ mesuré via CodeCarbon.
 
 ---
 
