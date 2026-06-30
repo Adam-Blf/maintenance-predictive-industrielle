@@ -50,6 +50,7 @@ REQUIREMENTS_FILE: Path = PROJECT_ROOT / "requirements.txt"
 # On vérifie la présence via le NOM D'IMPORT, on installe via le NOM PIP.
 _PIP_TO_IMPORT_NAME: dict[str, str] = {
     "scikit-learn": "sklearn",
+    "imbalanced-learn": "imblearn",
     "Pillow": "PIL",
     "PyYAML": "yaml",
     "fpdf2": "fpdf",
