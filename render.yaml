@@ -1,0 +1,20 @@
+# Blueprint Render - API d'inference Maintenance Predictive (FastAPI).
+# Deploiement : connecter le repo sur https://dashboard.render.com/blueprints
+# Le modele final (models/final_model.joblib, ~350 KB) est versionne dans le
+# repo pour que le service demarre sans phase d'entrainement.
+services:
+  - type: web
+    name: mpi-api
+    runtime: python
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: pip install -r requirements-deploy.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Deps installees au build : desactive l'auto-install pip du bootstrap
+      - key: MPI_SKIP_BOOTSTRAP
+        value: "1"
