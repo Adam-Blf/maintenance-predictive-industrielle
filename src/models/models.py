@@ -21,8 +21,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from xgboost import XGBClassifier
 
-from .config import RANDOM_STATE
-from .preprocessing import build_preprocessor
+from ..data.config import RANDOM_STATE
+from ..data.preprocessing import build_preprocessor
 
 
 def build_logistic_regression() -> Pipeline:

@@ -7,18 +7,15 @@ ML/DL, évaluation, interprétabilité et génération des schémas du rapport.
 
 Structure des modules
 ---------------------
-- bootstrap      · auto-install des dépendances pip au lancement.
-- config         · constantes globales (chemins, hyperparamètres, noms de colonnes).
-- data_loader    · chargement du CSV Kaggle v3.0 (lecture seule, pas de génération).
-- preprocessing  · pipeline sklearn ColumnTransformer (imputation, scaling, OHE).
-- models         · 4 pipelines de classification binaire (LogReg, RF, XGB, MLP).
-- models_multiclass   · 4 pipelines classification multi-classe (failure_type).
-- models_regression   · 4 pipelines régression (rul_hours, Remaining Useful Life).
-- evaluation     · métriques, matrices de confusion, courbes ROC/PR.
-- calibration    · calibration probabiliste Platt/Isotonic + seuil métier optimal.
-- tuning         · recherche bayésienne Optuna (TPE) sur RF, XGB, MLP.
-- interpretability    · feature importance native, permutation importance, SHAP.
-- diagrams       · schémas pédagogiques matplotlib pur (pipeline, biais-variance, etc.).
+Structure par domaine métier
+---------------------------
+- src/data/        · config, data_loader, preprocessing
+- src/models/      · models (binaire), models_multiclass, models_regression, tuning
+- src/validation/  · evaluation, calibration, conformal, bootstrap
+- src/analysis/    · interpretability, diagrams, imbalance
+
+Compatibilité : les anciens imports plats (from src.config import X) fonctionnent
+via les shims de rétrocompatibilité à la racine src/.
 
 Exports publics
 ---------------

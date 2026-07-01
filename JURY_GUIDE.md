@@ -10,15 +10,15 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Chemin dataset Kaggle (`predictive_maintenance_v3.csv`) | `src/config.py` | 93 |
-| Graine aleatoire (`RANDOM_STATE = 42`) | `src/config.py` | 104 |
-| Taille test set (`TEST_SIZE = 0.20`) | `src/config.py` | 108 |
-| Nombre de folds CV (`CV_FOLDS = 5`) | `src/config.py` | 112 |
-| Variable cible binaire (`failure_within_24h`) | `src/config.py` | 116 |
-| Features numeriques (7 capteurs) | `src/config.py` | 134 |
-| Features categorielles | `src/config.py` | 145 |
-| Charte couleurs EFREI | `src/config.py` | 169 |
-| Creation des dossiers de sortie | `src/config.py` | 178 |
+| Chemin dataset Kaggle (`predictive_maintenance_v3.csv`) | `src/data/config.py` | 93 |
+| Graine aleatoire (`RANDOM_STATE = 42`) | `src/data/config.py` | 104 |
+| Taille test set (`TEST_SIZE = 0.20`) | `src/data/config.py` | 108 |
+| Nombre de folds CV (`CV_FOLDS = 5`) | `src/data/config.py` | 112 |
+| Variable cible binaire (`failure_within_24h`) | `src/data/config.py` | 116 |
+| Features numeriques (7 capteurs) | `src/data/config.py` | 134 |
+| Features categorielles | `src/data/config.py` | 145 |
+| Charte couleurs EFREI | `src/data/config.py` | 169 |
+| Creation des dossiers de sortie | `src/data/config.py` | 178 |
 
 ---
 
@@ -28,10 +28,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Schema officiel Kaggle (15 colonnes) | `src/data_loader.py` | 33 |
-| Chargement CSV + validation schema | `src/data_loader.py` | 52 |
-| Politique anti-donnees-synthetiques | `src/data_loader.py` | 11 |
-| Reference Kaggle CC0 (24 042 lignes) | `src/data_loader.py` | 13 |
+| Schema officiel Kaggle (15 colonnes) | `src/data/data_loader.py` | 33 |
+| Chargement CSV + validation schema | `src/data/data_loader.py` | 52 |
+| Politique anti-donnees-synthetiques | `src/data/data_loader.py` | 11 |
+| Reference Kaggle CC0 (24 042 lignes) | `src/data/data_loader.py` | 13 |
 
 ---
 
@@ -41,11 +41,11 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Construction du ColumnTransformer | `src/preprocessing.py` | 43 |
-| Justification imputer mediane (robuste outliers) | `src/preprocessing.py` | 53 |
-| Justification StandardScaler vs MinMaxScaler | `src/preprocessing.py` | 59 |
-| One-Hot Encoder avec handle_unknown="ignore" | `src/preprocessing.py` | 65 |
-| Recuperation noms de features post-OHE | `src/preprocessing.py` | 108 |
+| Construction du ColumnTransformer | `src/data/preprocessing.py` | 43 |
+| Justification imputer mediane (robuste outliers) | `src/data/preprocessing.py` | 53 |
+| Justification StandardScaler vs MinMaxScaler | `src/data/preprocessing.py` | 59 |
+| One-Hot Encoder avec handle_unknown="ignore" | `src/data/preprocessing.py` | 65 |
+| Recuperation noms de features post-OHE | `src/data/preprocessing.py` | 108 |
 
 ---
 
@@ -55,12 +55,12 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Modele | Fichier | Ligne | F1 |
 |--------|---------|-------|----|
-| Logistic Regression (baseline) | `src/models.py` | 28 | 0.747 |
-| Random Forest (bagging) | `src/models.py` | 55 | 0.863 |
-| XGBoost (gradient boosting) | `src/models.py` | 85 | **0.886** |
-| MLP - couches 64-32-16 (Deep Learning) | `src/models.py` | 123 | 0.836 |
-| Catalogue des 4 modeles + factory pattern | `src/models.py` | 175 |  |
-| Methode `get_model(name)` | `src/models.py` | 183 |  |
+| Logistic Regression (baseline) | `src/models/models.py` | 28 | 0.747 |
+| Random Forest (bagging) | `src/models/models.py` | 55 | 0.863 |
+| XGBoost (gradient boosting) | `src/models/models.py` | 85 | **0.886** |
+| MLP - couches 64-32-16 (Deep Learning) | `src/models/models.py` | 123 | 0.836 |
+| Catalogue des 4 modeles + factory pattern | `src/models/models.py` | 175 |  |
+| Methode `get_model(name)` | `src/models/models.py` | 183 |  |
 
 ---
 
@@ -70,12 +70,12 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Metriques F1/Precision/Recall/ROC-AUC/PR-AUC | `src/evaluation.py` | 59 |
-| Calcul des metriques sur test set | `src/evaluation.py` | 84 |
-| Matrice de confusion normalisee | `src/evaluation.py` | 129 |
-| Courbes ROC superposees (4 modeles) | `src/evaluation.py` | 171 |
-| Courbes Precision-Recall | `src/evaluation.py` | 224 |
-| CV 3-fold rapide (tuning) | `src/tuning.py` | 53 |
+| Metriques F1/Precision/Recall/ROC-AUC/PR-AUC | `src/validation/evaluation.py` | 59 |
+| Calcul des metriques sur test set | `src/validation/evaluation.py` | 84 |
+| Matrice de confusion normalisee | `src/validation/evaluation.py` | 129 |
+| Courbes ROC superposees (4 modeles) | `src/validation/evaluation.py` | 171 |
+| Courbes Precision-Recall | `src/validation/evaluation.py` | 224 |
+| CV 3-fold rapide (tuning) | `src/models/tuning.py` | 53 |
 
 ---
 
@@ -88,9 +88,9 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Justification | Fichier | Ligne |
 |---------------|---------|-------|
-| Parametres XGBoost + `scale_pos_weight` | `src/models.py` | 85 |
-| Justification n_estimators=300, lr=0.05 | `src/models.py` | 88 |
-| Regularisation subsample + colsample | `src/models.py` | 93 |
+| Parametres XGBoost + `scale_pos_weight` | `src/models/models.py` | 85 |
+| Justification n_estimators=300, lr=0.05 | `src/models/models.py` | 88 |
+| Regularisation subsample + colsample | `src/models/models.py` | 93 |
 
 ---
 
@@ -100,12 +100,12 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Strategie | Fichier | Ligne |
 |-----------|---------|-------|
-| Analyse du desequilibre (ratio, IR, accuracy naive) | `src/imbalance.py` | 144 |
-| Construction pipeline imblearn par strategie | `src/imbalance.py` | 250 |
-| Evaluation d'une strategie | `src/imbalance.py` | 358 |
-| Comparaison des 5 strategies (DataFrame) | `src/imbalance.py` | 404 |
-| Optimisation du seuil de decision | `src/imbalance.py` | 602 |
-| Strategies disponibles : baseline/SMOTE/ADASYN/under/SMOTETomek | `src/imbalance.py` | 119 |
+| Analyse du desequilibre (ratio, IR, accuracy naive) | `src/analysis/imbalance.py` | 144 |
+| Construction pipeline imblearn par strategie | `src/analysis/imbalance.py` | 250 |
+| Evaluation d'une strategie | `src/analysis/imbalance.py` | 358 |
+| Comparaison des 5 strategies (DataFrame) | `src/analysis/imbalance.py` | 404 |
+| Optimisation du seuil de decision | `src/analysis/imbalance.py` | 602 |
+| Strategies disponibles : baseline/SMOTE/ADASYN/under/SMOTETomek | `src/analysis/imbalance.py` | 119 |
 
 ---
 
@@ -115,10 +115,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Methode | Fichier | Ligne |
 |---------|---------|-------|
-| Importance native (Random Forest / XGBoost) | `src/interpretability.py` | 51 |
-| Permutation Importance (agnostique au modele) | `src/interpretability.py` | 107 |
-| SHAP values (additivite, coherence) | `src/interpretability.py` | 177 |
-| Choix TreeExplainer vs KernelExplainer | `src/interpretability.py` | 219 |
+| Importance native (Random Forest / XGBoost) | `src/analysis/interpretability.py` | 51 |
+| Permutation Importance (agnostique au modele) | `src/analysis/interpretability.py` | 107 |
+| SHAP values (additivite, coherence) | `src/analysis/interpretability.py` | 177 |
+| Choix TreeExplainer vs KernelExplainer | `src/analysis/interpretability.py` | 219 |
 
 ---
 
@@ -128,10 +128,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Reliability diagram + Brier Score | `src/calibration.py` | 56 |
-| Cout metier : FN=1000EUR, FP=100EUR | `src/calibration.py` | 127 |
-| Courbe cout total vs seuil | `src/calibration.py` | 127 |
-| Sauvegarde du seuil optimal | `src/calibration.py` | 201 |
+| Reliability diagram + Brier Score | `src/validation/calibration.py` | 56 |
+| Cout metier : FN=1000EUR, FP=100EUR | `src/validation/calibration.py` | 127 |
+| Courbe cout total vs seuil | `src/validation/calibration.py` | 127 |
+| Sauvegarde du seuil optimal | `src/validation/calibration.py` | 201 |
 
 ---
 
@@ -141,10 +141,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Classe ConformalBinaryClassifier | `src/conformal.py` | 38 |
-| Calibration du seuil conforme (quantile) | `src/conformal.py` | 48 |
-| Prediction d'ensembles ({0}, {1}, {0,1}, {}) | `src/conformal.py` | 68 |
-| Couverture empirique | `src/conformal.py` | 87 |
+| Classe ConformalBinaryClassifier | `src/validation/conformal.py` | 38 |
+| Calibration du seuil conforme (quantile) | `src/validation/conformal.py` | 48 |
+| Prediction d'ensembles ({0}, {1}, {0,1}, {}) | `src/validation/conformal.py` | 68 |
+| Couverture empirique | `src/validation/conformal.py` | 87 |
 
 ---
 
@@ -154,10 +154,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Modele | Fichier | Ligne |
 |--------|---------|-------|
-| Logistic Regression multi-classe (OvR) | `src/models_multiclass.py` | 38 |
-| Random Forest multi-classe natif | `src/models_multiclass.py` | 71 |
-| XGBoost multi:softprob | `src/models_multiclass.py` | 108 |
-| MLP multi-classe | `src/models_multiclass.py` | 159 |
+| Logistic Regression multi-classe (OvR) | `src/models/models_multiclass.py` | 38 |
+| Random Forest multi-classe natif | `src/models/models_multiclass.py` | 71 |
+| XGBoost multi:softprob | `src/models/models_multiclass.py` | 108 |
+| MLP multi-classe | `src/models/models_multiclass.py` | 159 |
 
 ---
 
@@ -167,10 +167,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Modele | Fichier | Ligne |
 |--------|---------|-------|
-| Ridge regression (baseline lineaire) | `src/models_regression.py` | 41 |
-| Random Forest regressor | `src/models_regression.py` | 62 |
-| XGBoost regressor (reg:squarederror) | `src/models_regression.py` | 96 |
-| MLP regressor | `src/models_regression.py` | 139 |
+| Ridge regression (baseline lineaire) | `src/models/models_regression.py` | 41 |
+| Random Forest regressor | `src/models/models_regression.py` | 62 |
+| XGBoost regressor (reg:squarederror) | `src/models/models_regression.py` | 96 |
+| MLP regressor | `src/models/models_regression.py` | 139 |
 
 ---
 
@@ -180,10 +180,10 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Tuning Random Forest (espace + justification) | `src/tuning.py` | 63 |
-| Tuning XGBoost (log-scale learning_rate) | `src/tuning.py` | 136 |
-| Tuning MLP (architectures candidates) | `src/tuning.py` | 215 |
-| Lancement sequentiel RF + XGB + MLP | `src/tuning.py` | 296 |
+| Tuning Random Forest (espace + justification) | `src/models/tuning.py` | 63 |
+| Tuning XGBoost (log-scale learning_rate) | `src/models/tuning.py` | 136 |
+| Tuning MLP (architectures candidates) | `src/models/tuning.py` | 215 |
+| Lancement sequentiel RF + XGB + MLP | `src/models/tuning.py` | 296 |
 
 ---
 
@@ -193,8 +193,8 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Diagramme | Fichier | Ligne |
 |-----------|---------|-------|
-| Pipeline ML (EDA -> preprocessing -> train -> eval) | `src/diagrams.py` | ~80 |
-| Architecture systeme (data -> modele -> API -> dashboard) | `src/diagrams.py` | ~150 |
+| Pipeline ML (EDA -> preprocessing -> train -> eval) | `src/analysis/diagrams.py` | ~80 |
+| Architecture systeme (data -> modele -> API -> dashboard) | `src/analysis/diagrams.py` | ~150 |
 
 ---
 
@@ -204,8 +204,8 @@ Reference rapide besoin metier -> fichier:ligne. Utiliser `Ctrl+G` dans l'IDE po
 
 | Besoin | Fichier | Ligne |
 |--------|---------|-------|
-| Auto-installation dependances manquantes | `src/bootstrap.py` | 112 |
-| Portabilite des chemins (Win/Linux/Mac) | `src/bootstrap.py` | 14 |
+| Auto-installation dependances manquantes | `src/validation/bootstrap.py` | 112 |
+| Portabilite des chemins (Win/Linux/Mac) | `src/validation/bootstrap.py` | 14 |
 
 ---
 
