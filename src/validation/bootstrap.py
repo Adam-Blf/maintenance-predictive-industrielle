@@ -35,13 +35,16 @@ Idempotent · si tout est déjà installé, ne fait rien (pas de network call).
 from __future__ import annotations
 
 import importlib.util
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 # Racine du projet calculée depuis l'emplacement de CE fichier ·
-# `src/bootstrap.py`.parent.parent → racine du repo. Portable Win/Linux/Mac.
-PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent
+# `src/validation/bootstrap.py` → 3 niveaux jusqu'à la racine du repo.
+# Un `.parent` manquant ferait pointer sur `src/` où requirements.txt
+# n'existe pas · l'auto-install serait silencieusement désactivé.
+PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent.parent
 REQUIREMENTS_FILE: Path = PROJECT_ROOT / "requirements.txt"
 
 # Mapping {nom_pip → nom_import_python}.
@@ -124,6 +127,12 @@ def ensure_dependencies(verbose: bool = True) -> None:
         Si True, affiche les actions à l'écran. Mettre False pour les
         appels en mode batch (ex. dans une CI ou dans Streamlit).
     """
+    # Opt-out explicite pour les environnements gérés (Render, Docker, CI) ·
+    # les dépendances y sont installées au build via requirements-deploy.txt,
+    # un pip install au runtime serait lent et pourrait dépasser le disque.
+    if os.environ.get("MPI_SKIP_BOOTSTRAP"):
+        return
+
     requirements = _parse_requirements()
     if not requirements:
         if verbose:

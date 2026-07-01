@@ -33,7 +33,7 @@ from pathlib import Path
 # Tous les chemins sont calculés à partir de ce point pour ne pas dépendre
 # du cwd lorsqu'on exécute un script depuis un autre dossier.
 # ---------------------------------------------------------------------------
-PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent
+PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent.parent
 
 # Données brutes · CSV Kaggle officiel (CC0 public domain).
 DATA_RAW_DIR: Path = PROJECT_ROOT / "data" / "raw"

@@ -1,0 +1,12 @@
+# Dependances runtime de l'API d'inference seule (Render).
+# Le dashboard Streamlit, SHAP, Optuna et la generation PDF sont exclus :
+# seuls POST /predict, GET /health et GET /model-info tournent en cloud.
+# Voir requirements.txt pour la stack complete de developpement.
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.6
+numpy>=1.26,<3.0
+pandas>=2.1,<3.0
+scikit-learn>=1.4
+xgboost>=2.0
+joblib>=1.3

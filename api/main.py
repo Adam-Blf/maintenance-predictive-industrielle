@@ -63,12 +63,13 @@ app = FastAPI(
     },
 )
 
-# CORS permissif · dashboard Streamlit local + outils de test (Postman, curl).
-# En production, restreindre `allow_origins` à l'URL exacte du dashboard.
+# CORS permissif pour le dev/demo local (dashboard Streamlit, Postman, Swagger).
+# allow_credentials=True est incompatible avec allow_origins=["*"] selon la spec
+# CORS : les navigateurs bloquent la réponse. Credentials non nécessaires ici
+# car le dashboard appelle l'API via Python requests (hors navigateur).
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

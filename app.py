@@ -109,6 +109,25 @@ def _autoinstall_desktop_shortcut() -> None:
 _autoinstall_desktop_shortcut()
 
 # ---------------------------------------------------------------------------
+# Resolution de l'interpreteur Python pour les sous-processus.
+# CRITIQUE : en mode frozen PyInstaller, sys.executable est l'exe lui-meme.
+# Le passer a Popen relancerait ce script en boucle (fork bomb). On resout
+# donc un vrai python.exe du PATH quand on tourne depuis un exe.
+# ---------------------------------------------------------------------------
+def _find_real_python() -> str:
+    if not getattr(sys, "frozen", False):
+        return sys.executable
+    import shutil
+    for candidate in ("python", "python3"):
+        found = shutil.which(candidate)
+        if found and Path(found).resolve() != Path(sys.executable).resolve():
+            return found
+    raise RuntimeError("python.exe introuvable dans le PATH (mode frozen).")
+
+
+PYTHON = _find_real_python()
+
+# ---------------------------------------------------------------------------
 # Configuration des services
 # ---------------------------------------------------------------------------
 API_HOST = "127.0.0.1"
@@ -172,7 +191,7 @@ def main() -> int:
     # ---------------------- 1. Lancement de l'API ----------------------
     print("[1/3] Demarrage de l'API FastAPI (uvicorn)...")
     api_cmd = [
-        sys.executable,
+        PYTHON,
         "-m",
         "uvicorn",
         "api.main:app",
@@ -197,7 +216,7 @@ def main() -> int:
     env = os.environ.copy()
     env["API_BASE_URL"] = API_BASE_URL  # consomme par dashboard/app.py
     dashboard_cmd = [
-        sys.executable,
+        PYTHON,
         "-m",
         "streamlit",
         "run",
@@ -219,16 +238,18 @@ def main() -> int:
         print("      Dashboard operationnel.")
 
     # ---------------------- 3. Ouverture des navigateurs ----------------------
-    print("\n[3/3] Ouverture des interfaces dans le navigateur...")
-    # Swagger UI · interface interactive de l'API (utile pour la soutenance)
-    webbrowser.open(SWAGGER_URL)
-    time.sleep(0.6)
-    # Dashboard metier
-    webbrowser.open(DASHBOARD_URL)
-    time.sleep(0.6)
-    # ReDoc · vue documentaire alternative, plus lisible pour le jury
-    webbrowser.open(REDOC_URL)
-    time.sleep(0.6)
+    # MPI_NO_BROWSER=1 : supprime l'ouverture automatique quand app.py est
+    # lancé depuis LANCER_TOUT, qui gère lui-même tous les onglets navigateur.
+    if not os.environ.get("MPI_NO_BROWSER"):
+        print("\n[3/3] Ouverture des interfaces dans le navigateur...")
+        webbrowser.open(SWAGGER_URL)
+        time.sleep(0.6)
+        webbrowser.open(DASHBOARD_URL)
+        time.sleep(0.6)
+        webbrowser.open(REDOC_URL)
+        time.sleep(0.6)
+    else:
+        print("\n[3/3] Navigateur gere par le lanceur parent (MPI_NO_BROWSER=1).")
 
     # Ouverture des livrables pour la soutenance (PowerPoint + PDF)
     if PPTX_PATH.exists():

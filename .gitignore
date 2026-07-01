@@ -26,6 +26,10 @@ models/*.joblib
 models/*.pkl
 models/*.h5
 !models/.gitkeep
+# Exception deploiement Render : le modele final (~350 KB) et son nom sont
+# versionnes pour que l'API d'inference demarre sans re-entrainement.
+!models/final_model.joblib
+!models/final_model_name.txt
 
 # --- Rapports intermediaires (figures regenerables, embed dans le PDF final) ---
 reports/02/
