@@ -112,8 +112,8 @@ _autoinstall_desktop_shortcut()
 # Configuration des services
 # ---------------------------------------------------------------------------
 API_HOST = "127.0.0.1"
-API_PORT = 8000
-DASHBOARD_PORT = 8501
+API_PORT = int(os.environ.get("MPI_API_PORT", 8001))
+DASHBOARD_PORT = int(os.environ.get("MPI_DASH_PORT", 8502))
 
 API_BASE_URL = f"http://{API_HOST}:{API_PORT}"
 DASHBOARD_URL = f"http://localhost:{DASHBOARD_PORT}"
