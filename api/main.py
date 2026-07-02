@@ -20,6 +20,7 @@ Lancement ·
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -38,8 +39,12 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Bootstrap · auto-install des dépendances manquantes (rend le repo
 # clonable et exécutable sur n'importe quelle machine sans setup manuel).
-from src.bootstrap import ensure_dependencies  # noqa: E402
-ensure_dependencies(verbose=False)
+# MPI_SKIP_BOOTSTRAP=1 (Render, Docker, CI) · on saute AUSSI l'import, car
+# la chaîne src.bootstrap → src.validation.__init__ → evaluation importe
+# matplotlib, absent des requirements-deploy (API d'inférence légère).
+if not os.environ.get("MPI_SKIP_BOOTSTRAP"):
+    from src.bootstrap import ensure_dependencies  # noqa: E402
+    ensure_dependencies(verbose=False)
 
 from src import __version__  # noqa: E402
 from src.config import ALL_FEATURES, MODELS_DIR, OPERATING_MODES, S03_DIR  # noqa: E402
