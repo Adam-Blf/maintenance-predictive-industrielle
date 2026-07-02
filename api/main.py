@@ -68,6 +68,12 @@ app = FastAPI(
     },
 )
 
+# Anti-endormissement Render free tier · self-ping /health toutes les 10 min.
+# No-op hors Render (RENDER_EXTERNAL_URL absente en local/CI).
+from api.keepalive import start_keepalive  # noqa: E402
+
+start_keepalive()
+
 # CORS permissif pour le dev/demo local (dashboard Streamlit, Postman, Swagger).
 # allow_credentials=True est incompatible avec allow_origins=["*"] selon la spec
 # CORS : les navigateurs bloquent la réponse. Credentials non nécessaires ici
