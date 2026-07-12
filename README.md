@@ -1,4 +1,4 @@
-# Système Intelligent Multi-Modèles · Maintenance Prédictive Industrielle
+# Système Intelligent Multi-Modèles - Maintenance Prédictive Industrielle
 
 <!-- adam-badges:start -->
 [![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/maintenance-predictive-industrielle?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![visites](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle/) [![last commit](https://img.shields.io/github/last-commit/Adam-Blf/maintenance-predictive-industrielle?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![top language](https://img.shields.io/github/languages/top/Adam-Blf/maintenance-predictive-industrielle?style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle) [![license](https://img.shields.io/github/license/Adam-Blf/maintenance-predictive-industrielle?style=flat-square&color=D4A437)](LICENSE)
@@ -16,9 +16,9 @@
 [![License](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
 [![Version](https://img.shields.io/badge/version-2.0.0-informational)](./README.md)
 
-> **Projet Data Science** · M1 Mastère Data Engineering & IA · EFREI Paris Panthéon-Assas Université · Année 2025-2026
-> **Bloc** · BC2 RNCP40875 · Piloter et implémenter des solutions d'IA en s'aidant notamment de l'IA générative
-> **Auteurs** · Adam BELOUCIF · Emilien MORICE
+> **Projet Data Science** - M1 Mastère Data Engineering & IA - EFREI Paris Panthéon-Assas Université - Année 2025-2026
+> **Bloc** - BC2 RNCP40875 - Piloter et implémenter des solutions d'IA en s'aidant notamment de l'IA générative
+> **Auteurs** - Adam BELOUCIF - Emilien MORICE
 
 ---
 
@@ -54,12 +54,12 @@
 
 ### Problématique
 
-Dans les environnements industriels modernes, **la panne non planifiée d'une machine** engendre des coûts directs et indirects considérables ·
+Dans les environnements industriels modernes, **la panne non planifiée d'une machine** engendre des coûts directs et indirects considérables -
 
-- **Coût d'arrêt** · 5 000 à 50 000 EUR par heure selon le secteur (automotive, chimie, aéronautique).
-- **Perte de productivité** · délais de livraison non respectés, pénalités contractuelles.
-- **Coûts de dépannage d'urgence** · heures supplémentaires, frais de déplacement technicien.
-- **Perte de qualité** · rebuts produits, non-conformités.
+- **Coût d'arrêt** - 5 000 à 50 000 EUR par heure selon le secteur (automotive, chimie, aéronautique).
+- **Perte de productivité** - délais de livraison non respectés, pénalités contractuelles.
+- **Coûts de dépannage d'urgence** - heures supplémentaires, frais de déplacement technicien.
+- **Perte de qualité** - rebuts produits, non-conformités.
 
 ### Stratégies de maintenance existantes
 
@@ -71,7 +71,7 @@ Dans les environnements industriels modernes, **la panne non planifiée d'une ma
 
 ### Objectif du projet
 
-Développer un **système de maintenance prédictive** qui exploite les données de capteurs IoT (vibration, température, pression, courant) pour **anticiper les pannes dans les 24 heures** et recommander une intervention avant la défaillance. Cela permet ·
+Développer un **système de maintenance prédictive** qui exploite les données de capteurs IoT (vibration, température, pression, courant) pour **anticiper les pannes dans les 24 heures** et recommander une intervention avant la défaillance. Cela permet -
 
 - Réduction du coût d'arrêt non planifié.
 - Optimisation du taux d'utilisation des machines.
@@ -80,29 +80,29 @@ Développer un **système de maintenance prédictive** qui exploite les données
 
 ### KPI du projet
 
-- **ROI attendu** · réduction de 60% du coût global maintenance sur 3 ans.
-- **Disponibilité machine** · augmentation de 20% (panne non planifiées réduites).
-- **Taux de détection (Recall)** · ≥ 85% sur les pannes réelles (minimiser FN).
-- **Taux de fausses alertes (FP)** · ≤ 15% (coût intervention inutile < coût panne).
-- **Latence d'inférence** · < 500 ms (alertes temps réel).
+- **ROI attendu** - réduction de 60% du coût global maintenance sur 3 ans.
+- **Disponibilité machine** - augmentation de 20% (panne non planifiées réduites).
+- **Taux de détection (Recall)** - ≥ 85% sur les pannes réelles (minimiser FN).
+- **Taux de fausses alertes (FP)** - ≤ 15% (coût intervention inutile < coût panne).
+- **Latence d'inférence** - < 500 ms (alertes temps réel).
 
 ---
 
 ## Objectifs et livrables
 
-Ce projet livre une **plateforme intelligente complète** couvrant le cycle de vie data science ·
+Ce projet livre une **plateforme intelligente complète** couvrant le cycle de vie data science -
 
-1. **Ingestion et préparation** · dataset 24 042 enregistrements · 15 variables · classes déséquilibrées (~14.8% pannes).
-2. **Analyse exploratoire** · 7+ visualisations interactives, distributions capteurs, corrélations.
-3. **Modélisation multi-algorithmes** · 4 modèles (Logistic Regression, Random Forest, XGBoost, MLP).
-4. **Évaluation comparative** · 6 métriques standardisées (Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC).
-5. **Interprétabilité** · Feature Importance, Permutation Importance, SHAP Explainer (TreeExplainer/KernelExplainer).
-6. **Interface décisionnelle** · dashboard Streamlit 5 onglets (vue d'ensemble, EDA, comparaison, simulateur, interprétabilité).
-7. **API REST** · endpoints FastAPI + Pydantic (prédiction en temps réel, vérification santé, métadonnées modèle).
-8. **Rapport analytique** · PDF généré 20+ pages avec figures, schémas, matrice de confusion, courbes ROC/PR.
-9. **Bonus** · classification multi-classe (type de panne), régression (RUL), tuning hyperparamètres, calibration, mesure CO₂.
+1. **Ingestion et préparation** - dataset 24 042 enregistrements - 15 variables - classes déséquilibrées (~14.8% pannes).
+2. **Analyse exploratoire** - 7+ visualisations interactives, distributions capteurs, corrélations.
+3. **Modélisation multi-algorithmes** - 4 modèles (Logistic Regression, Random Forest, XGBoost, MLP).
+4. **Évaluation comparative** - 6 métriques standardisées (Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC).
+5. **Interprétabilité** - Feature Importance, Permutation Importance, SHAP Explainer (TreeExplainer/KernelExplainer).
+6. **Interface décisionnelle** - dashboard Streamlit 5 onglets (vue d'ensemble, EDA, comparaison, simulateur, interprétabilité).
+7. **API REST** - endpoints FastAPI + Pydantic (prédiction en temps réel, vérification santé, métadonnées modèle).
+8. **Rapport analytique** - PDF généré 20+ pages avec figures, schémas, matrice de confusion, courbes ROC/PR.
+9. **Bonus** - classification multi-classe (type de panne), régression (RUL), tuning hyperparamètres, calibration, mesure CO₂.
 
-Dataset officiel · Kaggle v3.0 CC0 · [tatheerabbas/industrial-machine-predictive-maintenance](https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance/data) (24 042 lignes × 15 colonnes).
+Dataset officiel - Kaggle v3.0 CC0 - [tatheerabbas/industrial-machine-predictive-maintenance](https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance/data) (24 042 lignes × 15 colonnes).
 
 ---
 
@@ -115,7 +115,7 @@ Dataset officiel · Kaggle v3.0 CC0 · [tatheerabbas/industrial-machine-predicti
 | **Prétraitement**| scikit-learn ColumnTransformer                   | Pipeline immuable évite data-leakage (fit train, transform test/inférence auto).               |
 | **ML classique** | scikit-learn (LogReg, RF)                        | Baseline interprétable (LogReg) + non-linéaire robuste (RF), feature_importances_ native.      |
 | **Boosting**     | XGBoost 2.x                                      | État de l'art tabulaire, gestion native déséquilibre via `scale_pos_weight`, `tree_method=hist` |
-| **Deep Learning**| MLPClassifier scikit-learn (64-32-16)            | Réseau dense DL requis par sujet · architecte 3 couches dégressives, ReLU + early stopping.    |
+| **Deep Learning**| MLPClassifier scikit-learn (64-32-16)            | Réseau dense DL requis par sujet - architecte 3 couches dégressives, ReLU + early stopping.    |
 | **Hypertuning**  | Optuna 3.x (TPE sampler)                         | Optimisation bayésienne > GridSearch exhaustif, log trials structuré, pruning adaptatif.        |
 | **Interprétab.** | SHAP + permutation_importance                    | TreeExplainer (XGBoost/RF), KernelExplainer (fallback), Force/Waterfall/Summary plots.         |
 | **Écorespons.**  | CodeCarbon 2.3+                                  | Mesure réelle CO₂eq (gCO2) par modèle, pays France (~80 gCO2/kWh), RNCP C4.3 littéral.         |
@@ -135,17 +135,17 @@ Dataset officiel · Kaggle v3.0 CC0 · [tatheerabbas/industrial-machine-predicti
 
 ```mermaid
 flowchart TB
-    SENSORS["Capteurs IoT<br/>vibration · temperature · RPM · pression"]
+    SENSORS["Capteurs IoT<br/>vibration - temperature - RPM - pression"]
     RAW["CSV Bronze<br/>data/raw/predictive_maintenance_v3.csv"]
-    EDA["02_eda.py<br/>8 graphiques · stats · analyse NaN"]
-    PREP["Preparation Silver<br/>preprocessing.py · Pandera · imputation · scaling · OHE"]
-    TRAIN["03_train_models.py<br/>LogReg · Random Forest · XGBoost · MLP · CV 5-fold"]
-    GOLD["Evaluation Gold<br/>evaluation.py · matrice confusion · ROC · PR · selection F1"]
-    INTERP["04_interpret.py<br/>SHAP · permutation importance · dependance partielle"]
-    BONUS["Bonus multi-taches<br/>multiclass · regression RUL · Optuna · calibration"]
-    REPORT["Livrables<br/>rapport PDF · presentation PPTX · diagrammes"]
-    DASH["dashboard/app.py<br/>Streamlit · localhost:8501"]
-    API["api/main.py<br/>FastAPI · localhost:8000"]
+    EDA["02_eda.py<br/>8 graphiques - stats - analyse NaN"]
+    PREP["Preparation Silver<br/>preprocessing.py - Pandera - imputation - scaling - OHE"]
+    TRAIN["03_train_models.py<br/>LogReg - Random Forest - XGBoost - MLP - CV 5-fold"]
+    GOLD["Evaluation Gold<br/>evaluation.py - matrice confusion - ROC - PR - selection F1"]
+    INTERP["04_interpret.py<br/>SHAP - permutation importance - dependance partielle"]
+    BONUS["Bonus multi-taches<br/>multiclass - regression RUL - Optuna - calibration"]
+    REPORT["Livrables<br/>rapport PDF - presentation PPTX - diagrammes"]
+    DASH["dashboard/app.py<br/>Streamlit - localhost:8501"]
+    API["api/main.py<br/>FastAPI - localhost:8000"]
 
     SENSORS --> RAW --> EDA --> PREP --> TRAIN --> GOLD --> INTERP
     GOLD --> BONUS
@@ -167,32 +167,32 @@ flowchart TB
 
 ### Prérequis machine
 
-- **RAM** · ≥ 4 GB (8 GB recommandé pour SHAP KernelExplainer sur tous les modèles).
-- **Disque** · ≥ 500 MB libre (donnée + modèles + rapports).
-- **CPU** · multi-core recommandé (RandomForest/XGBoost parallélisés via `n_jobs=-1`).
-- **Temps exécution complet** · ~45-60 min sur CPU grand public (i5-10400, 8GB RAM).
+- **RAM** - ≥ 4 GB (8 GB recommandé pour SHAP KernelExplainer sur tous les modèles).
+- **Disque** - ≥ 500 MB libre (donnée + modèles + rapports).
+- **CPU** - multi-core recommandé (RandomForest/XGBoost parallélisés via `n_jobs=-1`).
+- **Temps exécution complet** - ~45-60 min sur CPU grand public (i5-10400, 8GB RAM).
 
 ---
 
-## Quickstart · `python app.py`
+## Quickstart - `python app.py`
 
-Pour la **soutenance** ou pour démontrer la solution complète, un orchestrateur unique lance tout d'un coup ·
+Pour la **soutenance** ou pour démontrer la solution complète, un orchestrateur unique lance tout d'un coup -
 
 ```bash
 python app.py
 ```
 
-Séquence d'exécution ·
+Séquence d'exécution -
 
 1. Démarre l'API FastAPI sur `http://127.0.0.1:8000` (uvicorn, niveau log `warning`)
 2. Attend que `/health` réponde 200 (max 30 s)
 3. Démarre le dashboard Streamlit sur `http://localhost:8501`, branché sur l'API via la variable d'environnement `API_BASE_URL`
-4. Ouvre 3 onglets navigateur · **Swagger UI** (`/docs`), **dashboard métier**, **ReDoc** (`/redoc`)
+4. Ouvre 3 onglets navigateur - **Swagger UI** (`/docs`), **dashboard métier**, **ReDoc** (`/redoc`)
 5. Ouvre `reports/11/presentation.pptx` dans PowerPoint et `reports/06/rapport_projet_data_science.pdf` dans le viewer PDF par défaut
 
 `Ctrl+C` dans le terminal arrête proprement l'API et le dashboard ; PowerPoint et le PDF restent ouverts pour la suite de la soutenance.
 
-Pendant la démo, le diagnostic dans Streamlit appelle **réellement** l'API en `POST /predict` via httpx · un badge *"Source · API REST"* apparaît sous le résultat. Si l'API est arrêtée, le dashboard bascule en local (joblib) avec un badge *"Source · modèle local"*.
+Pendant la démo, le diagnostic dans Streamlit appelle **réellement** l'API en `POST /predict` via httpx - un badge *"Source - API REST"* apparaît sous le résultat. Si l'API est arrêtée, le dashboard bascule en local (joblib) avec un badge *"Source - modèle local"*.
 
 ---
 
@@ -230,7 +230,7 @@ pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 ```
 
-Vérification · la commande suivante doit réussir sans erreur ·
+Vérification - la commande suivante doit réussir sans erreur -
 
 ```bash
 python -c "import sklearn, xgboost, streamlit, fastapi, shap; print('OK')"
@@ -240,14 +240,14 @@ python -c "import sklearn, xgboost, streamlit, fastapi, shap; print('OK')"
 
 ## Pipeline d'exécution
 
-Les scripts doivent s'exécuter **strictement dans l'ordre** · chaque étape produit les artefacts consommés par la suivante.
+Les scripts doivent s'exécuter **strictement dans l'ordre** - chaque étape produit les artefacts consommés par la suivante.
 
 ### Exécution complète (~45 min)
 
 ```bash
-# Pré-requis · CSV Kaggle officiel placé dans data/raw/predictive_maintenance_v3.csv
+# Pré-requis - CSV Kaggle officiel placé dans data/raw/predictive_maintenance_v3.csv
 
-# 1. Analyse exploratoire (EDA) · 8 graphiques + stats + analyse NaN
+# 1. Analyse exploratoire (EDA) - 8 graphiques + stats + analyse NaN
 python scripts/02_eda.py
 
 # 2. Entraînement 4 modèles + évaluation comparative + CV stratifiée
@@ -260,11 +260,11 @@ python scripts/04_interpret.py
 python scripts/05_generate_diagrams.py
 ```
 
-Les livrables jury sont déjà présents dans le repo ·
-- `reports/06/rapport_projet_data_science.pdf` · ~30 pages, 2.4 Mo
-- `reports/11/presentation.pptx` · 24 slides charte EFREI, 2.2 Mo
+Les livrables jury sont déjà présents dans le repo -
+- `reports/06/rapport_projet_data_science.pdf` - ~30 pages, 2.4 Mo
+- `reports/11/presentation.pptx` - 24 slides charte EFREI, 2.2 Mo
 
-(Pas de script de génération · ces livrables sont versionnés tels quels.)
+(Pas de script de génération - ces livrables sont versionnés tels quels.)
 
 ### Tâches bonus (optionnelles, exécutables après 03)
 
@@ -308,53 +308,53 @@ Le dashboard Streamlit est l'**interface décisionnelle opérationnelle** (EF4 d
 streamlit run dashboard/app.py
 ```
 
-Ouvre automatiquement · `http://localhost:8501`
+Ouvre automatiquement - `http://localhost:8501`
 
-**Configuration** · layout large (wide), sidebar expandu, CSS custom EFREI (bleu/blanc).
+**Configuration** - layout large (wide), sidebar expandu, CSS custom EFREI (bleu/blanc).
 
 ### Structure des 5 onglets
 
-#### Onglet 1 · Vue d'ensemble (KPI Dashboard)
+#### Onglet 1 - Vue d'ensemble (KPI Dashboard)
 
-Indicateurs clés affichés ·
+Indicateurs clés affichés -
 
-- **Nombre total de machines** · 1 204 (historique du dataset)
-- **Taux de pannes** · 25.3% (6 081 pannes / 24 042 total)
-- **Modèle déployé** · XGBoost (F1 le plus élevé · 0.886)
-- **Temps de prédiction** · 0.007 ms par échantillon (latence acceptée < 500 ms)
-- **Métrique F1 du modèle final** · 0.886 ± 0.011 (CV 5-fold)
-- **ROC-AUC** · 0.995
-- **PR-AUC** · 0.974 (plus fiable que ROC-AUC en classes déséquilibrées)
+- **Nombre total de machines** - 1 204 (historique du dataset)
+- **Taux de pannes** - 25.3% (6 081 pannes / 24 042 total)
+- **Modèle déployé** - XGBoost (F1 le plus élevé - 0.886)
+- **Temps de prédiction** - 0.007 ms par échantillon (latence acceptée < 500 ms)
+- **Métrique F1 du modèle final** - 0.886 ± 0.011 (CV 5-fold)
+- **ROC-AUC** - 0.995
+- **PR-AUC** - 0.974 (plus fiable que ROC-AUC en classes déséquilibrées)
 
-Graphes ·
+Graphes -
 
 - Courbe ROC du modèle final (interactive plotly)
 - Distribution des probabilités prédites (train vs test)
 - Matrice de confusion du test set
 
-#### Onglet 2 · Analyse exploratoire (EDA)
+#### Onglet 2 - Analyse exploratoire (EDA)
 
 Sélecteur interactif de variables numériques/catégories.
 
-**Numériques** ·
+**Numériques** -
 
 - Histogramme distribution + boxplot (par classe si target binaire)
 - KDE plot (kernel density estimation)
 - Statistiques descriptives (mean, std, min, max, quantiles)
 
-**Catégories** ·
+**Catégories** -
 
 - Stacked bar chart (répartition machine_type vs operating_mode)
 - Contingency table (crosstab)
 
-Corrélations ·
+Corrélations -
 
 - Heatmap corrélation Pearson (14x14 numériques)
 - Top 5 corrélations avec la cible
 
-#### Onglet 3 · Comparaison des modèles
+#### Onglet 3 - Comparaison des modèles
 
-Tableau interactif · 4 modèles × 6 métriques
+Tableau interactif - 4 modèles × 6 métriques
 
 | Modèle            | Accuracy | Precision | Recall | F1    | ROC-AUC | PR-AUC | Temps train (s) |
 | ----------------- | -------- | --------- | ------ | ----- | ------- | ------ | --------------- |
@@ -363,15 +363,15 @@ Tableau interactif · 4 modèles × 6 métriques
 | **XGBoost**       | **0.963**| **0.824** |**0.958**|**0.886**|**0.995**|**0.974**| **0.503**    |
 | MLP (64-32-16)    | 0.952    | 0.842     | 0.830  | 0.836 | 0.984   | 0.909  | 2.361           |
 
-Graphes ·
+Graphes -
 
 - Courbes ROC superposées (4 modèles)
 - Courbes PR superposées (4 modèles)
 - Barplot F1 par modèle (avec barres d'erreur CV)
 
-#### Onglet 4 · Simulateur scénario
+#### Onglet 4 - Simulateur scénario
 
-Sliders et input fields pour saisir manuellement les capteurs ·
+Sliders et input fields pour saisir manuellement les capteurs -
 
 ```
 Vibration RMS (mm/s)        [0.0 ────●──── 15.0]  →  4.2
@@ -385,21 +385,21 @@ Mode opératoire            [Dropdown: normal / idle / peak]  →  peak
 Type machine               [Dropdown: CNC / Pump / Compressor / Robotic Arm]  →  CNC
 ```
 
-Clic bouton « Prédire » ·
+Clic bouton « Prédire » -
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Prédiction : ALERTE · PANNE PROBABLE
+Prédiction : ALERTE - PANNE PROBABLE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Probabilité de panne dans 24h · 78.4%
-Niveau de risque · ÉLEVÉ (seuil 60%)
-Recommendation · Intervention préventive dans les 2h
+Probabilité de panne dans 24h - 78.4%
+Niveau de risque - ÉLEVÉ (seuil 60%)
+Recommendation - Intervention préventive dans les 2h
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-#### Onglet 5 · Interprétabilité (SHAP)
+#### Onglet 5 - Interprétabilité (SHAP)
 
-Feature importance triée par impact moyen |SHAP value| ·
+Feature importance triée par impact moyen |SHAP value| -
 
 ```
 1. vibration_rms          ████████████████  0.42 (impact moyen)
@@ -410,7 +410,7 @@ Feature importance triée par impact moyen |SHAP value| ·
 ... (14 features total)
 ```
 
-Graphes ·
+Graphes -
 
 - SHAP Waterfall (pour 1 sample sélectionné)
 - SHAP Dependence plot (relation vibration_rms vs SHAP value, couleur par température)
@@ -430,14 +430,14 @@ L'API REST FastAPI est l'**interface d'industrialisation** (EF5). Elle expose le
 uvicorn api.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Sortie console ·
+Sortie console -
 
 ```
 INFO:     Uvicorn running on http://127.0.0.1:8000
 INFO:     Application startup complete
 ```
 
-Accès documentation interactive · `http://localhost:8000/docs` (Swagger UI).
+Accès documentation interactive - `http://localhost:8000/docs` (Swagger UI).
 
 ### Endpoints et codes HTTP
 
@@ -450,7 +450,7 @@ Accès documentation interactive · `http://localhost:8000/docs` (Swagger UI).
 
 ### Schémas Pydantic (contrat typed)
 
-#### Request · `SensorReading`
+#### Request - `SensorReading`
 
 ```json
 {
@@ -466,17 +466,17 @@ Accès documentation interactive · `http://localhost:8000/docs` (Swagger UI).
 }
 ```
 
-**Validation** ·
+**Validation** -
 
-- `vibration_rms` · float, [0.0 ≤ x ≤ 15.0]
-- `temperature_motor` · float, [−20 ≤ x ≤ 160]
-- `rpm` · float, [0 ≤ x ≤ 5000]
-- `operating_mode` · enum ["normal", "idle", "peak"]
-- `machine_type` · enum ["CNC", "Pump", "Compressor", "Robotic Arm"]
+- `vibration_rms` - float, [0.0 ≤ x ≤ 15.0]
+- `temperature_motor` - float, [−20 ≤ x ≤ 160]
+- `rpm` - float, [0 ≤ x ≤ 5000]
+- `operating_mode` - enum ["normal", "idle", "peak"]
+- `machine_type` - enum ["CNC", "Pump", "Compressor", "Robotic Arm"]
 
 Si validation échoue → **422 Unprocessable Entity** (détails en réponse JSON).
 
-#### Response · `PredictionResponse` (HTTP 200)
+#### Response - `PredictionResponse` (HTTP 200)
 
 ```json
 {
@@ -489,16 +489,16 @@ Si validation échoue → **422 Unprocessable Entity** (détails en réponse JSO
 }
 ```
 
-Champs ·
+Champs -
 
-- `failure_within_24h` · 0 (OK) ou 1 (panne probable)
-- `probability` · [0.0 .. 1.0], probabilité de la classe positive
-- `risk_level` · "low" (< 30%) | "moderate" (30-60%) | "high" (> 60%)
-- `recommendation` · chaîne actionnable pour opérateur maintenance
-- `model_name` · identifiant du modèle servi (ex. "XGBoost_FE")
-- `timestamp_utc` · ISO 8601, horodatage UTC de la prédiction
+- `failure_within_24h` - 0 (OK) ou 1 (panne probable)
+- `probability` - [0.0 .. 1.0], probabilité de la classe positive
+- `risk_level` - "low" (< 30%) | "moderate" (30-60%) | "high" (> 60%)
+- `recommendation` - chaîne actionnable pour opérateur maintenance
+- `model_name` - identifiant du modèle servi (ex. "XGBoost_FE")
+- `timestamp_utc` - ISO 8601, horodatage UTC de la prédiction
 
-#### Response · `HealthResponse` (HTTP 200)
+#### Response - `HealthResponse` (HTTP 200)
 
 ```json
 {
@@ -511,7 +511,7 @@ Champs ·
 
 Le champ `status` passe à "degraded" si le modèle n'est pas chargé (modèle invalide, fichier manquant).
 
-#### Response · `ModelInfoResponse` (HTTP 200)
+#### Response - `ModelInfoResponse` (HTTP 200)
 
 ```json
 {
@@ -535,7 +535,7 @@ Le champ `status` passe à "degraded" si le modèle n'est pas chargé (modèle i
 
 ### Exemples cURL
 
-#### Cas 1 · Prédiction optimiste (machine saine)
+#### Cas 1 - Prédiction optimiste (machine saine)
 
 ```bash
 curl -X POST http://127.0.0.1:8000/predict \
@@ -553,7 +553,7 @@ curl -X POST http://127.0.0.1:8000/predict \
   }' | jq .
 ```
 
-Réponse attendue ·
+Réponse attendue -
 
 ```json
 {
@@ -566,7 +566,7 @@ Réponse attendue ·
 }
 ```
 
-#### Cas 2 · Prédiction pessimiste (alerte panne)
+#### Cas 2 - Prédiction pessimiste (alerte panne)
 
 ```bash
 curl -X POST http://127.0.0.1:8000/predict \
@@ -584,20 +584,20 @@ curl -X POST http://127.0.0.1:8000/predict \
   }' | jq .
 ```
 
-Réponse attendue ·
+Réponse attendue -
 
 ```json
 {
   "failure_within_24h": 1,
   "probability": 0.89,
   "risk_level": "high",
-  "recommendation": "ALERTE · Intervention préventive immédiate (< 4h)",
+  "recommendation": "ALERTE - Intervention préventive immédiate (< 4h)",
   "model_name": "XGBoost",
   "timestamp_utc": "2026-04-28T14:36:05.789012Z"
 }
 ```
 
-#### Cas 3 · Validation échouée (422)
+#### Cas 3 - Validation échouée (422)
 
 ```bash
 curl -X POST http://127.0.0.1:8000/predict \
@@ -609,7 +609,7 @@ curl -X POST http://127.0.0.1:8000/predict \
   }'
 ```
 
-Réponse ·
+Réponse -
 
 ```json
 {
@@ -674,7 +674,7 @@ maintenance-predictive-industrielle/
 │   ├── xgboost.joblib
 │   └── mlp.joblib
 ├── reports/
-│   ├── 02/                               # Sorties scripts/02_eda.py (EDA · 8 PNG + 2 CSV)
+│   ├── 02/                               # Sorties scripts/02_eda.py (EDA - 8 PNG + 2 CSV)
 │   ├── 03/                               # Sorties scripts/03_train_models.py (métriques + CM + ROC/PR)
 │   ├── 04/                               # Sorties scripts/04_interpret.py (SHAP + permutation)
 │   ├── 05/                               # Sorties scripts/05_generate_diagrams.py (4 schémas)
@@ -734,7 +734,7 @@ maintenance-predictive-industrielle/
 
 ## Modèles comparés
 
-Le sujet impose **au minimum 4 modèles dont 1 Deep Learning**. Nous comparons ·
+Le sujet impose **au minimum 4 modèles dont 1 Deep Learning**. Nous comparons -
 
 | # | Modèle | Famille | Hyperparamètres exacts | Justification |
 | - | ------ | ------- | ---------------------- | ------------- |
@@ -743,7 +743,7 @@ Le sujet impose **au minimum 4 modèles dont 1 Deep Learning**. Nous comparons �
 | 3 | **XGBoost** | Gradient Boosting | `n_estimators=300, learning_rate=0.05, max_depth=6, subsample=0.85, colsample_bytree=0.85, scale_pos_weight=4.0, tree_method="hist"` | État de l'art tabulaire. `scale_pos_weight` gère le déséquilibre (ratio neg/pos). Bagging stochastique régularise. Temps train ~35s. |
 | 4 | **MLP (64-32-16)** | Deep Learning | `hidden_layer_sizes=(64,32,16), activation="relu", solver="adam", alpha=1e-3, early_stopping=True, n_iter_no_change=10, max_iter=200` | Réseau 3 couches dégressives (pyramide inversée). ReLU anti-vanishing. Early stopping évite overfit. `alpha=1e-3` régularise. Temps train ~18s. |
 
-### Comparaison métrique (résultats réels · `reports/03/metrics_summary.json`)
+### Comparaison métrique (résultats réels - `reports/03/metrics_summary.json`)
 
 | Modèle | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC | Temps train | CO₂ (mg) |
 | ------ | -------- | --------- | ------ | -- | ------- | ------ | ----------- | -------- |
@@ -752,7 +752,7 @@ Le sujet impose **au minimum 4 modèles dont 1 Deep Learning**. Nous comparons �
 | **XGBoost** | **0.963** | **0.824** | **0.958** | **0.886** | **0.995** | **0.974** | **0.503s** | **6.1** |
 | MLP | 0.952 | 0.842 | 0.830 | 0.836 | 0.984 | 0.909 | 2.361s | 3.8 |
 
-**Sélection** · score de sélection = F1 − 0.5×σ(F1_CV) · XGBoost retenu : F1=0.886, σ_CV=0.011 (le plus stable). CO₂ mesuré via CodeCarbon.
+**Sélection** - score de sélection = F1 − 0.5×σ(F1_CV) - XGBoost retenu : F1=0.886, σ_CV=0.011 (le plus stable). CO₂ mesuré via CodeCarbon.
 
 ---
 
@@ -770,69 +770,69 @@ Le sujet impose **au minimum 4 modèles dont 1 Deep Learning**. Nous comparons �
 - Calculer stats descriptives (mean, std, min, max, skewness, kurtosis)
 - Visualiser target : 74.7% classe 0 (machine saine), 25.3% classe 1 (panne)
 
-Output · 7 graphiques PNG, stats CSV.
+Output - 7 graphiques PNG, stats CSV.
 
 #### 2. **Data Preparation (Silver Layer)**
 
-- **Validation schema** · Pandera (types + ranges)
-- **Imputation NaN** · `SimpleImputer(strategy="median")` sur numériques
-- **Standardisation** · `StandardScaler` sur train, transform test (anti-leakage)
-- **Encoding catégories** · `OneHotEncoder(drop="first")` sur [operating_mode, machine_type]
-- **Feature Engineering bonus** · ratios (vibration/rpm), interactions (T×vibration), deviations (z-score)
+- **Validation schema** - Pandera (types + ranges)
+- **Imputation NaN** - `SimpleImputer(strategy="median")` sur numériques
+- **Standardisation** - `StandardScaler` sur train, transform test (anti-leakage)
+- **Encoding catégories** - `OneHotEncoder(drop="first")` sur [operating_mode, machine_type]
+- **Feature Engineering bonus** - ratios (vibration/rpm), interactions (T×vibration), deviations (z-score)
 
-Outil · `sklearn.compose.ColumnTransformer` · garantit chaîne immédiate fit train → transform test/inférence.
+Outil - `sklearn.compose.ColumnTransformer` - garantit chaîne immédiate fit train → transform test/inférence.
 
-Output · X_train (18 433 × 23), X_test (5 609 × 23), y_train, y_test, scaler+encoder sérialisés.
+Output - X_train (18 433 × 23), X_test (5 609 × 23), y_train, y_test, scaler+encoder sérialisés.
 
 #### 3. **Train/Test Split stratifié**
 
-- **Test size** · 20% (5 609 samples) stratifié sur `failure_within_24h`
-- **Stratification** · préserve ratio 74.7% / 25.3% dans train ET test
-- **Seed** · 42 (reproductibilité bit-à-bit)
-- **Raison** · test sur données invisibles, pas de leakage, comparaison équitable
+- **Test size** - 20% (5 609 samples) stratifié sur `failure_within_24h`
+- **Stratification** - préserve ratio 74.7% / 25.3% dans train ET test
+- **Seed** - 42 (reproductibilité bit-à-bit)
+- **Raison** - test sur données invisibles, pas de leakage, comparaison équitable
 
 #### 4. **Modélisation 4 algorithmes**
 
-- **Logistic Regression** · fit, predict_proba
-- **Random Forest** · fit, OOB score, feature_importances_
-- **XGBoost** · fit, predict_proba, custom `scale_pos_weight` pour déséquilibre
-- **MLP** · fit avec early stopping (validation split 10%)
+- **Logistic Regression** - fit, predict_proba
+- **Random Forest** - fit, OOB score, feature_importances_
+- **XGBoost** - fit, predict_proba, custom `scale_pos_weight` pour déséquilibre
+- **MLP** - fit avec early stopping (validation split 10%)
 
 Tous dans `sklearn.Pipeline` avec preprocessor + classifier pour éviter leakage.
 
 #### 5. **Évaluation comparative + Cross-Validation**
 
-- **CV stratifiée** · 5-fold sur train, calcule 5×6 métriques
-- **Métriques** · Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC
-- **Raison PR-AUC** · plus pertinent que ROC-AUC en classes déséquilibrées
-- **Matrices confusion** · pour analyser FP/FN par modèle
+- **CV stratifiée** - 5-fold sur train, calcule 5×6 métriques
+- **Métriques** - Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC
+- **Raison PR-AUC** - plus pertinent que ROC-AUC en classes déséquilibrées
+- **Matrices confusion** - pour analyser FP/FN par modèle
 
-Output · barplots, courbes ROC/PR superposées, tableaux.
+Output - barplots, courbes ROC/PR superposées, tableaux.
 
 #### 6. **Calibration probabiliste (bonus)**
 
-- **Reliability diagram** · courbe calibration (predicted prob vs empirical freq)
-- **Brier score** · moyenne (y_true − y_proba)²
-- **Seuil optimisé** · minimise coût métier (FN=1000€, FP=100€) plutôt que 0.5 standard
+- **Reliability diagram** - courbe calibration (predicted prob vs empirical freq)
+- **Brier score** - moyenne (y_true − y_proba)²
+- **Seuil optimisé** - minimise coût métier (FN=1000€, FP=100€) plutôt que 0.5 standard
 
-Output · graphique reliability, matrice confusion avec seuil custom.
+Output - graphique reliability, matrice confusion avec seuil custom.
 
 #### 7. **Interprétabilité (SHAP)**
 
-- **Feature Importance native** · Gini (RF) ou Gain (XGB)
-- **Permutation Importance** · shuffle une feature, mesure drop performance
-- **SHAP Explainer** · TreeExplainer (RF/XGB) ou KernelExplainer (LogReg/MLP)
-- **Visualisations** · Force plots (top 10 features), Waterfall (1 sample), Summary (moyenne |SHAP|)
+- **Feature Importance native** - Gini (RF) ou Gain (XGB)
+- **Permutation Importance** - shuffle une feature, mesure drop performance
+- **SHAP Explainer** - TreeExplainer (RF/XGB) ou KernelExplainer (LogReg/MLP)
+- **Visualisations** - Force plots (top 10 features), Waterfall (1 sample), Summary (moyenne |SHAP|)
 
-Output · PNG SHAP, classement features par impact.
+Output - PNG SHAP, classement features par impact.
 
 #### 8. **Sélection et déploiement du modèle final**
 
-- **Score de sélection** · F1 − 0.5×σ(F1_CV) = compromis entre F1 moyen et stabilité
-- **Sauvegarder** · joblib + seed en commentaire
-- **Exposer** · FastAPI endpoint `/predict` + Streamlit dashboard
+- **Score de sélection** - F1 − 0.5×σ(F1_CV) = compromis entre F1 moyen et stabilité
+- **Sauvegarder** - joblib + seed en commentaire
+- **Exposer** - FastAPI endpoint `/predict` + Streamlit dashboard
 
-Output · final_model.joblib (~8 MB), final_model_name.txt.
+Output - final_model.joblib (~8 MB), final_model_name.txt.
 
 ---
 
@@ -840,7 +840,7 @@ Output · final_model.joblib (~8 MB), final_model_name.txt.
 
 ### Pourquoi ces 6 métriques ?
 
-En classification binaire avec classes déséquilibrées (~14.8% pannes), on compare ·
+En classification binaire avec classes déséquilibrées (~14.8% pannes), on compare -
 
 | Métrique | Formule | Quand l'utiliser | Pièges |
 | -------- | ------- | --------------- | ------ |
@@ -849,14 +849,14 @@ En classification binaire avec classes déséquilibrées (~14.8% pannes), on com
 | **Recall** | TP / (TP+FN) | Coût d'un faux négatif (panne non détectée = production stoppée) | Ignore FP (alertes inutiles) |
 | **F1** | 2×(Precision×Recall) / (Precision+Recall) | Compromis Precision/Recall quand les deux importants | Donne même poids aux deux |
 | **ROC-AUC** | Aire sous courbe TPR vs FPR | Compare capacité discrimination modèles (invariant seuil) | Peut être élevé même si performance faible sur classe minoritaire |
-| **PR-AUC** | Aire sous courbe Precision vs Recall | **Plus fiable que ROC-AUC en déséquilibre** · mieux réflète métier | Coûteux à calculer (100s d'iterations) |
+| **PR-AUC** | Aire sous courbe Precision vs Recall | **Plus fiable que ROC-AUC en déséquilibre** - mieux réflète métier | Coûteux à calculer (100s d'iterations) |
 
-### Choix métier · asymétrie FP vs FN
+### Choix métier - asymétrie FP vs FN
 
-Dans la maintenance industrielle ·
+Dans la maintenance industrielle -
 
-- **Coût FN (panne ratée)** · ~1 000 EUR/heure (arrêt production) = **très cher**
-- **Coût FP (alerte inutile)** · ~100 EUR (technicien se déplace) = **bon marché**
+- **Coût FN (panne ratée)** - ~1 000 EUR/heure (arrêt production) = **très cher**
+- **Coût FP (alerte inutile)** - ~100 EUR (technicien se déplace) = **bon marché**
 
 Donc → **Recall ≥ 85%** (détecter 85% des pannes réelles), accepter FP jusqu'à ~15%.
 
@@ -868,7 +868,7 @@ score = F1 − 0.5 × σ(F1_CV)
 
 Où σ(F1_CV) = écart-type du F1 sur 5 folds CV.
 
-**Raisonnement** · on veut maximiser F1 moyen (performance) tout en minimisant variance (stabilité). Le facteur 0.5 privilégie slightly la stabilité.
+**Raisonnement** - on veut maximiser F1 moyen (performance) tout en minimisant variance (stabilité). Le facteur 0.5 privilégie slightly la stabilité.
 
 ---
 
@@ -883,14 +883,14 @@ Utiliser à l'entraînement une information qui ne sera pas disponible à l'inf�
 | Cause | Exemple problématique | Solution appliquée |
 | ----- | -------------------- | ------------------- |
 | **Normalisation sur dataset complet** | StandardScaler fit sur train+test ensemble | ✓ Fit sur train uniquement, transform test après |
-| **Feature engineering sur target** | Calculer une feature via la cible (ex. ratio pannes/sample) | ✓ Aucune feature dérivée de la cible · uniquement les capteurs bruts |
+| **Feature engineering sur target** | Calculer une feature via la cible (ex. ratio pannes/sample) | ✓ Aucune feature dérivée de la cible - uniquement les capteurs bruts |
 | **Cross-val naïve** | Split train/test, puis CV sur train+test | ✓ CV toujours imbriquée dans train |
 | **Test set vu à l'entraînement** | Hypertuning sur test set | ✓ Optuna sur CV train uniquement |
 
 ### Architecture scikit-learn anti-leakage
 
 ```python
-# ✓ CORRECT · Pipeline immutable
+# ✓ CORRECT - Pipeline immutable
 pipeline = Pipeline([
     ("preprocessor", ColumnTransformer([
         ("num", StandardScaler(), numeric_features),
@@ -910,41 +910,41 @@ y_pred = pipeline.predict(X_test)  # Transform+predict test auto
 
 ### Trois niveaux d'explication
 
-#### Niveau 1 · Feature Importance globale
+#### Niveau 1 - Feature Importance globale
 
 **Qu'est-ce ?** Classement des features par contribution moyenne à la prédiction.
 
-**Techniques** ·
+**Techniques** -
 
-- **Native importance** (sklearn) · Gini/Gain dans arbres
-  - Avantage · très rapide, O(n×m)
-  - Inconvénient · ne capture pas les interactions
-  - Cas d'usage · exploration rapide, baseline
+- **Native importance** (sklearn) - Gini/Gain dans arbres
+  - Avantage - très rapide, O(n×m)
+  - Inconvénient - ne capture pas les interactions
+  - Cas d'usage - exploration rapide, baseline
 
 - **Permutation importance** (sklearn)
   - Shuffler une feature, mesurer baisse métrique
-  - Avantage · model-agnostic, robuste
-  - Inconvénient · coûteux (O(n×m)), corrélations masquées
-  - Cas d'usage · audit final, validation
+  - Avantage - model-agnostic, robuste
+  - Inconvénient - coûteux (O(n×m)), corrélations masquées
+  - Cas d'usage - audit final, validation
 
-#### Niveau 2 · SHAP Value (feature importance + direction)
+#### Niveau 2 - SHAP Value (feature importance + direction)
 
 **Qu'est-ce ?** Pour chaque prédiction, décompose la contribution de chaque feature (positive = vers panne, négative = vers sain).
 
-**Techniques** ·
+**Techniques** -
 
 - **TreeExplainer** (XGBoost / Random Forest)
-  - Exact · trace tous les chemins arbre
-  - Avantage · très rapide (ms par sample)
-  - Cas d'usage · production (API temps réel)
+  - Exact - trace tous les chemins arbre
+  - Avantage - très rapide (ms par sample)
+  - Cas d'usage - production (API temps réel)
 
 - **KernelExplainer** (universal, LogReg / MLP)
   - Approximation par coalitions locales
-  - Avantage · model-agnostic
-  - Inconvénient · lent (besoins 5000 queries par sample)
-  - Cas d'usage · explications offline détaillées
+  - Avantage - model-agnostic
+  - Inconvénient - lent (besoins 5000 queries par sample)
+  - Cas d'usage - explications offline détaillées
 
-**Interprétation** ·
+**Interprétation** -
 
 ```
 SHAP value positif  → la feature pousse la prédiction vers panne (y=1)
@@ -952,12 +952,12 @@ SHAP value négatif  → la feature pousse la prédiction vers sain (y=0)
 |SHAP value| haut   → contribution importante
 ```
 
-#### Niveau 3 · Visualisations SHAP
+#### Niveau 3 - Visualisations SHAP
 
-- **Force plot** · top 10 features + SHAP values, barres couleur
-- **Waterfall plot** · 1 sample · décomposition cascadée de la prédiction
-- **Summary plot** · scatter plot moyenne |SHAP| par feature, coloré par valeur
-- **Dependence plot** · scatter feature value vs SHAP value (détecte non-linéarités)
+- **Force plot** - top 10 features + SHAP values, barres couleur
+- **Waterfall plot** - 1 sample - décomposition cascadée de la prédiction
+- **Summary plot** - scatter plot moyenne |SHAP| par feature, coloré par valeur
+- **Dependence plot** - scatter feature value vs SHAP value (détecte non-linéarités)
 
 ### Quand utiliser quelle explication ?
 
@@ -977,11 +977,11 @@ SHAP value négatif  → la feature pousse la prédiction vers sain (y=0)
 
 Le sujet impose explicitement l'**évaluation du degré d'écoresponsabilité** des modèles.
 
-**CodeCarbon** estime l'empreinte carbone (gCO₂ équivalent) basée sur ·
+**CodeCarbon** estime l'empreinte carbone (gCO₂ équivalent) basée sur -
 
-- **Consommation électrique** · TDP CPU + GPU, durée entraînement
-- **Mix énergétique national** · France ~80 gCO₂/kWh (nucléaire, bas carbone)
-- **Formule** · gCO₂eq = (énergie kWh) × (intensité carbone gCO₂/kWh)
+- **Consommation électrique** - TDP CPU + GPU, durée entraînement
+- **Mix énergétique national** - France ~80 gCO₂/kWh (nucléaire, bas carbone)
+- **Formule** - gCO₂eq = (énergie kWh) × (intensité carbone gCO₂/kWh)
 
 ### Résultats pour le projet
 
@@ -995,25 +995,25 @@ Le sujet impose explicitement l'**évaluation du degré d'écoresponsabilité** 
 
 ### Recommandations d'écoresponsabilité
 
-1. **Baseline optimale** · Logistic Regression (0.3 mg CO₂), mais F1=0.86 insuffisant.
-2. **Best compromise** · XGBoost (F1=0.928, 6.12 mg CO₂) = 152 F1-points par mg CO₂eq.
-3. **Limiter ensemble** · Une fois modèle sélectionné, ne pas réentraîner 4×.
-4. **Décorrélation CPU/perso** · les résultats peuvent varier ±30% selon machine.
+1. **Baseline optimale** - Logistic Regression (0.3 mg CO₂), mais F1=0.86 insuffisant.
+2. **Best compromise** - XGBoost (F1=0.928, 6.12 mg CO₂) = 152 F1-points par mg CO₂eq.
+3. **Limiter ensemble** - Une fois modèle sélectionné, ne pas réentraîner 4×.
+4. **Décorrélation CPU/perso** - les résultats peuvent varier ±30% selon machine.
 
-**Données brutes** · `reports/03/metrics_summary.csv` contient les colonnes `fit_time_s` et `predict_time_ms` mesurées au runtime.
+**Données brutes** - `reports/03/metrics_summary.csv` contient les colonnes `fit_time_s` et `predict_time_ms` mesurées au runtime.
 
 ---
 
 ## Reproductibilité
 
-### Seed propagée · Garantie 100% bit-à-bit
+### Seed propagée - Garantie 100% bit-à-bit
 
 ```python
 # src/config.py
 RANDOM_STATE: int = 42
 ```
 
-Propagée à tous les composants ·
+Propagée à tous les composants -
 
 ```python
 # numpy
@@ -1032,29 +1032,29 @@ XGBClassifier(random_state=RANDOM_STATE, ...)
 MLPClassifier(random_state=RANDOM_STATE)
 ```
 
-### Versions figées · Python + dépendances
+### Versions figées - Python + dépendances
 
 ```
 python --version  → 3.12.0
 pip freeze        → requirements.txt avec versions [m.n.p]
 ```
 
-Relancer après clone ·
+Relancer après clone -
 
 ```bash
 pip install -r requirements.txt  # versions exactes
-# Pré-requis · CSV Kaggle dans data/raw/predictive_maintenance_v3.csv
+# Pré-requis - CSV Kaggle dans data/raw/predictive_maintenance_v3.csv
 python scripts/02_eda.py
 python scripts/03_train_models.py
 # → Résultats identiques à la machine d'origin Adam/Emilien
 ```
 
-### Dataset · CSV Kaggle officiel uniquement
+### Dataset - CSV Kaggle officiel uniquement
 
-- **Source unique** · Kaggle CC0 · [tatheerabbas/industrial-machine-predictive-maintenance](https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance/data)
-- **Téléchargement** · `kaggle datasets download tatheerabbas/industrial-machine-predictive-maintenance` puis extraire `predictive_maintenance_v3.csv` dans `data/raw/`
-- **Validation auto** · `src.data_loader.load_dataset()` valide le schéma 15 colonnes à chaque chargement, lève `FileNotFoundError` avec instructions Kaggle si absent
-- **Politique stricte** · aucun fallback synthétique nulle part. Si le CSV est absent, les tests skip proprement et les scripts plantent avec un message clair. Pas de génération de données.
+- **Source unique** - Kaggle CC0 - [tatheerabbas/industrial-machine-predictive-maintenance](https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance/data)
+- **Téléchargement** - `kaggle datasets download tatheerabbas/industrial-machine-predictive-maintenance` puis extraire `predictive_maintenance_v3.csv` dans `data/raw/`
+- **Validation auto** - `src.data_loader.load_dataset()` valide le schéma 15 colonnes à chaque chargement, lève `FileNotFoundError` avec instructions Kaggle si absent
+- **Politique stricte** - aucun fallback synthétique nulle part. Si le CSV est absent, les tests skip proprement et les scripts plantent avec un message clair. Pas de génération de données.
 
 ### Vérification simple
 
@@ -1073,19 +1073,19 @@ cat models/optimal_threshold.json
 
 ## Couverture RNCP40875
 
-### Bloc 2 · Piloter et implémenter des solutions d'IA en s'aidant notamment de l'IA générative
+### Bloc 2 - Piloter et implémenter des solutions d'IA en s'aidant notamment de l'IA générative
 
 | Code | Compétence | Implémentation | Preuves (fichiers/sections) |
 | ---- | --------- | -------------- | ---------------------- |
-| **C3.1** | Préparer et transformer les données | ColumnTransformer (Imputer + Scaler + OHE) · `preprocessing.py` · anti-leakage pipeline sklearn | `src/preprocessing.py` lignes 40-120 · schéma dans section "Architecture" du rapport (p.4) |
-| **C3.2** | Concevoir et mettre en oeuvre un tableau de bord interactif et inclusif | Dashboard Streamlit · 5 onglets · CSS EFREI · KPI + EDA + comparaison + simulateur + SHAP · 6 fonctions exigées | `dashboard/app.py` lignes 1-600 · captures dans README section "Lancer le dashboard" |
-| **C3.3** | Réaliser une analyse exploratoire des données | EDA script · 7+ graphiques (distributions, correlations, imbalance) · stats descriptives | `scripts/02_eda.py` · `reports/02/eda_*.png` · section "Pipeline" du rapport (p.5-6) |
-| **C4.1** | Intégrer une stratégie d'IA dans la chaîne de valeur métier | Modèle prédictif 24h · cas métier maintenance industrielle · coût FN vs FP · thresholdoldOptimization · ROI documented | Rapport section 1 "Contexte métier" (p.2-3) · ADR-0001 |
-| **C4.2** | Concevoir et mettre en oeuvre des modèles prédictifs ML/DL | 4 modèles (LogReg, RF, XGBoost, MLP 64-32-16) · CV stratifiée 5-fold · sélection via F1−0.5σ · hyperparamètres justifiés | `src/models.py` lignes 28-170 · tableau comparaison "Modèles comparés" · section "Modèles comparés" du README |
-| **C4.3** | Évaluer la performance des modèles et leur écoresponsabilité | 6 métriques (Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC) · temps d'entraînement et latence d'inférence par modèle · Brier score calibration | `src/evaluation.py` lignes 76-150 · `reports/03/metrics_summary.csv` (colonnes `fit_time_s`, `predict_time_ms`) · `reports/03/compute_cost_comparison.png` |
-| **C4.4** | Assurer la qualité et la pérennité des solutions IA | Tests pytest (preprocessing, models, evaluation, API) · logging structuré · version semver (2.0.0) · docs (ADR) | `tests/*.py` · `tests/*.py` · `docs/adr/*.md` · section "Reproductibilité" du README |
-| **EF4** | Tableau de bord opérationnel | Streamlit 5-onglets (KPI, EDA, modèles, simulator, SHAP) · CSS premium · sliders interactifs | `dashboard/app.py` · section README "Lancer le dashboard" |
-| **EF5** | API REST industrialisation | FastAPI endpoints · `/predict` (prédiction) · `/health` (santé) · `/model-info` (métadonnées) · validation Pydantic | `api/main.py` · section README "Lancer l'API" · exemples cURL |
+| **C3.1** | Préparer et transformer les données | ColumnTransformer (Imputer + Scaler + OHE) - `preprocessing.py` - anti-leakage pipeline sklearn | `src/preprocessing.py` lignes 40-120 - schéma dans section "Architecture" du rapport (p.4) |
+| **C3.2** | Concevoir et mettre en oeuvre un tableau de bord interactif et inclusif | Dashboard Streamlit - 5 onglets - CSS EFREI - KPI + EDA + comparaison + simulateur + SHAP - 6 fonctions exigées | `dashboard/app.py` lignes 1-600 - captures dans README section "Lancer le dashboard" |
+| **C3.3** | Réaliser une analyse exploratoire des données | EDA script - 7+ graphiques (distributions, correlations, imbalance) - stats descriptives | `scripts/02_eda.py` - `reports/02/eda_*.png` - section "Pipeline" du rapport (p.5-6) |
+| **C4.1** | Intégrer une stratégie d'IA dans la chaîne de valeur métier | Modèle prédictif 24h - cas métier maintenance industrielle - coût FN vs FP - thresholdoldOptimization - ROI documented | Rapport section 1 "Contexte métier" (p.2-3) - ADR-0001 |
+| **C4.2** | Concevoir et mettre en oeuvre des modèles prédictifs ML/DL | 4 modèles (LogReg, RF, XGBoost, MLP 64-32-16) - CV stratifiée 5-fold - sélection via F1−0.5σ - hyperparamètres justifiés | `src/models.py` lignes 28-170 - tableau comparaison "Modèles comparés" - section "Modèles comparés" du README |
+| **C4.3** | Évaluer la performance des modèles et leur écoresponsabilité | 6 métriques (Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC) - temps d'entraînement et latence d'inférence par modèle - Brier score calibration | `src/evaluation.py` lignes 76-150 - `reports/03/metrics_summary.csv` (colonnes `fit_time_s`, `predict_time_ms`) - `reports/03/compute_cost_comparison.png` |
+| **C4.4** | Assurer la qualité et la pérennité des solutions IA | Tests pytest (preprocessing, models, evaluation, API) - logging structuré - version semver (2.0.0) - docs (ADR) | `tests/*.py` - `tests/*.py` - `docs/adr/*.md` - section "Reproductibilité" du README |
+| **EF4** | Tableau de bord opérationnel | Streamlit 5-onglets (KPI, EDA, modèles, simulator, SHAP) - CSS premium - sliders interactifs | `dashboard/app.py` - section README "Lancer le dashboard" |
+| **EF5** | API REST industrialisation | FastAPI endpoints - `/predict` (prédiction) - `/health` (santé) - `/model-info` (métadonnées) - validation Pydantic | `api/main.py` - section README "Lancer l'API" - exemples cURL |
 
 ### Bonus valorisés
 
@@ -1104,35 +1104,35 @@ cat models/optimal_threshold.json
 
 Au lieu de prédire "panne oui/non", on prédit le **type exact de panne**.
 
-**Cible** · `failure_type` ∈ {none, bearing, motor_overheat, hydraulic, electrical} (5 classes).
+**Cible** - `failure_type` ∈ {none, bearing, motor_overheat, hydraulic, electrical} (5 classes).
 
-**Modèles** · 4 modèles réentraînés en mode multi-classe ·
+**Modèles** - 4 modèles réentraînés en mode multi-classe -
 
 ```python
 python scripts/07_train_multiclass.py
 ```
 
-**Métrique** · F1 macro (moyenne non-pondérée) plutôt que F1 binaire.
+**Métrique** - F1 macro (moyenne non-pondérée) plutôt que F1 binaire.
 
-**Output** · `reports/07/multiclass_confusion_matrix.png`, `models/multiclass_final.joblib`.
+**Output** - `reports/07/multiclass_confusion_matrix.png`, `models/multiclass_final.joblib`.
 
-### 2. Régression · durée de vie restante (RUL)
+### 2. Régression - durée de vie restante (RUL)
 
 Prédire le nombre d'heures restantes avant panne.
 
-**Cible** · `rul_hours` (valeur continue, [0, 2000]).
+**Cible** - `rul_hours` (valeur continue, [0, 2000]).
 
-**Modèles** · 4 modèles adaptés en régression ·
+**Modèles** - 4 modèles adaptés en régression -
 
 ```python
 python scripts/08_train_regression.py
 ```
 
-**Métriques** · MAE (erreur absolue moyenne), RMSE, R² (coefficient détermination).
+**Métriques** - MAE (erreur absolue moyenne), RMSE, R² (coefficient détermination).
 
-**Output** · `reports/08/regression_pred_vs_true.png`, `models/regression_final.joblib`.
+**Output** - `reports/08/regression_pred_vs_true.png`, `models/regression_final.joblib`.
 
-### 3. Hyperparameter tuning · Optuna
+### 3. Hyperparameter tuning - Optuna
 
 Optimisation bayésienne des hyperparamètres (plutôt que GridSearch exhaustif).
 
@@ -1140,11 +1140,11 @@ Optimisation bayésienne des hyperparamètres (plutôt que GridSearch exhaustif)
 python scripts/09_tune_hyperparams.py
 ```
 
-**Sampler** · TPE (Tree-structured Parzen Estimator) · plus efficace que Random Search.
+**Sampler** - TPE (Tree-structured Parzen Estimator) - plus efficace que Random Search.
 
-**Trials** · 100 essais, pruning adaptatif (arrête trial non-prometteuse tôt).
+**Trials** - 100 essais, pruning adaptatif (arrête trial non-prometteuse tôt).
 
-**Output** · `reports/09/tuning_results.json`.
+**Output** - `reports/09/tuning_results.json`.
 
 ### 4. Calibration probabiliste
 
@@ -1154,13 +1154,13 @@ Affiner les probabilités prédites pour minimiser le coût métier (FN=1000€,
 python scripts/10_calibrate.py
 ```
 
-**Outils** ·
+**Outils** -
 
-- Reliability diagram · graphique étalonnage empirique vs probabilités
-- Brier score · MSE(y_true, y_proba)
-- Optimal threshold · seuil Youden ou custom cost-sensitive
+- Reliability diagram - graphique étalonnage empirique vs probabilités
+- Brier score - MSE(y_true, y_proba)
+- Optimal threshold - seuil Youden ou custom cost-sensitive
 
-**Output** · `reports/10/reliability_diagram_*.png` + `reports/10/cost_threshold_*.png`, seuil optimal recommandé dans `models/optimal_threshold.json`.
+**Output** - `reports/10/reliability_diagram_*.png` + `reports/10/cost_threshold_*.png`, seuil optimal recommandé dans `models/optimal_threshold.json`.
 
 ---
 
@@ -1168,7 +1168,7 @@ python scripts/10_calibrate.py
 
 ### Pourquoi 4 modèles et pas 2 ou 5 ?
 
-Le sujet impose « au minimum 4 modèles dont 1 Deep Learning ». 4 est un bon compromis ·
+Le sujet impose « au minimum 4 modèles dont 1 Deep Learning ». 4 est un bon compromis -
 
 - 2 trop peu (pas assez de variation pour comp comparative)
 - 5+ coûteux en temps (200+ min train) et émissions CO₂
@@ -1176,15 +1176,15 @@ Le sujet impose « au minimum 4 modèles dont 1 Deep Learning ». 4 est un bon c
 
 ### Pourquoi MLP plutôt que LSTM ou Conv1D ?
 
-**LSTM** · mieux pour séries temporelles (t-1, t, t+1). Notre dataset est **tabulaire stateless** (capteurs statiques à un instant T), pas une série temporelle. LSTM serait sur-dimensionné.
+**LSTM** - mieux pour séries temporelles (t-1, t, t+1). Notre dataset est **tabulaire stateless** (capteurs statiques à un instant T), pas une série temporelle. LSTM serait sur-dimensionné.
 
-**Conv1D** · pour signaux 1D (audio, ECG). Notre cas c'est 9 features indépendantes, pas un signal continu.
+**Conv1D** - pour signaux 1D (audio, ECG). Notre cas c'est 9 features indépendantes, pas un signal continu.
 
-**Conclusion** · MLP suffit. Si les données étaient temporelles (historique 24h), on aurait exploré LSTM.
+**Conclusion** - MLP suffit. Si les données étaient temporelles (historique 24h), on aurait exploré LSTM.
 
 ### Comment changer la variable cible ?
 
-Actuellement · `failure_within_24h` (binaire). Pour changer ·
+Actuellement - `failure_within_24h` (binaire). Pour changer -
 
 ```python
 # src/config.py
@@ -1192,7 +1192,7 @@ TARGET_BINARY = "failure_type"  # switch à multi-classe
 TARGET_REGRESSION = "rul_hours" # ou régression
 ```
 
-Puis ·
+Puis -
 
 ```python
 python scripts/03_train_models.py  # réentraîner
@@ -1202,8 +1202,8 @@ Les métriques s'adaptent automatiquement (F1 pour classification, RMSE pour ré
 
 ### Comment ajouter un modèle (ex. CatBoost) ?
 
-1. **Installer** · `pip install catboost`
-2. **Ajouter factory** ·
+1. **Installer** - `pip install catboost`
+2. **Ajouter factory** -
 
 ```python
 # src/models.py
@@ -1214,7 +1214,7 @@ def build_catboost() -> Pipeline:
     ])
 ```
 
-3. **Enregistrer** dans `scripts/03_train_models.py` ·
+3. **Enregistrer** dans `scripts/03_train_models.py` -
 
 ```python
 models = {
@@ -1224,7 +1224,7 @@ models = {
 }
 ```
 
-4. **Relancer** · `python scripts/03_train_models.py`
+4. **Relancer** - `python scripts/03_train_models.py`
 
 ### Pourquoi Streamlit et pas Dash ou Plotly ?
 
@@ -1269,7 +1269,7 @@ Le modèle final est chargé automatiquement depuis `models/final_model.joblib`.
 ### Comment utiliser le modèle avec un nouveau capteur (ex. vibration_z-axis) ?
 
 1. **Ajouter colonne** au CSV source
-2. **Updater config** ·
+2. **Updater config** -
 
 ```python
 # src/config.py
@@ -1280,7 +1280,7 @@ NUMERIC_FEATURES = [
 ]
 ```
 
-3. **Rétraiter + réentraîner** ·
+3. **Rétraiter + réentraîner** -
 
 ```bash
 python scripts/03_train_models.py  # ColumnTransformer s'adapte
@@ -1292,26 +1292,26 @@ Le preprocessing et les modèles se réajustent automatiquement.
 
 ## Troubleshooting
 
-### Erreur · FileNotFoundError: data/raw/predictive_maintenance_v3.csv
+### Erreur - FileNotFoundError: data/raw/predictive_maintenance_v3.csv
 
-**Cause** · Dataset manquant (pas téléchargé de Kaggle, synthetique pas généré).
+**Cause** - Dataset manquant (pas téléchargé de Kaggle, synthetique pas généré).
 
-**Solutions** ·
+**Solutions** -
 
 ```bash
-# Option 1 · télécharger Kaggle
+# Option 1 - télécharger Kaggle
 kaggle datasets download -d tatheerabbas/industrial-machine-predictive-maintenance
 unzip archive.zip -d data/raw/
 ```
 
-### Erreur · MemoryError lors de SHAP KernelExplainer
+### Erreur - MemoryError lors de SHAP KernelExplainer
 
-**Cause** · KernelExplainer estime sur 2500 backgrounds samples · trop coûteux en RAM sur petit CPU.
+**Cause** - KernelExplainer estime sur 2500 backgrounds samples - trop coûteux en RAM sur petit CPU.
 
-**Solutions** ·
+**Solutions** -
 
 ```python
-# src/interpretability.py · reduce backgrounds
+# src/interpretability.py - reduce backgrounds
 explainer = shap.KernelExplainer(
     model_predict_proba,
     shap.sample(X_train, 500)  # ← 500 au lieu de 2500
@@ -1320,22 +1320,22 @@ explainer = shap.KernelExplainer(
 
 Ou utiliser TreeExplainer si le modèle final est XGBoost/RF (gratuit).
 
-### Erreur · ConvergenceWarning sur Logistic Regression
+### Erreur - ConvergenceWarning sur Logistic Regression
 
-**Cause** · `max_iter=1000` insuffisant sur certaines machines (lent convergence).
+**Cause** - `max_iter=1000` insuffisant sur certaines machines (lent convergence).
 
-**Solution** ·
+**Solution** -
 
 ```python
 # src/models.py
 LogisticRegression(max_iter=5000, solver="saga", ...)  # augmenter ou changer solver
 ```
 
-### Erreur · ModuleNotFoundError: No module named 'src'
+### Erreur - ModuleNotFoundError: No module named 'src'
 
-**Cause** · virtualenv pas activé ou dépendances pas installées.
+**Cause** - virtualenv pas activé ou dépendances pas installées.
 
-**Solutions** ·
+**Solutions** -
 
 ```bash
 # Vérifier virtualenv actif (prefix [.venv] ou (.venv))
@@ -1343,11 +1343,11 @@ pip install -r requirements.txt --upgrade
 python -c "import src; print(src.__version__)"
 ```
 
-### Erreur · Port 8000/8501 déjà utilisé
+### Erreur - Port 8000/8501 déjà utilisé
 
-**Cause** · API/Dashboard déjà lancés sur ces ports.
+**Cause** - API/Dashboard déjà lancés sur ces ports.
 
-**Solutions** ·
+**Solutions** -
 
 ```bash
 # Trouver et tuer processus
@@ -1365,9 +1365,9 @@ streamlit run dashboard/app.py --server.port=8502
 
 ### Métriques très différentes de celles documentées
 
-**Cause** · seed aléatoire changé, versions dépendances différentes, données modifiées.
+**Cause** - seed aléatoire changé, versions dépendances différentes, données modifiées.
 
-**Diagnostic** ·
+**Diagnostic** -
 
 ```bash
 # Vérifier seed
@@ -1384,14 +1384,14 @@ md5sum data/raw/predictive_maintenance_v3.csv
 
 ## Roadmap
 
-### Court terme (v2.1 · juin 2026)
+### Court terme (v2.1 - juin 2026)
 
 - [ ] Déploiement Cloud (Vercel/Render) pour accès public
 - [ ] MLflow pour tracking expériences (alternative Optuna)
 - [ ] Monitoring drift automatique (données en production vs train)
 - [ ] Alertes Slack si F1 baisse
 
-### Moyen terme (v2.5 · sept 2026)
+### Moyen terme (v2.5 - sept 2026)
 
 - [ ] Ajout LSTM temporel si données séries 24h disponibles
 - [ ] Edge deployment (TensorFlow Lite pour IoT gateway)
@@ -1403,18 +1403,18 @@ md5sum data/raw/predictive_maintenance_v3.csv
 - [ ] Federated learning (entraînement décentralisé multi-usines)
 - [ ] Confidence intervals sur prédictions (Bayesian MLP)
 - [ ] AutoML wrapper (H2O, AutoGluon)
-- [ ] Explainability audit · LIME + SHAP comparaison
+- [ ] Explainability audit - LIME + SHAP comparaison
 
 ---
 
 ## Remerciements
 
-Ce projet n'aurait pas été possible sans ·
+Ce projet n'aurait pas été possible sans -
 
-- **Sarah Malaeb** · enseignante, sujet du projet, feedback continu
-- **EFREI Paris Panthéon-Assas Université** · ressources académiques, infrastructure
-- **Kaggle Dataset** · [Tathaeer Abbas](https://www.kaggle.com/tatheerabbas) pour le dataset public CC0
-- **Communauté open source** · scikit-learn, XGBoost, Streamlit, FastAPI, SHAP, CodeCarbon maintainers
+- **Sarah Malaeb** - enseignante, sujet du projet, feedback continu
+- **EFREI Paris Panthéon-Assas Université** - ressources académiques, infrastructure
+- **Kaggle Dataset** - [Tathaeer Abbas](https://www.kaggle.com/tatheerabbas) pour le dataset public CC0
+- **Communauté open source** - scikit-learn, XGBoost, Streamlit, FastAPI, SHAP, CodeCarbon maintainers
 
 Merci aussi à **Emilien Morice**, coauteur du projet, pour les brainstormings et les alternances de contributions.
 
@@ -1424,11 +1424,11 @@ Merci aussi à **Emilien Morice**, coauteur du projet, pour les brainstormings e
 
 ### Licence
 
-Ce projet est sous licence **MIT** · libre d'usage, modification, redistribution (voir `LICENSE`).
+Ce projet est sous licence **MIT** - libre d'usage, modification, redistribution (voir `LICENSE`).
 
 ### Contributions
 
-Nous acceptons contributions via pull requests ·
+Nous acceptons contributions via pull requests -
 
 1. Fork le dépôt
 2. Créer branche `feat/*` ou `fix/*`
@@ -1439,27 +1439,27 @@ Nous acceptons contributions via pull requests ·
 
 ### Citation
 
-Si vous réutilisez ce projet ·
+Si vous réutilisez ce projet -
 
 ```bibtex
 @misc{beloucif_morice_2026,
-  title={Maintenance Prédictive Industrielle · Système Intelligent Multi-Modèles},
+  title={Maintenance Prédictive Industrielle - Système Intelligent Multi-Modèles},
   author={Beloucif, Adam and Morice, Emilien},
   year={2026},
   school={EFREI Paris Panthéon-Assas Université},
-  note={M1 Data Engineering & IA · BC2 RNCP40875}
+  note={M1 Data Engineering & IA - BC2 RNCP40875}
 }
 ```
 
 ---
 
-**Dernière mise à jour** · 2026-04-28
+**Dernière mise à jour** - 2026-04-28
 
-**Version** · 2.0.0
+**Version** - 2.0.0
 
-**Auteurs** · Adam BELOUCIF · Emilien MORICE (n° 20241824)
+**Auteurs** - Adam BELOUCIF - Emilien MORICE (n° 20241824)
 
-**Status** · Production ready (v2.0 + 7 bonus scripts) · Reproductibilité certifiée seed=42
+**Status** - Production ready (v2.0 + 7 bonus scripts) - Reproductibilité certifiée seed=42
 
 
 ## Star History
@@ -1472,20 +1472,20 @@ Si vous réutilisez ce projet ·
  </picture>
 </a>
 
-## Bonus avancés · industrialisation, incertitude & robustesse
+## Bonus avancés - industrialisation, incertitude & robustesse
 
-Scripts complémentaires (lecture seule sur les données, artefacts dans `reports/`) ·
+Scripts complémentaires (lecture seule sur les données, artefacts dans `reports/`) -
 
 | Script | Apport | Sortie |
 |---|---|---|
 | `scripts/12_drift_psi.py` | Détection de dérive (PSI train → test), seuils 0.10 / 0.25 | `reports/12/` |
-| `scripts/13_conformal.py` | Prédiction conforme (split-conformal LAC) · ensembles avec garantie de couverture 80/90/95 % | `reports/13/` |
+| `scripts/13_conformal.py` | Prédiction conforme (split-conformal LAC) - ensembles avec garantie de couverture 80/90/95 % | `reports/13/` |
 | `scripts/14_mlflow_log.py` | Traçabilité MLflow des 4 modèles (params, métriques, modèle promu) | `mlruns/` (`mlflow ui`) |
 | `scripts/15_noise_robustness.py` | Robustesse au bruit capteur et aux pannes de sonde | `reports/15/` |
 
-`src/conformal.py` · conformaliseur binaire réutilisable (garantie distribution-free).
+`src/conformal.py` - conformaliseur binaire réutilisable (garantie distribution-free).
 
 ### Roadmap (limites assumées)
-- **Modèle temporel (LSTM/GRU)** · non implémenté ici · le dataset est un instantané tabulaire sans séquence horodatée par machine. Nécessite des séries capteurs (fenêtres glissantes) avant d'entraîner un modèle séquentiel.
-- **Dataset alternatif** · validation croisée sur NASA C-MAPSS ou UCI AI4I 2020 pour confirmer la robustesse cross-source.
-- **Monitoring continu** · brancher le PSI (script 12) en tâche planifiée + alerte au-delà du seuil.
+- **Modèle temporel (LSTM/GRU)** - non implémenté ici - le dataset est un instantané tabulaire sans séquence horodatée par machine. Nécessite des séries capteurs (fenêtres glissantes) avant d'entraîner un modèle séquentiel.
+- **Dataset alternatif** - validation croisée sur NASA C-MAPSS ou UCI AI4I 2020 pour confirmer la robustesse cross-source.
+- **Monitoring continu** - brancher le PSI (script 12) en tâche planifiée + alerte au-delà du seuil.
