@@ -1,7 +1,7 @@
 # Système Intelligent Multi-Modèles - Maintenance Prédictive Industrielle
 
 <!-- adam-badges:start -->
-[![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/maintenance-predictive-industrielle?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![visites](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle/) [![last commit](https://img.shields.io/github/last-commit/Adam-Blf/maintenance-predictive-industrielle?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![top language](https://img.shields.io/github/languages/top/Adam-Blf/maintenance-predictive-industrielle?style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle) [![license](https://img.shields.io/github/license/Adam-Blf/maintenance-predictive-industrielle?style=flat-square&color=D4A437)](LICENSE)
+[![version](https://img.shields.io/badge/version-2.0.0-163767?style=flat-square)](CHANGELOG.md) [![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/maintenance-predictive-industrielle?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![visites](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/maintenance-predictive-industrielle/) [![last commit](https://img.shields.io/github/last-commit/Adam-Blf/maintenance-predictive-industrielle?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/maintenance-predictive-industrielle/commits) [![top language](https://img.shields.io/github/languages/top/Adam-Blf/maintenance-predictive-industrielle?style=flat-square)](https://github.com/Adam-Blf/maintenance-predictive-industrielle) [![license](https://img.shields.io/github/license/Adam-Blf/maintenance-predictive-industrielle?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
 
@@ -14,7 +14,6 @@
 [![Streamlit](https://img.shields.io/badge/streamlit-1.32-red)](https://streamlit.io/)
 [![FastAPI](https://img.shields.io/badge/fastapi-0.110-009688)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/license-MIT-yellow)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.0-informational)](./README.md)
 
 > **Projet Data Science** - M1 Mastère Data Engineering & IA - EFREI Paris Panthéon-Assas Université - Année 2025-2026
 > **Bloc** - BC2 RNCP40875 - Piloter et implémenter des solutions d'IA en s'aidant notamment de l'IA générative
